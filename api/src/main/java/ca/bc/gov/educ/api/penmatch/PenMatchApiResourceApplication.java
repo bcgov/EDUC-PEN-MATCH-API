@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog;
+package ca.bc.gov.educ.api.penmatch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,10 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableCaching
-public class PenDemographicsApiResourceApplication {
+public class PenMatchApiResourceApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(PenDemographicsApiResourceApplication.class, args);
+    SpringApplication.run(PenMatchApiResourceApplication.class, args);
   }
 
   @Configuration
