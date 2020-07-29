@@ -1,11 +1,9 @@
-package ca.bc.gov.educ.api.pendemog.struct;
+package ca.bc.gov.educ.api.penmatch.struct;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
 
 @Data
 @Builder

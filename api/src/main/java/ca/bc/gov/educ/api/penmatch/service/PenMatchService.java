@@ -1,36 +1,27 @@
-package ca.bc.gov.educ.api.pendemog.service;
+package ca.bc.gov.educ.api.penmatch.service;
 
-import ca.bc.gov.educ.api.pendemog.exception.EntityNotFoundException;
-import ca.bc.gov.educ.api.pendemog.model.PenDemographicsEntity;
-import ca.bc.gov.educ.api.pendemog.repository.PenDemographicsRepository;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 @Service
-public class PenDemographicsService {
+public class PenMatchService {
 
-  @Getter(AccessLevel.PRIVATE)
-  private final PenDemographicsRepository penDemographicsRepository;
+	@Getter(AccessLevel.PRIVATE)
+	private final PenDemographicsRepository penDemographicsRepository;
 
-  @Autowired
-  public PenDemographicsService(final PenDemographicsRepository penDemographicsRepository) {
-    this.penDemographicsRepository = penDemographicsRepository;
-  }
+	@Autowired
+	public PenMatchService(final PenDemographicsRepository penDemographicsRepository) {
+		this.penDemographicsRepository = penDemographicsRepository;
+	}
 
-  public PenDemographicsEntity getPenDemographicsByPen(String pen) {
-    val result = getPenDemographicsRepository().findByStudNo(pen);
-    if (result.isPresent()) {
-      return result.get();
-    }
-    throw new EntityNotFoundException(PenDemographicsEntity.class, "pen", pen);
-  }
+	public PenMatchStudent matchStudent(PenMatchStudent student) {
+		// Run algorithm
+		return null;
+	}
 
-  public List<PenDemographicsEntity> searchPenDemographics(String studSurName, String studGiven, String studMiddle, String studBirth, String studSex) {
-    return getPenDemographicsRepository().searchPenDemographics(studSurName, studGiven, studMiddle, studBirth, studSex);
-  }
 }
