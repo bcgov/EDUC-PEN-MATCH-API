@@ -1,0 +1,32 @@
+-------------------------------------------------------------------------------
+Test set: ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 20.247 s <<< FAILURE! - in ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest
+testGetPenDemographicsByPen_GivenPenExistInDB_ShouldReturnStatusOk  Time elapsed: 0.367 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testSearchPenDemographics2_GivenWrongFormatDOBInQueryParam_ShouldReturnStatusBadRequest  Time elapsed: 0.032 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testSearchPenDemographics_GivenNoQueryParameters_ShouldReturnStatusOkWithNoResults  Time elapsed: 0.034 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testSearchPenDemographics_GivenOnlySexInQueryParam_ShouldReturnStatusOkAndNoResults  Time elapsed: 0.035 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testSearchPenDemographics_GivenOnlyDOBInQueryParam_ShouldReturnStatusOk  Time elapsed: 0.037 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testSearchPenDemographics_GivenWrongFormatDOBInQueryParam_ShouldReturnStatusBadRequest  Time elapsed: 0.041 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
+testGetPenDemographicsByPen_GivenPenDoesNotExistInDB_ShouldReturnStatusNotFound  Time elapsed: 0.041 s  <<< ERROR!
+java.io.FileNotFoundException: C:\Users\Arcshift%20Solutions\git\intellij\EDUC-PEN-DEMOG-API\api\target\test-classes\PenDemogDummyData.json (The system cannot find the path specified)
+	at ca.bc.gov.educ.api.pendemog.controller.PenDemographicsControllerTest.setUp(PenDemographicsControllerTest.java:53)
+
