@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ca.bc.gov.educ.api.pendemog</groupId>
-    <artifactId>pendemog-api</artifactId>
+    <groupId>ca.bc.gov.educ.api.penmatch</groupId>
+    <artifactId>penmatch-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
@@ -16,7 +16,7 @@
         <!-- Enable language to disable other language analysis -->
         <sonar.language>java</sonar.language>
         <sonar.exclusions>src/main/resources/**,
-            src/main/java/ca/bc/gov/educ/api/pendemog/mappers/**,src/main/java/ca/bc/gov/educ/api/pendemog/exception/**,src/main/java/ca/bc/gov/educ/api/pendemog/model/**,src/main/java/ca/bc/gov/educ/api/pendemog/struct/**
+            src/main/java/ca/bc/gov/educ/api/penmatch/mappers/**,src/main/java/ca/bc/gov/educ/api/penmatch/exception/**,src/main/java/ca/bc/gov/educ/api/penmatch/model/**,src/main/java/ca/bc/gov/educ/api/penmatch/struct/**
         </sonar.exclusions>
         <java.version>11</java.version>
 
