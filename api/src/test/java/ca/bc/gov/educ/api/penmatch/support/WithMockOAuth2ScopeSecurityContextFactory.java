@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.support;
+package ca.bc.gov.educ.api.penmatch.support;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

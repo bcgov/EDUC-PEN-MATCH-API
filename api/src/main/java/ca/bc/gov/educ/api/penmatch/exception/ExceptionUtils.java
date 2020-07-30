@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.exception;
+package ca.bc.gov.educ.api.penmatch.exception;
 
 import java.util.HashMap;
 import java.util.Map;

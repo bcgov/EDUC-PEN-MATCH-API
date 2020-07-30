@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.support;
+package ca.bc.gov.educ.api.penmatch.support;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

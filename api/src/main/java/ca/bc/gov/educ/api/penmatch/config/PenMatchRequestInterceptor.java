@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.config;
+package ca.bc.gov.educ.api.penmatch.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class PenDemogRequestInterceptor extends HandlerInterceptorAdapter {
+public class PenMatchRequestInterceptor extends HandlerInterceptorAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(PenDemogRequestInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(PenMatchRequestInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

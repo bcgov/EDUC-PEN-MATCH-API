@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.exception;
+package ca.bc.gov.educ.api.penmatch.exception;
 
 /**
  * InvalidParameterException to provide error details when unexpected parameters are passed to endpoint

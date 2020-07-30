@@ -2,7 +2,7 @@ package ca.bc.gov.educ.api.penmatch.endpoint;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,9 +17,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @OpenAPIDefinition(info = @Info(title = "API for PEN Match.", description = "This API is to match students to PENs.", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"READ_PEN_MATCH"})})
 public interface PenMatchEndpoint {
 
-  @GetMapping("/{pen}")
-  @PreAuthorize("#oauth2.hasScope('READ_PEN_MATCH')")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "NOT FOUND.")})
+  @PostMapping
+  @PreAuthorize("#oauth2.hasAnyScope('READ_PEN_MATCH')")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
   PenMatchStudent matchStudent(@Validated @RequestBody PenMatchStudent student);
 
 }

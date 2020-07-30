@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.config;
+package ca.bc.gov.educ.api.penmatch.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,18 +8,18 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class PenDemogMVCConfig implements WebMvcConfigurer {
+public class PenMatchMVCConfig implements WebMvcConfigurer {
 
     @Getter(AccessLevel.PRIVATE)
-    private final PenDemogRequestInterceptor penDemogRequestInterceptor;
+    private final PenMatchRequestInterceptor penMatchRequestInterceptor;
 
     @Autowired
-    public PenDemogMVCConfig(final PenDemogRequestInterceptor penDemogRequestInterceptor){
-        this.penDemogRequestInterceptor = penDemogRequestInterceptor;
+    public PenMatchMVCConfig(final PenMatchRequestInterceptor penDemogRequestInterceptor){
+        this.penMatchRequestInterceptor = penDemogRequestInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(penDemogRequestInterceptor).addPathPatterns("/**/**/");
+        registry.addInterceptor(penMatchRequestInterceptor).addPathPatterns("/**/**/");
     }
 }

@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.pendemog.exception.errors;
+package ca.bc.gov.educ.api.penmatch.exception.errors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
