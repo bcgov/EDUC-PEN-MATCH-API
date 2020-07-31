@@ -2,7 +2,6 @@ package ca.bc.gov.educ.api.penmatch.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
 
@@ -59,20 +58,20 @@ public class PenMatchControllerTest {
 		student.setPenStatus(null);
 		student.setPenStatusMessage(null);
 		student.setPostal(null);
-		student.setStudentBirth(null);
-		student.setStudentGiven(null);
-		student.setStudentGivenInitial(null);
-		student.setStudentLocalID(null);
-		student.setStudentMiddle(null);
-		student.setStudentMiddleInitial(null);
+		student.setDob(null);
+		student.setGivenName(null);
+		student.setGivenInitial(null);
+		student.setLocalID(null);
+		student.setMiddleName(null);
+		student.setMiddleInitial(null);
 		student.setStudentNumber(null);
-		student.setStudentSex(null);
-		student.setStudentSurname(null);
-		student.setStudentSoundexSurname(null);
+		student.setSex(null);
+		student.setSurname(null);
+		student.setSoundexSurname(null);
 		student.setUpdateCode(null);
-		student.setUsualGiven(null);
+		student.setUsualGivenName(null);
 		student.setUsualGivenInitial(null);
-		student.setUsualMiddle(null);
+		student.setUsualMiddleName(null);
 		student.setUsualMiddleInitial(null);
 		student.setUsualSurname(null);
 		student.setUsualSoundexSurname(null);
