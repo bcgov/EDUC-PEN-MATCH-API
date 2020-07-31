@@ -13,23 +13,23 @@ public class PenMatchStudent {
   private String studentNumber;
   private String penStatus;
   private String penStatusMessage;
-  private String studentBirth;
-  private String studentSex;
+  private String dob;
+  private String sex;
   private String enrolledGradeCode;
-  private String studentSurname;
-  private String studentSoundexSurname;
-  private String studentGiven;
-  private String studentGivenInitial;
-  private String studentMiddle;
-  private String studentMiddleInitial;
+  private String surname;
+  private String soundexSurname;
+  private String givenName;
+  private String givenInitial;
+  private String middleName;
+  private String middleInitial;
   private String usualSurname;
   private String usualSoundexSurname;
-  private String usualGiven;
+  private String usualGivenName;
   private String usualGivenInitial;
-  private String usualMiddle;
+  private String usualMiddleName;
   private String usualMiddleInitial;
   private String mincode;
-  private String studentLocalID;
+  private String localID;
   private String postal;
   private String fypFlag;
   private String assignmentCode;
@@ -56,7 +56,7 @@ public class PenMatchStudent {
   private String pen18;
   private String pen19;
   private String pen20;
-  private String noMatches;
+  private Integer noMatches;
 }
 
 
