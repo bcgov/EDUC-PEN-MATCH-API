@@ -32,5 +32,7 @@ public class PenMasterRecord {
     private String  masterBandCode;       
     private String  masterMergedFromPEN;  
     private String  masterPenMincode;      
-    private String  masterPenLocalId;     
+    private String  masterPenLocalId;  
+    
+    private String masterAlternateLocalId;
 }

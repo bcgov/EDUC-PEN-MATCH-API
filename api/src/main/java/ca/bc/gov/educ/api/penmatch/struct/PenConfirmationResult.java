@@ -16,4 +16,5 @@ public class PenConfirmationResult {
 	private String mergedPEN;
 	private String resultCode;
 	
+	
 }

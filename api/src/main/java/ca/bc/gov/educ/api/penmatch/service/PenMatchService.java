@@ -30,6 +30,8 @@ public class PenMatchService {
 	public static final String PEN_STATUS_D0 = "D0";
 	public static final String PEN_STATUS_D1 = "D1";
 	public static final String PEN_STATUS_F1 = "F1";
+	public static final String ALGORITHM_S1 = "S1";
+	public static final String ALGORITHM_S2 = "S2";
 	public static final Integer VERY_FREQUENT = 500;
 	public static final Integer NOT_VERY_FREQUENT = 50;
 	public static final Integer VERY_RARE = 5;
@@ -37,10 +39,11 @@ public class PenMatchService {
 	private Integer reallyGoodMatches;
 	private Integer prettyGoodMatches;
 	private Integer reallyGoodPEN;
-	private String studentNumber;
+	private String localStudentNumber;
 	private boolean type5Match;
 	private boolean type5F1;
 	private boolean penFoundOnMaster;
+	private boolean matchFound;
 	private String alternateLocalID;
 	private String studentSurnameNoBlanks;
 	private String usualSurnameNoBlanks;
@@ -50,7 +53,8 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private String fullStudentSurname;
 	private Integer partSurnameFrequency;
-	private PenMasterRecord penMasterRecord;
+	//private PenMasterRecord penMasterRecord;
+	private String algorithmUsed;
 
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
 		log.info("Received student payload :: {}", student);
@@ -61,7 +65,7 @@ public class PenMatchService {
 			String checkDigitErrorCode = penCheckDigit(student.getStudentNumber());
 			if (checkDigitErrorCode != null) {
 				if (checkDigitErrorCode.equals(CHECK_DIGIT_ERROR_CODE_000)) {
-					PenConfirmationResult penConfirmation = confirmPEN();
+					PenConfirmationResult penConfirmation = confirmPEN(student);
 					if (penConfirmation.getResultCode() == PenConfirmationResult.PEN_CONFIRMED) {
 						if (penConfirmation.getMergedPEN() == null) {
 							student.setPenStatus(PEN_STATUS_AA);
@@ -124,8 +128,7 @@ public class PenMatchService {
 					&& penMasterRecord.getMasterStudentDob() == student.getDob()
 					&& penMasterRecord.getMasterPenMincode() == student.getMincode()
 					&& penMasterRecord.getMasterPenLocalId() != student.getLocalID()
-					&& penMasterRecord.getMasterPenLocalId() != null 
-					&& student.getLocalID() != null) {
+					&& penMasterRecord.getMasterPenLocalId() != null && student.getLocalID() != null) {
 				student.setPenStatusMessage("Possible twin: " + penMasterRecord.getMasterStudentGiven().trim() + " vs "
 						+ student.getGivenName().trim());
 				student.setPenStatus(PEN_STATUS_F1);
@@ -133,8 +136,8 @@ public class PenMatchService {
 				student.setStudentNumber(null);
 			}
 		}
-		
-		if(student.isDeceased()) {
+
+		if (student.isDeceased()) {
 			student.setPenStatus(PEN_STATUS_C0);
 			student.setStudentNumber(null);
 		}
@@ -145,7 +148,7 @@ public class PenMatchService {
 	private void initialize(PenMatchStudent student) {
 		student.setPenStatusMessage(null);
 		this.matchingPENs = new HashSet<String>();
-		studentNumber = null;
+		this.localStudentNumber = null;
 
 		this.reallyGoodMatches = 0;
 		this.prettyGoodMatches = 0;
@@ -311,18 +314,89 @@ public class PenMatchService {
 		// TODO Implement this
 	}
 
+	/**
+	 * Check for exact match on surname , given name, birthday and gender OR exact
+	 * match on school and local ID and one or more of surname, given name or
+	 * birthday
+	 */
+	private void simpleCheckForMatch(PenMatchStudent student, PenMasterRecord master) {
+		this.matchFound = false;
+		this.type5Match = false;
+
+		if (student.getSurname() != null && student.getSurname() == master.getMasterStudentSurname()
+				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
+				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
+				&& student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
+			this.matchFound = true;
+			this.algorithmUsed = ALGORITHM_S1;
+		} else if (student.getSurname() != null && student.getSurname() == master.getMasterStudentSurname()
+				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
+				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
+				&& student.getLocalID() != null && student.getLocalID().length() > 1) {
+			normalizeLocalIDsFromMaster();
+			if(student.getMincode() != null && student.getMincode() == master.getMasterPenMincode() && (student.getLocalID() == master.getMasterPenLocalId() || this.alternateLocalID == master.getMasterAlternateLocalId())) {
+				this.matchFound = true;
+				this.algorithmUsed = ALGORITHM_S2;				
+			}
+		}
+		
+		if(this.matchFound) {
+			loadPenMatchHistory();
+		}
+
+	}
+	
+	private void normalizeLocalIDsFromMaster() {
+		// TODO Implement this
+	}
+
 	private Integer lookupSurnameFrequency() {
 		// TODO Implement this
 		// Note this returns in two different places
 		return 0;
 	}
 
-	private PenConfirmationResult confirmPEN() {
-		penMasterRecord = new PenMasterRecord();
-		return new PenConfirmationResult();
+	private PenConfirmationResult confirmPEN(PenMatchStudent student) {
+		PenConfirmationResult penConfirmationResult = new PenConfirmationResult();
+		this.localStudentNumber = student.getStudentNumber();
+		student.setDeceased(false);
+
+		penMasterRecord = getPENMasterRecord(this.localStudentNumber);
+
+		if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
+			penConfirmationResult.setResultCode(PenConfirmationResult.PEN_ON_FILE);
+			if (penMasterRecord.getMasterStudentStatus() == "M"
+					&& penMasterRecord.getMasterStudentTrueNumber() != null) {
+				this.localStudentNumber = penMasterRecord.getMasterStudentTrueNumber();
+				penConfirmationResult.setMergedPEN(penMasterRecord.getMasterStudentTrueNumber());
+				penMasterRecord = getPENMasterRecord(this.localStudentNumber);
+				if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
+					simpleCheckForMatch();
+					if (penMasterRecord.getMasterStudentStatus() == "D") {
+						this.localStudentNumber = null;
+						student.setDeceased(true);
+					}
+				}
+			} else {
+				simpleCheckForMatch();
+			}
+			if (this.matchFound) {
+				penConfirmationResult.setResultCode(PenConfirmationResult.PEN_CONFIRMED);
+			}
+		}
+
+		if (this.matchFound) {
+			loadPenMatchHistory();
+		}
+
+		return penConfirmationResult;
 	}
 
 	private void findMatchesOnPenDemog() {
+		// TODO Implement this
+	}
+
+	private void loadPenMatchHistory() {
 		// TODO Implement this
 	}
 
