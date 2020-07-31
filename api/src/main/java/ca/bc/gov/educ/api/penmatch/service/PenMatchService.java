@@ -69,7 +69,7 @@ public class PenMatchService {
 					if (penConfirmation.getResultCode() == PenConfirmationResult.PEN_CONFIRMED) {
 						if (penConfirmation.getMergedPEN() == null) {
 							student.setPenStatus(PEN_STATUS_AA);
-							student.setStudentNumber(penMasterRecord.getMasterStudentNumber());
+							student.setStudentNumber(penConfirmation.getPenMasterRecord().getMasterStudentNumber());
 						} else {
 							student.setPenStatus(PEN_STATUS_B1);
 							student.setStudentNumber(penConfirmation.getMergedPEN());
@@ -78,7 +78,7 @@ public class PenMatchService {
 						}
 					} else if (penConfirmation.getResultCode() == PenConfirmationResult.PEN_ON_FILE) {
 						student.setPenStatus(PEN_STATUS_B);
-						if (penMasterRecord.getMasterStudentNumber() != null) {
+						if (penConfirmation.getPenMasterRecord().getMasterStudentNumber() != null) {
 							penFoundOnMaster = true;
 						}
 						findMatchesOnPenDemog();
@@ -114,7 +114,7 @@ public class PenMatchService {
 
 		if (student.getPenStatus() == PEN_STATUS_AA || student.getPenStatus() == PEN_STATUS_B1
 				|| student.getPenStatus() == PEN_STATUS_C1 || student.getPenStatus() == PEN_STATUS_D1) {
-			penMasterRecord = getPENMasterRecord(student.getStudentNumber());
+			PenMasterRecord penMasterRecord = getPENMasterRecord(student.getStudentNumber());
 			if (penMasterRecord.getMasterStudentDob() != student.getDob()) {
 				student.setPenStatusMessage(
 						"Birthdays are suspect: " + penMasterRecord.getMasterStudentDob() + " vs " + student.getDob());
@@ -361,7 +361,7 @@ public class PenMatchService {
 		this.localStudentNumber = student.getStudentNumber();
 		student.setDeceased(false);
 
-		penMasterRecord = getPENMasterRecord(this.localStudentNumber);
+		PenMasterRecord penMasterRecord = getPENMasterRecord(this.localStudentNumber);
 
 		if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
 			penConfirmationResult.setResultCode(PenConfirmationResult.PEN_ON_FILE);
@@ -371,14 +371,14 @@ public class PenMatchService {
 				penConfirmationResult.setMergedPEN(penMasterRecord.getMasterStudentTrueNumber());
 				penMasterRecord = getPENMasterRecord(this.localStudentNumber);
 				if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
-					simpleCheckForMatch();
+					simpleCheckForMatch(student, penMasterRecord);
 					if (penMasterRecord.getMasterStudentStatus() == "D") {
 						this.localStudentNumber = null;
 						student.setDeceased(true);
 					}
 				}
 			} else {
-				simpleCheckForMatch();
+				simpleCheckForMatch(student, penMasterRecord);
 			}
 			if (this.matchFound) {
 				penConfirmationResult.setResultCode(PenConfirmationResult.PEN_CONFIRMED);
