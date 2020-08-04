@@ -24,9 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PenMatchService {
 
-	private PenMatchNames penMatchNames;
+	private PenMatchNames penMatchTransactionNames;
+	private PenMatchNames penMatchMasterNames;
 
-	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202" + StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
+	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202"
+			+ StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
 	public static final String CHECK_DIGIT_ERROR_CODE_000 = "000";
 	public static final String CHECK_DIGIT_ERROR_CODE_001 = "001";
 	public static final String PEN_STATUS_AA = "AA";
@@ -74,6 +76,18 @@ public class PenMatchService {
 	private Integer wyScore;
 	private Integer wyIndex;
 	private Integer totalPoints;
+	private Integer idDemerits;
+	private Integer bonusPoints;
+	private Integer surnamePoints;
+	private Integer givenNamePoints;
+	private Integer middleNamePoints;
+	private Integer birthdayPoints;
+	private Integer localIDPoints;
+	private Integer addressPoints;
+	private boolean legalUsed;
+	private boolean givenFlip;
+	private boolean middleFlip;
+	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
 	private final PenDemographicsRepository penDemographicsRepository;
@@ -252,39 +266,83 @@ public class PenMatchService {
 		String given = student.getGivenName();
 		String usualGiven = student.getUsualGivenName();
 
-		this.penMatchNames = new PenMatchNames();
-		this.penMatchNames.setLegalGiven(student.getGivenName());
-		this.penMatchNames.setLegalMiddle(student.getMiddleName());
-		this.penMatchNames.setUsualGiven(student.getUsualGivenName());
-		this.penMatchNames.setUsualMiddle(student.getUsualMiddleName());
+		this.penMatchTransactionNames = new PenMatchNames();
+		this.penMatchTransactionNames.setLegalGiven(given);
+		this.penMatchTransactionNames.setLegalMiddle(student.getMiddleName());
+		this.penMatchTransactionNames.setUsualGiven(usualGiven);
+		this.penMatchTransactionNames.setUsualMiddle(student.getUsualMiddleName());
 
 		if (given != null) {
 			int spaceIndex = StringUtils.indexOf(given, " ");
 			if (spaceIndex != -1) {
-				this.penMatchNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
-				this.penMatchNames.setAlternateLegalMiddle(given.substring(spaceIndex));
+				this.penMatchTransactionNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
+				this.penMatchTransactionNames.setAlternateLegalMiddle(given.substring(spaceIndex));
 			}
 			int dashIndex = StringUtils.indexOf(given, "-");
 			if (dashIndex != -1) {
-				this.penMatchNames.setAlternateLegalGiven(given.substring(0, dashIndex));
-				this.penMatchNames.setAlternateLegalMiddle(given.substring(dashIndex));
+				this.penMatchTransactionNames.setAlternateLegalGiven(given.substring(0, dashIndex));
+				this.penMatchTransactionNames.setAlternateLegalMiddle(given.substring(dashIndex));
 			}
 		}
 
 		if (usualGiven != null) {
 			int spaceIndex = StringUtils.indexOf(usualGiven, " ");
 			if (spaceIndex != -1) {
-				this.penMatchNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
-				this.penMatchNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex));
+				this.penMatchTransactionNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
+				this.penMatchTransactionNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex));
 			}
 			int dashIndex = StringUtils.indexOf(usualGiven, "-");
 			if (dashIndex != -1) {
-				this.penMatchNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
-				this.penMatchNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex));
+				this.penMatchTransactionNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
+				this.penMatchTransactionNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex));
 			}
 		}
 
 		lookupNicknames();
+	}
+
+	/**
+	 * This function stores all names in an object It includes some split logic for
+	 * given/middle names
+	 * 
+	 * @param master
+	 */
+	private void storeNamesFromMaster(PenMasterRecord master) {
+		String given = master.getMasterStudentGiven();
+		String usualGiven = master.getMasterUsualGivenName();
+
+		this.penMatchMasterNames = new PenMatchNames();
+		this.penMatchMasterNames.setLegalGiven(given);
+		this.penMatchMasterNames.setLegalMiddle(master.getMasterStudentMiddle());
+		this.penMatchMasterNames.setUsualGiven(usualGiven);
+		this.penMatchMasterNames.setUsualMiddle(master.getMasterUsualMiddleName());
+
+		if (given != null) {
+			int spaceIndex = StringUtils.indexOf(given, " ");
+			if (spaceIndex != -1) {
+				this.penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
+				this.penMatchMasterNames.setAlternateLegalMiddle(given.substring(spaceIndex));
+			}
+			int dashIndex = StringUtils.indexOf(given, "-");
+			if (dashIndex != -1) {
+				this.penMatchMasterNames.setAlternateLegalGiven(given.substring(0, dashIndex));
+				this.penMatchMasterNames.setAlternateLegalMiddle(given.substring(dashIndex));
+			}
+		}
+
+		if (usualGiven != null) {
+			int spaceIndex = StringUtils.indexOf(usualGiven, " ");
+			if (spaceIndex != -1) {
+				this.penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
+				this.penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex));
+			}
+			int dashIndex = StringUtils.indexOf(usualGiven, "-");
+			if (dashIndex != -1) {
+				this.penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
+				this.penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex));
+			}
+		}
+
 	}
 
 	/**
@@ -632,7 +690,7 @@ public class PenMatchService {
 		// terms of algorithm and/or score, that it'll never be sent
 		// back to the user anyway, so don't bother copying it into
 		// the array.
-		if(this.wyIndex < 21) {
+		if (this.wyIndex < 21) {
 			this.matchingAlgorithms[this.wyIndex] = this.wyAlgorithmResult;
 			this.matchingScores[this.wyIndex] = this.wyScore;
 			this.matchingPENs[this.wyIndex] = this.wyPEN;
@@ -641,7 +699,7 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Soundex calculation 
+	 * Soundex calculation
 	 * 
 	 * @param inputString
 	 * @return
@@ -653,43 +711,43 @@ public class PenMatchService {
 		Integer currentCharSoundex = null;
 		String soundexString = null;
 		String tempString = null;
-		
-		if(inputString != null && inputString.length() >= 1) {
-			tempString =  StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
+
+		if (inputString != null && inputString.length() >= 1) {
+			tempString = StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
 			soundexString = inputString.substring(0, 1);
 			previousCharRaw = inputString.substring(0, 1);
 			previousCharSoundex = -1;
-			
-			for(int i = 2;i < tempString.length(); i++) {
+
+			for (int i = 2; i < tempString.length(); i++) {
 				currentCharRaw = inputString.substring(i, i + 1);
 				currentCharSoundex = Integer.valueOf(tempString.substring(i, i + 1));
-			
-				if(currentCharSoundex >= 1 && currentCharSoundex <= 7) {
-					// If the second "soundexable" character is not the same as the first raw 
+
+				if (currentCharSoundex >= 1 && currentCharSoundex <= 7) {
+					// If the second "soundexable" character is not the same as the first raw
 					// character then append the soundex value of this character to the soundex
-					// string. If this is the third or greater soundexable value, then if the soundex
+					// string. If this is the third or greater soundexable value, then if the
+					// soundex
 					// value of the character is not equal to the soundex value of the previous
 					// character, then append that soundex value to the soundex string.
-					if(i == 2) {
-						if(currentCharRaw != previousCharRaw) {
+					if (i == 2) {
+						if (currentCharRaw != previousCharRaw) {
 							soundexString = soundexString + currentCharSoundex;
 							previousCharSoundex = currentCharSoundex;
 						}
-					}else if(currentCharSoundex != previousCharSoundex) {
+					} else if (currentCharSoundex != previousCharSoundex) {
 						soundexString = soundexString + currentCharSoundex;
 						previousCharSoundex = currentCharSoundex;
 					}
 				}
 			}
-			
+
 			soundexString = (soundexString + "00000000").substring(0, 8);
-		}else {
+		} else {
 			soundexString = "10000000";
 		}
-		
+
 		return soundexString;
 	}
-	
 
 	/**
 	 * Create a log entry for analytical purposes. Not used in our Java
@@ -702,6 +760,225 @@ public class PenMatchService {
 
 	private void lookupWithAllParts() {
 		// Not currently implemented
+	}
+
+	private void checkForMatch(PenMatchStudent student, PenMasterRecord master) {
+		this.matchFound = false;
+		this.type5Match = false;
+
+		normalizeLocalIDsFromMaster(master);
+		storeNamesFromMaster(master);
+
+		this.bonusPoints = 0;
+		this.idDemerits = 0;
+
+		matchSex(student, master); // 5 points
+		matchBirthday(student, master); // 5, 10, 15 or 20 points
+		matchSurname(student, master); // 10 or 20 points
+		matchGivenName(student, master); // 5, 10, 15 or 20 points
+
+		// If a perfect match on legal surname , add 5 points if a very rare surname
+		if (this.surnamePoints >= 20 && this.fullSurnameFrequency <= VERY_RARE && this.legalUsed) {
+			this.surnamePoints = this.surnamePoints + 5;
+		}
+
+		matchMiddleName(student, master); // 5, 10, 15 or 20 points
+
+		// If given matches middle and middle matches given and there are some
+		// other points, there is a good chance that the names have been flipped
+		if (this.givenFlip && this.middleFlip && (this.surnamePoints >= 10 || this.birthdayPoints >= 15)) {
+			this.givenNamePoints = 15;
+			this.middleNamePoints = 15;
+		}
+
+		matchLocalID(student, master); // 5, 10 or 20 points
+		matchAddress(student, master); // 1 or 10 points
+
+		// Special search algorithm - just looks for any points in all of
+		// the non-blank search fields provided
+		if (this.updateCode == "S") {
+			this.matchFound = true;
+			if (student.getSex() != null && this.sexPoints == 0) {
+				this.matchFound = false;
+			}
+			if (!(student.getSurname() != null && student.getUsualSurname() != null) && this.surnamePoints == 0) {
+				this.matchFound = false;
+			}
+			if (!(student.getGivenName() != null && student.getUsualGivenName() != null) && this.givenNamePoints == 0) {
+				this.matchFound = false;
+			}
+			if (!(student.getMiddleName() != null && student.getUsualMiddleName() != null)
+					&& this.middleNamePoints == 0) {
+				this.matchFound = false;
+			}
+			if (student.getDob() != null && this.birthdayPoints == 0) {
+				this.matchFound = false;
+			}
+			if (!(student.getLocalID() != null && student.getMincode() != null) && this.localIDPoints == 0) {
+				this.matchFound = false;
+			}
+			if (student.getPostal() != null && this.addressPoints == 0) {
+				this.matchFound = false;
+			}
+
+			if (this.matchFound) {
+				this.type5Match = true;
+				this.type5F1 = true;
+				this.algorithmUsed = PenAlgorithm.ALG_SP;
+			}
+		}
+
+		// Algorithm 1 : used to be Personal Education No. + 40 bonus points
+		// Using SIMPLE_MATCH instead
+
+		// Algorithm 2 : Gender + Birthday + Surname + 25 bonus points (not counting
+		// school points and address points so twins are weeded out)
+		// Bonus points will include same district or same school + localid ,
+		// but not same school
+		if (!this.matchFound) {
+			if (this.localIDPoints == 5 || this.localIDPoints == 20) {
+				this.bonusPoints = this.givenNamePoints + this.middleNamePoints + this.localIDPoints;
+			} else {
+				this.bonusPoints = this.givenNamePoints + this.middleNamePoints;
+			}
+
+			if (this.sexPoints >= 5 && this.birthdayPoints >= 20 && this.surnamePoints >= 20) {
+				if (this.bonusPoints >= 25) {
+					this.matchFound = true;
+					this.reallyGoodMatches = this.reallyGoodMatches + 1;
+					this.reallyGoodPEN = master.getMasterStudentNumber();
+					this.totalPoints = this.sexPoints + this.birthdayPoints + this.surnamePoints + this.bonusPoints;
+					this.algorithmUsed = PenAlgorithm.ALG_20;
+				}
+			}
+		}
+
+		// Algorithm 3 : School/ local ID + Surname + 25 bonus points
+		// (65 points total)
+		if (!this.matchFound) {
+			if (this.localIDPoints >= 20 && this.surnamePoints >= 20) {
+				this.bonusPoints = this.sexPoints + this.givenNamePoints + this.middleNamePoints + this.addressPoints;
+				if (this.bonusPoints >= 25) {
+					this.matchFound = true;
+					this.reallyGoodMatches = this.reallyGoodMatches + 1;
+					this.reallyGoodPEN = master.getMasterStudentNumber();
+					this.totalPoints = this.localIDPoints + this.surnamePoints + this.bonusPoints;
+					this.algorithmUsed = PenAlgorithm.ALG_30;
+				}
+			}
+		}
+
+		// Algorithm 4: School/local id + gender + birthdate + 20 bonus points
+		// (65 points total)
+		if (!this.matchFound) {
+			if (this.localIDPoints >= 20 && this.sexPoints >= 5 && this.birthdayPoints >= 20) {
+				this.bonusPoints = this.surnamePoints + this.givenNamePoints + this.middleNamePoints
+						+ this.addressPoints;
+				if (this.bonusPoints >= 20) {
+					this.matchFound = true;
+					this.reallyGoodMatches = this.reallyGoodMatches + 1;
+					this.reallyGoodPEN = master.getMasterStudentNumber();
+					this.totalPoints = this.localIDPoints + this.sexPoints + this.birthdayPoints + this.bonusPoints;
+					this.algorithmUsed = PenAlgorithm.ALG_40;
+				}
+			}
+		}
+
+		// Algorithm 5: Use points for Sex + birthdate + surname + given name +
+		// middle name + address + local_id + school >= 55 bonus points
+		if (!this.matchFound) {
+			this.bonusPoints = this.sexPoints + this.birthdayPoints + this.surnamePoints + this.givenNamePoints
+					+ this.middleNamePoints + this.localIDPoints + this.addressPoints;
+			if (this.bonusPoints >= this.idDemerits) {
+				this.bonusPoints = this.bonusPoints - this.idDemerits;
+			} else {
+				this.bonusPoints = 0;
+			}
+
+			if (this.bonusPoints >= 55 || (this.bonusPoints >= 40 && this.localIDPoints >= 20)
+					|| (this.bonusPoints >= 50 && this.surnamePoints >= 10 && this.birthdayPoints >= 15
+							&& this.givenNamePoints >= 15)
+					|| (this.bonusPoints >= 50 && this.birthdayPoints >= 20)
+					|| (this.bonusPoints >= 50 && student.getLocalID().substring(1, 4) == "ZZZ")) {
+				this.matchFound = true;
+				this.algorithmUsed = PenAlgorithm.ALG_50;
+				this.totalPoints = this.bonusPoints;
+				if (this.bonusPoints >= 70) {
+					this.reallyGoodMatches = this.reallyGoodMatches + 1;
+					this.reallyGoodPEN = master.getMasterStudentNumber();
+				} else if (this.bonusPoints >= 60 || this.localIDPoints >= 20) {
+					this.prettyGoodMatches = this.prettyGoodMatches + 1;
+				}
+				this.type5F1 = true;
+				this.type5Match = true;
+			}
+		}
+
+		// Algorithm 5.1: Use points for Sex + birthdate + surname + given name +
+		// middle name + address + local_id + school >= 55 bonus points
+		if (!this.matchFound) {
+			if(this.sexPoints == 5 && this.birthdayPoints >= 10 && this.surnamePoints >= 20 && this.givenNamePoints >= 10) {
+				this.matchFound = true;
+				this.algorithmUsed = PenAlgorithm.ALG_51;
+				this.totalPoints = 45;
+				
+				//Identify a pretty good match - needs to be better than the Questionable Match
+				//but not a full 60 points as above
+				if(this.surnamePoints >= 20 && this.givenNamePoints >=15 && this.birthdayPoints >= 15 && this.sexPoints == 5) {
+					this.prettyGoodMatches = this.prettyGoodMatches + 1;
+					this.totalPoints = 55;
+				}
+				this.type5F1 = true;
+				this.type5Match = true;
+			}
+		}
+		
+		if(this.matchFound) {
+			loadPenMatchHistory();
+		}
+
+	}
+
+	/**
+	 * Calculate points for Birthday match
+	 */
+	private void matchBirthday(PenMatchStudent student, PenMasterRecord master) {
+
+	}
+
+	/**
+	 * Calculate points for surname match
+	 */
+	private void matchSurname(PenMatchStudent student, PenMasterRecord master) {
+
+	}
+
+	/**
+	 * Calculate points for address match
+	 */
+	private void matchAddress(PenMatchStudent student, PenMasterRecord master) {
+
+	}
+
+	/**
+	 * Calculate points for local ID match
+	 */
+	private void matchLocalID(PenMatchStudent student, PenMasterRecord master) {
+
+	}
+
+	/**
+	 * Calculate points for given name match
+	 */
+	private void matchGivenName(PenMatchStudent student, PenMasterRecord master) {
+
+	}
+
+	/**
+	 * Calculate points for middle name match
+	 */
+	private void matchMiddleName(PenMatchStudent student, PenMasterRecord master) {
+
 	}
 
 	private void lookupNoInit() {
