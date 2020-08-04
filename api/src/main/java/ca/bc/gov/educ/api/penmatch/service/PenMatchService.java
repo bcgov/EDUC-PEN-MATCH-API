@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
@@ -41,13 +42,12 @@ public class PenMatchService {
 	public static final String PEN_STATUS_F = "F";
 	public static final String PEN_STATUS_F1 = "F1";
 	public static final String PEN_STATUS_G0 = "G0";
-	public static final String ALGORITHM_00 = "00";
-	public static final String ALGORITHM_S1 = "S1";
-	public static final String ALGORITHM_S2 = "S2";
 	public static final Integer VERY_FREQUENT = 500;
 	public static final Integer NOT_VERY_FREQUENT = 50;
 	public static final Integer VERY_RARE = 5;
-	private List<String> matchingPENs;
+	private String[] matchingPENs;
+	private Integer[] matchingAlgorithms;
+	private Integer[] matchingScores;
 	private Integer reallyGoodMatches;
 	private Integer prettyGoodMatches;
 	private String reallyGoodPEN;
@@ -65,12 +65,16 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private String fullStudentSurname;
 	private Integer partSurnameFrequency;
-	private String algorithmUsed;
+	private PenAlgorithm algorithmUsed;
 	private Integer sexPoints;
 	private boolean useGivenInitial;
 	private String partStudentSurname;
 	private String partStudentGiven;
 	private String wyPEN;
+	private Integer wyAlgorithmResult;
+	private Integer wyScore;
+	private Integer wyIndex;
+	private Integer totalPoints;
 
 	@Getter(AccessLevel.PRIVATE)
 	private final PenDemographicsRepository penDemographicsRepository;
@@ -171,7 +175,7 @@ public class PenMatchService {
 
 	private void initialize(PenMatchStudent student) {
 		student.setPenStatusMessage(null);
-		this.matchingPENs = new ArrayList<String>();
+		this.matchingPENs = new String[20];
 		this.localStudentNumber = null;
 
 		this.reallyGoodMatches = 0;
@@ -364,7 +368,7 @@ public class PenMatchService {
 				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
 				&& student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
 			this.matchFound = true;
-			this.algorithmUsed = ALGORITHM_S1;
+			this.algorithmUsed = PenAlgorithm.ALG_S1;
 		} else if (student.getSurname() != null && student.getSurname() == master.getMasterStudentSurname()
 				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
 				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
@@ -374,7 +378,7 @@ public class PenMatchService {
 					&& (student.getLocalID() == master.getMasterPenLocalId()
 							|| this.alternateLocalID == master.getMasterAlternateLocalId())) {
 				this.matchFound = true;
-				this.algorithmUsed = ALGORITHM_S2;
+				this.algorithmUsed = PenAlgorithm.ALG_S2;
 			}
 		}
 
@@ -475,9 +479,9 @@ public class PenMatchService {
 		if (student.getPenStatus() == PEN_STATUS_B && this.penFoundOnMaster) {
 			this.reallyGoodMatches = 0;
 			this.wyPEN = this.localStudentNumber;
-			this.algorithmUsed = ALGORITHM_00;
+			this.algorithmUsed = PenAlgorithm.ALG_00;
 			this.type5F1 = true;
-			mergeNewMatchIntoList();
+			mergeNewMatchIntoList(student);
 		}
 
 //		If only one really good match, and no pretty good matches,
@@ -491,26 +495,26 @@ public class PenMatchService {
 			return;
 		} else {
 			log.debug("List of matching PENs: {}", matchingPENs);
-			student.setPen1(matchingPENs.get(0));
-			student.setPen2(matchingPENs.get(1));
-			student.setPen3(matchingPENs.get(2));
-			student.setPen4(matchingPENs.get(3));
-			student.setPen5(matchingPENs.get(4));
-			student.setPen6(matchingPENs.get(5));
-			student.setPen7(matchingPENs.get(6));
-			student.setPen8(matchingPENs.get(7));
-			student.setPen9(matchingPENs.get(8));
-			student.setPen10(matchingPENs.get(9));
-			student.setPen11(matchingPENs.get(10));
-			student.setPen12(matchingPENs.get(11));
-			student.setPen13(matchingPENs.get(12));
-			student.setPen14(matchingPENs.get(13));
-			student.setPen15(matchingPENs.get(14));
-			student.setPen16(matchingPENs.get(15));
-			student.setPen17(matchingPENs.get(16));
-			student.setPen18(matchingPENs.get(17));
-			student.setPen19(matchingPENs.get(18));
-			student.setPen20(matchingPENs.get(19));
+			student.setPen1(matchingPENs[0]);
+			student.setPen2(matchingPENs[1]);
+			student.setPen3(matchingPENs[2]);
+			student.setPen4(matchingPENs[3]);
+			student.setPen5(matchingPENs[4]);
+			student.setPen6(matchingPENs[5]);
+			student.setPen7(matchingPENs[6]);
+			student.setPen8(matchingPENs[7]);
+			student.setPen9(matchingPENs[8]);
+			student.setPen10(matchingPENs[9]);
+			student.setPen11(matchingPENs[10]);
+			student.setPen12(matchingPENs[11]);
+			student.setPen13(matchingPENs[12]);
+			student.setPen14(matchingPENs[13]);
+			student.setPen15(matchingPENs[14]);
+			student.setPen16(matchingPENs[15]);
+			student.setPen17(matchingPENs[16]);
+			student.setPen18(matchingPENs[17]);
+			student.setPen19(matchingPENs[18]);
+			student.setPen20(matchingPENs[19]);
 		}
 
 		if (student.getNumberOfMatches() == 0) {
@@ -519,18 +523,19 @@ public class PenMatchService {
 			student.setStudentNumber(null);
 		} else if (student.getNumberOfMatches() == 1) {
 			// 1 match only
-			if(this.type5F1) {
+			if (this.type5F1) {
 				student.setPenStatus(PEN_STATUS_F);
 				student.setStudentNumber(null);
-			}else {
-				//one solid match, put in t_stud_no
-				student.setStudentNumber(this.matchingPENs.get(0)); 
+			} else {
+				// one solid match, put in t_stud_no
+				student.setStudentNumber(this.matchingPENs[0]);
 			}
 			student.setPenStatus(student.getPenStatus().trim() + "1");
-		}else {
+		} else {
 			student.setPenStatus(student.getPenStatus().trim() + "M");
-			//many matches, so they are all considered questionable, even if some are "solid"
-			student.setStudentNumber(null); 
+			// many matches, so they are all considered questionable, even if some are
+			// "solid"
+			student.setStudentNumber(null);
 		}
 
 	}
@@ -571,7 +576,75 @@ public class PenMatchService {
 
 		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
 	}
-	
+
+	/**
+	 * Merge new match into the list Assign points for algorithm and score for sort
+	 * use
+	 */
+	private void mergeNewMatchIntoList(PenMatchStudent student) {
+		switch (algorithmUsed) {
+		case ALG_S1:
+			this.wyAlgorithmResult = 100;
+			this.wyScore = 100;
+			break;
+		case ALG_S2:
+			this.wyAlgorithmResult = 110;
+			this.wyScore = 100;
+			break;
+		case ALG_SP:
+			this.wyAlgorithmResult = 190;
+			this.wyScore = 100;
+			break;
+		case ALG_00:
+			this.wyAlgorithmResult = 0;
+			this.wyScore = 1;
+			break;
+		case ALG_20:
+		case ALG_30:
+		case ALG_40:
+		case ALG_50:
+		case ALG_51:
+			this.wyAlgorithmResult = Integer.valueOf(algorithmUsed.toString()) * 10;
+			this.wyScore = this.totalPoints;
+			break;
+		default:
+			log.debug("Unconvertable algorithm code: {}", this.algorithmUsed);
+			this.wyAlgorithmResult = 9999;
+			this.wyScore = 0;
+			break;
+		}
+
+		// Determine where to insert new item
+		this.wyIndex = student.getNumberOfMatches() + 1;
+		// If the array is full
+		if (student.getNumberOfMatches() < 20) {
+			// Add new slot in the array
+			student.setNumberOfMatches(student.getNumberOfMatches() + 1);
+		}
+
+		// Move the insertion point up one slot whenever the new item has a lower
+		// algorithm point set or a matching algorithm and better score
+		while (this.wyIndex > 1 && (this.wyAlgorithmResult < this.matchingAlgorithms[this.wyIndex - 1]
+				|| ((this.wyAlgorithmResult == this.matchingAlgorithms[this.wyIndex - 1]
+						&& this.wyScore > this.matchingScores[this.wyIndex - 1])))) {
+			this.wyIndex = this.wyIndex - 1;
+			this.matchingAlgorithms[this.wyIndex + 1] = this.matchingAlgorithms[this.wyIndex];
+			this.matchingScores[this.wyIndex + 1] = this.matchingScores[this.wyIndex];
+			this.matchingPENs[this.wyIndex + 1] = this.matchingPENs[this.wyIndex];
+		}
+
+		// Copy new PEN match to current index
+		// Note: if index>20, then the new entry is such a bogus match in
+		// terms of algorithm and/or score, that it'll never be sent
+		// back to the user anyway, so don't bother copying it into
+		// the array.
+		if(this.wyIndex < 21) {
+			this.matchingAlgorithms[this.wyIndex] = this.wyAlgorithmResult;
+			this.matchingScores[this.wyIndex] = this.wyScore;
+			this.matchingPENs[this.wyIndex] = this.wyPEN;
+		}
+
+	}
 
 	/**
 	 * Create a log entry for analytical purposes. Not used in our Java
@@ -580,10 +653,6 @@ public class PenMatchService {
 	private void loadPenMatchHistory() {
 		// Not currently implemented
 		// This was a logging function in Basic, we'll likely do something different
-	}
-
-	private void mergeNewMatchIntoList() {
-		// Not currently implemented
 	}
 
 	private void lookupWithAllParts() {
@@ -601,7 +670,6 @@ public class PenMatchService {
 	private void lookupNoInitNoLocalID() {
 		// Not currently implemented
 	}
-	
 
 	private void lookupNicknames() {
 		// TODO Implement this
