@@ -30,6 +30,7 @@ public class PenMatchService {
 	public static final String PEN_STATUS_D0 = "D0";
 	public static final String PEN_STATUS_D1 = "D1";
 	public static final String PEN_STATUS_F1 = "F1";
+	public static final String PEN_STATUS_G0 = "G0";
 	public static final String ALGORITHM_S1 = "S1";
 	public static final String ALGORITHM_S2 = "S2";
 	public static final Integer VERY_FREQUENT = 500;
@@ -53,8 +54,8 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private String fullStudentSurname;
 	private Integer partSurnameFrequency;
-	//private PenMasterRecord penMasterRecord;
 	private String algorithmUsed;
+	private Integer sexPoints;
 
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
 		log.info("Received student payload :: {}", student);
@@ -109,7 +110,7 @@ public class PenMatchService {
 		 */
 		if ((student.getPenStatus() == PEN_STATUS_C0 || student.getPenStatus() == PEN_STATUS_D0)
 				&& (student.getUpdateCode() == "Y" || student.getUpdateCode() == "R")) {
-			checkForCodeData();
+			checkForCoreData(student);
 		}
 
 		if (student.getPenStatus() == PEN_STATUS_AA || student.getPenStatus() == PEN_STATUS_B1
@@ -259,6 +260,22 @@ public class PenMatchService {
 		lookupNicknames();
 	}
 
+	/**
+	 * Example:  the original PEN number is 746282656
+	 * 1. First 8 digits are 74628265
+	 * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1)
+	 * 3. Extract the even digits 4,2,2,5 to get A = 4225.
+	 * 4. Multiply A times 2 to get B = 8450
+	 * 5. Sum the digits of B: 8 + 4 + 5 + 0 = 17 (S2)
+	 * 6. 27 + 17 = 44 (S3)
+	 * 7. S3 is not a multiple of 10
+	 * 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) = 10 - 4  = 6
+	 *    A) Alternatively, round up S3 to next multiple of 10: 44 becomes 50
+	 *    B) Subtract S3 from this: 50 - 44 = 6
+	 * 
+	 * @param pen
+	 * @return
+	 */
 	private String penCheckDigit(String pen) {
 		if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
 			return CHECK_DIGIT_ERROR_CODE_001;
@@ -306,8 +323,10 @@ public class PenMatchService {
 		return "";
 	}
 
-	private void checkForCodeData() {
-		// TODO Implement this
+	private void checkForCoreData(PenMatchStudent student) {
+		if(student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+			student.setPenStatus(PEN_STATUS_G0);
+		}
 	}
 
 	private void lookupNicknames() {
@@ -333,21 +352,31 @@ public class PenMatchService {
 				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
 				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
 				&& student.getLocalID() != null && student.getLocalID().length() > 1) {
-			normalizeLocalIDsFromMaster();
-			if(student.getMincode() != null && student.getMincode() == master.getMasterPenMincode() && (student.getLocalID() == master.getMasterPenLocalId() || this.alternateLocalID == master.getMasterAlternateLocalId())) {
+			normalizeLocalIDsFromMaster(master);
+			if (student.getMincode() != null && student.getMincode() == master.getMasterPenMincode()
+					&& (student.getLocalID() == master.getMasterPenLocalId()
+							|| this.alternateLocalID == master.getMasterAlternateLocalId())) {
 				this.matchFound = true;
-				this.algorithmUsed = ALGORITHM_S2;				
+				this.algorithmUsed = ALGORITHM_S2;
 			}
 		}
-		
-		if(this.matchFound) {
+
+		if (this.matchFound) {
 			loadPenMatchHistory();
 		}
 
 	}
-	
-	private void normalizeLocalIDsFromMaster() {
-		// TODO Implement this
+
+	/**
+	 * Strip off leading zeros , leading blanks and trailing blanks from the
+	 * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
+	 */
+	private void normalizeLocalIDsFromMaster(PenMasterRecord master) {
+		master.setMasterAlternateLocalId("MMM");
+		if (master.getMasterPenLocalId() != null) {
+			master.setMasterAlternateLocalId(StringUtils.stripStart(master.getMasterPenLocalId(), "0"));
+			master.setMasterAlternateLocalId(master.getMasterAlternateLocalId().replaceAll(" ", ""));
+		}
 	}
 
 	private Integer lookupSurnameFrequency() {
@@ -392,13 +421,36 @@ public class PenMatchService {
 		return penConfirmationResult;
 	}
 
+	/**
+	 * Find all possible students on master who could match the transaction
+	 * If the first four characters of surname are uncommon then only use 4
+	 * characters in lookup. Otherwise use 6 characters , or 5 if surname is
+	 * only 5 characters long use the given initial in the lookup unless 1st 4 characters of surname is 
+	 * quite rare
+	 */
 	private void findMatchesOnPenDemog() {
 		// TODO Implement this
 	}
 
+	/**
+	 * Create a log entry for analytical purposes. 
+	 * Not used in our Java implementation
+	 */
 	private void loadPenMatchHistory() {
-		// TODO Implement this
+		//Not currently implemented
+		//This was a logging function in Basic, we'll likely do something different
 	}
+	
+	/**
+	 * Calculate points for Sex match
+	 */
+	private void matchSex(PenMatchStudent student, PenMasterRecord master) {
+		this.sexPoints = 0;
+		if(student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
+			this.sexPoints = 5;
+		}
+	}
+		
 
 	private PenMasterRecord getPENMasterRecord(String studentNumber) {
 		return new PenMasterRecord();
