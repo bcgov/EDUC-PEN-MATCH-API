@@ -81,7 +81,6 @@ public class PenMatchService {
 	private Integer surnamePoints;
 	private Integer givenNamePoints;
 	private Integer middleNamePoints;
-	private Integer birthdayPoints;
 	private Integer localIDPoints;
 	private Integer addressPoints;
 	private boolean legalUsed;
@@ -773,7 +772,7 @@ public class PenMatchService {
 		this.idDemerits = 0;
 
 		matchSex(student, master); // 5 points
-		matchBirthday(student, master); // 5, 10, 15 or 20 points
+		Integer birthdayPoints = matchBirthday(student, master); // 5, 10, 15 or 20 points
 		matchSurname(student, master); // 10 or 20 points
 		matchGivenName(student, master); // 5, 10, 15 or 20 points
 
@@ -786,7 +785,7 @@ public class PenMatchService {
 
 		// If given matches middle and middle matches given and there are some
 		// other points, there is a good chance that the names have been flipped
-		if (this.givenFlip && this.middleFlip && (this.surnamePoints >= 10 || this.birthdayPoints >= 15)) {
+		if (this.givenFlip && this.middleFlip && (this.surnamePoints >= 10 || birthdayPoints >= 15)) {
 			this.givenNamePoints = 15;
 			this.middleNamePoints = 15;
 		}
@@ -811,7 +810,7 @@ public class PenMatchService {
 					&& this.middleNamePoints == 0) {
 				this.matchFound = false;
 			}
-			if (student.getDob() != null && this.birthdayPoints == 0) {
+			if (student.getDob() != null && birthdayPoints == 0) {
 				this.matchFound = false;
 			}
 			if (!(student.getLocalID() != null && student.getMincode() != null) && this.localIDPoints == 0) {
@@ -842,12 +841,12 @@ public class PenMatchService {
 				this.bonusPoints = this.givenNamePoints + this.middleNamePoints;
 			}
 
-			if (this.sexPoints >= 5 && this.birthdayPoints >= 20 && this.surnamePoints >= 20) {
+			if (this.sexPoints >= 5 && birthdayPoints >= 20 && this.surnamePoints >= 20) {
 				if (this.bonusPoints >= 25) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
-					this.totalPoints = this.sexPoints + this.birthdayPoints + this.surnamePoints + this.bonusPoints;
+					this.totalPoints = this.sexPoints + birthdayPoints + this.surnamePoints + this.bonusPoints;
 					this.algorithmUsed = PenAlgorithm.ALG_20;
 				}
 			}
@@ -871,14 +870,14 @@ public class PenMatchService {
 		// Algorithm 4: School/local id + gender + birthdate + 20 bonus points
 		// (65 points total)
 		if (!this.matchFound) {
-			if (this.localIDPoints >= 20 && this.sexPoints >= 5 && this.birthdayPoints >= 20) {
+			if (this.localIDPoints >= 20 && this.sexPoints >= 5 && birthdayPoints >= 20) {
 				this.bonusPoints = this.surnamePoints + this.givenNamePoints + this.middleNamePoints
 						+ this.addressPoints;
 				if (this.bonusPoints >= 20) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
-					this.totalPoints = this.localIDPoints + this.sexPoints + this.birthdayPoints + this.bonusPoints;
+					this.totalPoints = this.localIDPoints + this.sexPoints + birthdayPoints + this.bonusPoints;
 					this.algorithmUsed = PenAlgorithm.ALG_40;
 				}
 			}
@@ -887,7 +886,7 @@ public class PenMatchService {
 		// Algorithm 5: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			this.bonusPoints = this.sexPoints + this.birthdayPoints + this.surnamePoints + this.givenNamePoints
+			this.bonusPoints = this.sexPoints + birthdayPoints + this.surnamePoints + this.givenNamePoints
 					+ this.middleNamePoints + this.localIDPoints + this.addressPoints;
 			if (this.bonusPoints >= this.idDemerits) {
 				this.bonusPoints = this.bonusPoints - this.idDemerits;
@@ -896,9 +895,9 @@ public class PenMatchService {
 			}
 
 			if (this.bonusPoints >= 55 || (this.bonusPoints >= 40 && this.localIDPoints >= 20)
-					|| (this.bonusPoints >= 50 && this.surnamePoints >= 10 && this.birthdayPoints >= 15
+					|| (this.bonusPoints >= 50 && this.surnamePoints >= 10 && birthdayPoints >= 15
 							&& this.givenNamePoints >= 15)
-					|| (this.bonusPoints >= 50 && this.birthdayPoints >= 20)
+					|| (this.bonusPoints >= 50 && birthdayPoints >= 20)
 					|| (this.bonusPoints >= 50 && student.getLocalID().substring(1, 4) == "ZZZ")) {
 				this.matchFound = true;
 				this.algorithmUsed = PenAlgorithm.ALG_50;
@@ -917,14 +916,14 @@ public class PenMatchService {
 		// Algorithm 5.1: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			if(this.sexPoints == 5 && this.birthdayPoints >= 10 && this.surnamePoints >= 20 && this.givenNamePoints >= 10) {
+			if(this.sexPoints == 5 && birthdayPoints >= 10 && this.surnamePoints >= 20 && this.givenNamePoints >= 10) {
 				this.matchFound = true;
 				this.algorithmUsed = PenAlgorithm.ALG_51;
 				this.totalPoints = 45;
 				
 				//Identify a pretty good match - needs to be better than the Questionable Match
 				//but not a full 60 points as above
-				if(this.surnamePoints >= 20 && this.givenNamePoints >=15 && this.birthdayPoints >= 15 && this.sexPoints == 5) {
+				if(this.surnamePoints >= 20 && this.givenNamePoints >=15 && birthdayPoints >= 15 && this.sexPoints == 5) {
 					this.prettyGoodMatches = this.prettyGoodMatches + 1;
 					this.totalPoints = 55;
 				}
@@ -942,8 +941,58 @@ public class PenMatchService {
 	/**
 	 * Calculate points for Birthday match
 	 */
-	private void matchBirthday(PenMatchStudent student, PenMasterRecord master) {
+	private Integer matchBirthday(PenMatchStudent student, PenMasterRecord master) {
+		Integer birthdayPoints = 0;
+		Integer birthdayMatches = 0;
+		String dob = student.getDob();
 
+		String masterDob = master.getMasterStudentDob();
+		if(dob == null) {
+			return null;
+		}
+	
+		for(int i = 0; i < 8; i++) {
+			if(dob.substring(i, i+1) == masterDob.substring(i, i + 1)) {
+				birthdayMatches = birthdayMatches + 1;
+			}
+		}
+		
+		//Check for full match
+		if(dob.trim() == masterDob.trim()) {
+			birthdayPoints = 20;
+		}else {
+			//Same year, month/day flip
+			if(dob.substring(0, 3) == masterDob.substring(0, 3) && dob.substring(5, 7) == masterDob.substring(7, 9) && dob.substring(7, 9) == masterDob.substring(5, 7)) {
+				birthdayPoints = 15;
+			}else {
+				//5 out of 6 right most digits
+				if(birthdayMatches >= 5) {
+					birthdayPoints = 15;
+				}else {
+					// Same year and month
+					if(dob.substring(0, 6) == masterDob.substring(0, 6)) {
+						birthdayPoints = 10;	
+					}else {
+						// Same year and day
+						if(dob.substring(0, 4) == masterDob.substring(0, 4) && dob.substring(7, 9) == masterDob.substring(7, 9)) {
+							birthdayPoints = 10;	
+						}else {
+							//Same month and day
+							if(dob.substring(5, 9) == masterDob.substring(5, 9)) {
+								birthdayPoints = 5;		
+							}else {
+								//Same year
+								if(dob.substring(0, 4) == masterDob.substring(0, 4)) {
+									birthdayPoints = 5;			
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return birthdayPoints;
 	}
 
 	/**
