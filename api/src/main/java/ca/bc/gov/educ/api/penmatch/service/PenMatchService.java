@@ -1,15 +1,24 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
+import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
+import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenConfirmationResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -31,15 +40,16 @@ public class PenMatchService {
 	public static final String PEN_STATUS_D1 = "D1";
 	public static final String PEN_STATUS_F1 = "F1";
 	public static final String PEN_STATUS_G0 = "G0";
+	public static final String ALGORITHM_00 = "00";
 	public static final String ALGORITHM_S1 = "S1";
 	public static final String ALGORITHM_S2 = "S2";
 	public static final Integer VERY_FREQUENT = 500;
 	public static final Integer NOT_VERY_FREQUENT = 50;
 	public static final Integer VERY_RARE = 5;
-	private HashSet<String> matchingPENs;
+	private List<String> matchingPENs;
 	private Integer reallyGoodMatches;
 	private Integer prettyGoodMatches;
-	private Integer reallyGoodPEN;
+	private String reallyGoodPEN;
 	private String localStudentNumber;
 	private boolean type5Match;
 	private boolean type5F1;
@@ -56,6 +66,18 @@ public class PenMatchService {
 	private Integer partSurnameFrequency;
 	private String algorithmUsed;
 	private Integer sexPoints;
+	private boolean useGivenInitial;
+	private String partStudentSurname;
+	private String partStudentGiven;
+	private String wyPEN;
+
+	@Getter(AccessLevel.PRIVATE)
+	private final PenDemographicsRepository penDemographicsRepository;
+
+	@Autowired
+	public PenMatchService(final PenDemographicsRepository penDemographicsRepository) {
+		this.penDemographicsRepository = penDemographicsRepository;
+	}
 
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
 		log.info("Received student payload :: {}", student);
@@ -82,20 +104,20 @@ public class PenMatchService {
 						if (penConfirmation.getPenMasterRecord().getMasterStudentNumber() != null) {
 							penFoundOnMaster = true;
 						}
-						findMatchesOnPenDemog();
+						findMatchesOnPenDemog(student);
 					} else {
 						student.setPenStatus(PEN_STATUS_C);
-						findMatchesOnPenDemog();
+						findMatchesOnPenDemog(student);
 					}
 
 				} else if (checkDigitErrorCode.equals(CHECK_DIGIT_ERROR_CODE_001)) {
 					student.setPenStatus(PEN_STATUS_C);
-					findMatchesOnPenDemog();
+					findMatchesOnPenDemog(student);
 				}
 			}
 		} else {
 			student.setPenStatus(PEN_STATUS_D);
-			findMatchesOnPenDemog();
+			findMatchesOnPenDemog(student);
 		}
 
 		/*
@@ -115,7 +137,7 @@ public class PenMatchService {
 
 		if (student.getPenStatus() == PEN_STATUS_AA || student.getPenStatus() == PEN_STATUS_B1
 				|| student.getPenStatus() == PEN_STATUS_C1 || student.getPenStatus() == PEN_STATUS_D1) {
-			PenMasterRecord penMasterRecord = getPENMasterRecord(student.getStudentNumber());
+			PenMasterRecord penMasterRecord = getPENDemogMasterRecord(student.getStudentNumber());
 			if (penMasterRecord.getMasterStudentDob() != student.getDob()) {
 				student.setPenStatusMessage(
 						"Birthdays are suspect: " + penMasterRecord.getMasterStudentDob() + " vs " + student.getDob());
@@ -148,7 +170,7 @@ public class PenMatchService {
 
 	private void initialize(PenMatchStudent student) {
 		student.setPenStatusMessage(null);
-		this.matchingPENs = new HashSet<String>();
+		this.matchingPENs = new ArrayList<String>();
 		this.localStudentNumber = null;
 
 		this.reallyGoodMatches = 0;
@@ -159,6 +181,7 @@ public class PenMatchService {
 		this.type5Match = false;
 		this.type5F1 = false;
 		this.penFoundOnMaster = false;
+		this.useGivenInitial = false;
 		this.alternateLocalID = "TTT";
 
 		// Strip off leading zeros, leading blanks and trailing blanks
@@ -261,17 +284,13 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Example:  the original PEN number is 746282656
-	 * 1. First 8 digits are 74628265
-	 * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1)
-	 * 3. Extract the even digits 4,2,2,5 to get A = 4225.
-	 * 4. Multiply A times 2 to get B = 8450
-	 * 5. Sum the digits of B: 8 + 4 + 5 + 0 = 17 (S2)
-	 * 6. 27 + 17 = 44 (S3)
-	 * 7. S3 is not a multiple of 10
-	 * 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) = 10 - 4  = 6
-	 *    A) Alternatively, round up S3 to next multiple of 10: 44 becomes 50
-	 *    B) Subtract S3 from this: 50 - 44 = 6
+	 * Example: the original PEN number is 746282656 1. First 8 digits are 74628265
+	 * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1) 3. Extract the even digits
+	 * 4,2,2,5 to get A = 4225. 4. Multiply A times 2 to get B = 8450 5. Sum the
+	 * digits of B: 8 + 4 + 5 + 0 = 17 (S2) 6. 27 + 17 = 44 (S3) 7. S3 is not a
+	 * multiple of 10 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) =
+	 * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
+	 * 50 B) Subtract S3 from this: 50 - 44 = 6
 	 * 
 	 * @param pen
 	 * @return
@@ -324,7 +343,8 @@ public class PenMatchService {
 	}
 
 	private void checkForCoreData(PenMatchStudent student) {
-		if(student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+		if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null
+				|| student.getSex() == null || student.getMincode() == null) {
 			student.setPenStatus(PEN_STATUS_G0);
 		}
 	}
@@ -390,7 +410,7 @@ public class PenMatchService {
 		this.localStudentNumber = student.getStudentNumber();
 		student.setDeceased(false);
 
-		PenMasterRecord penMasterRecord = getPENMasterRecord(this.localStudentNumber);
+		PenMasterRecord penMasterRecord = getPENDemogMasterRecord(this.localStudentNumber);
 
 		if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
 			penConfirmationResult.setResultCode(PenConfirmationResult.PEN_ON_FILE);
@@ -398,7 +418,7 @@ public class PenMatchService {
 					&& penMasterRecord.getMasterStudentTrueNumber() != null) {
 				this.localStudentNumber = penMasterRecord.getMasterStudentTrueNumber();
 				penConfirmationResult.setMergedPEN(penMasterRecord.getMasterStudentTrueNumber());
-				penMasterRecord = getPENMasterRecord(this.localStudentNumber);
+				penMasterRecord = getPENDemogMasterRecord(this.localStudentNumber);
 				if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == this.localStudentNumber) {
 					simpleCheckForMatch(student, penMasterRecord);
 					if (penMasterRecord.getMasterStudentStatus() == "D") {
@@ -422,37 +442,154 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Find all possible students on master who could match the transaction
-	 * If the first four characters of surname are uncommon then only use 4
-	 * characters in lookup. Otherwise use 6 characters , or 5 if surname is
-	 * only 5 characters long use the given initial in the lookup unless 1st 4 characters of surname is 
-	 * quite rare
+	 * Find all possible students on master who could match the transaction - If the
+	 * first four characters of surname are uncommon then only use 4 characters in
+	 * lookup. Otherwise use 6 characters , or 5 if surname is only 5 characters
+	 * long use the given initial in the lookup unless 1st 4 characters of surname
+	 * is quite rare
 	 */
-	private void findMatchesOnPenDemog() {
-		// TODO Implement this
+	private void findMatchesOnPenDemog(PenMatchStudent student) {
+		this.useGivenInitial = true;
+
+		if (this.partSurnameFrequency <= NOT_VERY_FREQUENT) {
+			this.partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
+			this.useGivenInitial = false;
+		} else {
+			if (this.partSurnameFrequency <= VERY_FREQUENT) {
+				this.partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
+				this.partStudentGiven = student.getGivenName().substring(0, 1);
+			} else {
+				this.partStudentSurname = student.getSurname().substring(0, this.maxSurnameSearchSize);
+				this.partStudentGiven = student.getGivenName().substring(0, 2);
+			}
+		}
+
+		if (student.getLocalID() == null) {
+			if (this.useGivenInitial) {
+				lookupNoLocalID();
+			} else {
+				lookupNoInitNoLocalID();
+			}
+		} else {
+			if (this.useGivenInitial) {
+				lookupWithAllParts();
+			} else {
+				lookupNoInit();
+			}
+		}
+
+//		If a PEN was provided, but the demographics didn't match the student
+//		on PEN-MASTER with that PEN, then add the student on PEN-MASTER to 
+//		the list of possible students who match.
+		if (student.getPenStatus() == PEN_STATUS_B && this.penFoundOnMaster) {
+			this.reallyGoodMatches = 0;
+			this.wyPEN = this.localStudentNumber;
+			this.algorithmUsed = ALGORITHM_00;
+			this.type5F1 = true;
+			mergeNewMatchIntoList();
+		}
+
+//		If only one really good match, and no pretty good matches,
+//		just send the one PEN back
+		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && this.reallyGoodMatches == 1 && this.prettyGoodMatches == 0) {
+			student.setPen1(this.reallyGoodPEN);
+			student.setStudentNumber(this.reallyGoodPEN);
+			student.setNoMatches(1);
+			student.setPenStatus(PEN_STATUS_D1);
+			return;
+		} else {
+			log.debug("List of matching PENs: {}", matchingPENs);
+			student.setPen1(matchingPENs.get(0));
+			student.setPen2(matchingPENs.get(1));
+			student.setPen3(matchingPENs.get(2));
+			student.setPen4(matchingPENs.get(3));
+			student.setPen5(matchingPENs.get(4));
+			student.setPen6(matchingPENs.get(5));
+			student.setPen7(matchingPENs.get(6));
+			student.setPen8(matchingPENs.get(7));
+			student.setPen9(matchingPENs.get(8));
+			student.setPen10(matchingPENs.get(9));
+			student.setPen11(matchingPENs.get(10));
+			student.setPen12(matchingPENs.get(11));
+			student.setPen13(matchingPENs.get(12));
+			student.setPen14(matchingPENs.get(13));
+			student.setPen15(matchingPENs.get(14));
+			student.setPen16(matchingPENs.get(15));
+			student.setPen17(matchingPENs.get(16));
+			student.setPen18(matchingPENs.get(17));
+			student.setPen19(matchingPENs.get(18));
+			student.setPen20(matchingPENs.get(19));
+		}
+
+		if (student.getNoMatches() == 0) {
+			student.setPenStatus(student.getPenStatus().trim() + "0");
+			student.setStudentNumber(null);
+		}
 	}
 
 	/**
-	 * Create a log entry for analytical purposes. 
-	 * Not used in our Java implementation
+	 * Create a log entry for analytical purposes. Not used in our Java
+	 * implementation
 	 */
 	private void loadPenMatchHistory() {
-		//Not currently implemented
-		//This was a logging function in Basic, we'll likely do something different
+		// Not currently implemented
+		// This was a logging function in Basic, we'll likely do something different
 	}
-	
+
+	private void mergeNewMatchIntoList() {
+		// Not currently implemented
+	}
+
+	private void lookupWithAllParts() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInit() {
+		// Not currently implemented
+	}
+
+	private void lookupNoLocalID() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInitNoLocalID() {
+		// Not currently implemented
+	}
+
 	/**
 	 * Calculate points for Sex match
 	 */
 	private void matchSex(PenMatchStudent student, PenMasterRecord master) {
 		this.sexPoints = 0;
-		if(student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
+		if (student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
 			this.sexPoints = 5;
 		}
 	}
-		
 
-	private PenMasterRecord getPENMasterRecord(String studentNumber) {
-		return new PenMasterRecord();
+	/**
+	 * Fetches a PEN Master Record given a student number
+	 * 
+	 * @param studentNumber
+	 * @return
+	 */
+	private PenMasterRecord getPENDemogMasterRecord(String studentNumber) {
+		Optional<PenDemographicsEntity> demog = getPenDemographicsRepository().findByStudNo(studentNumber);
+		if (demog.isPresent()) {
+			PenDemographicsEntity entity = demog.get();
+			PenMasterRecord masterRecord = new PenMasterRecord();
+			masterRecord.setMasterStudentNumber(entity.getStudNo());
+			masterRecord.setMasterStudentSurname(entity.getStudSurname());
+			masterRecord.setMasterStudentGiven(entity.getStudGiven());
+			masterRecord.setMasterStudentDob(entity.getStudBirth());
+			masterRecord.setMasterStudentSex(entity.getStudSex());
+			masterRecord.setMasterStudentGrade(entity.getGrade());
+			masterRecord.setMasterPenMincode(entity.getMincode());
+			masterRecord.setMasterPenLocalId(entity.getLocalID());
+			masterRecord.setMasterStudentStatus(entity.getStudStatus());
+			masterRecord.setMasterStudentTrueNumber(entity.getTrueNumber());
+			return masterRecord;
+		}
+
+		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
 	}
 }
