@@ -1,12 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fujion.common.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +26,7 @@ public class PenMatchService {
 
 	private PenMatchNames penMatchNames;
 
+	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202" + StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
 	public static final String CHECK_DIGIT_ERROR_CODE_000 = "000";
 	public static final String CHECK_DIGIT_ERROR_CODE_001 = "001";
 	public static final String PEN_STATUS_AA = "AA";
@@ -340,11 +339,6 @@ public class PenMatchService {
 		} else {
 			return CHECK_DIGIT_ERROR_CODE_001;
 		}
-	}
-
-	private String runSoundex(String name) {
-		// TODO Implement this
-		return "";
 	}
 
 	private void checkForCoreData(PenMatchStudent student) {
@@ -681,4 +675,47 @@ public class PenMatchService {
 		return 0;
 	}
 
+	private String runSoundex(String inputString) {
+		String previousCharRaw = null;
+		Integer previousCharSoundex = null;
+		String currentCharRaw = null;
+		Integer currentCharSoundex = null;
+		String soundexString = null;
+		String tempString = null;
+		
+		if(inputString != null && inputString.length() >= 1) {
+			tempString =  StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
+			soundexString = inputString.substring(0, 1);
+			previousCharRaw = inputString.substring(0, 1);
+			previousCharSoundex = -1;
+			
+			for(int i = 2;i < tempString.length(); i++) {
+				currentCharRaw = inputString.substring(i, i + 1);
+				currentCharSoundex = Integer.valueOf(tempString.substring(i, i + 1));
+			
+				if(currentCharSoundex >= 1 && currentCharSoundex <= 7) {
+					// If the second "soundexable" character is not the same as the first raw 
+					// character then append the soundex value of this character to the soundex
+					// string. If this is the third or greater soundexable value, then if the soundex
+					// value of the character is not equal to the soundex value of the previous
+					// character, then append that soundex value to the soundex string.
+					if(i == 2) {
+						if(currentCharRaw != previousCharRaw) {
+							soundexString = soundexString + currentCharSoundex;
+							previousCharSoundex = currentCharSoundex;
+						}
+					}else if(currentCharSoundex != previousCharSoundex) {
+						soundexString = soundexString + currentCharSoundex;
+						previousCharSoundex = currentCharSoundex;
+					}
+				}
+			}
+			
+			soundexString = (soundexString + "00000000").substring(0, 8);
+		}else {
+			soundexString = "10000000";
+		}
+		
+		return soundexString;
+	}
 }
