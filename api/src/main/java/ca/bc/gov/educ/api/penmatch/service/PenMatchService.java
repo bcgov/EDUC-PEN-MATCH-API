@@ -12,6 +12,7 @@ import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
+import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenConfirmationResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
@@ -79,10 +80,9 @@ public class PenMatchService {
 	private Integer bonusPoints;
 	private Integer surnamePoints;
 	private Integer givenNamePoints;
-	private Integer middleNamePoints;
 	private boolean legalUsed;
 	private boolean givenFlip;
-	private boolean middleFlip;
+
 	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
@@ -521,9 +521,9 @@ public class PenMatchService {
 			}
 		}
 
-//		If a PEN was provided, but the demographics didn't match the student
-//		on PEN-MASTER with that PEN, then add the student on PEN-MASTER to 
-//		the list of possible students who match.
+		// If a PEN was provided, but the demographics didn't match the student
+		// on PEN-MASTER with that PEN, then add the student on PEN-MASTER to
+		// the list of possible students who match.
 		if (student.getPenStatus() == PEN_STATUS_B && this.penFoundOnMaster) {
 			this.reallyGoodMatches = 0;
 			this.wyPEN = this.localStudentNumber;
@@ -532,8 +532,8 @@ public class PenMatchService {
 			mergeNewMatchIntoList(student);
 		}
 
-//		If only one really good match, and no pretty good matches,
-//		just send the one PEN back
+		// If only one really good match, and no pretty good matches,
+		// just send the one PEN back
 		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && this.reallyGoodMatches == 1
 				&& this.prettyGoodMatches == 0) {
 			student.setPen1(this.reallyGoodPEN);
@@ -746,19 +746,6 @@ public class PenMatchService {
 		return soundexString;
 	}
 
-	/**
-	 * Create a log entry for analytical purposes. Not used in our Java
-	 * implementation
-	 */
-	private void loadPenMatchHistory() {
-		// Not currently implemented
-		// This was a logging function in Basic, we'll likely do something different
-	}
-
-	private void lookupWithAllParts() {
-		// Not currently implemented
-	}
-
 	private void checkForMatch(PenMatchStudent student, PenMasterRecord master) {
 		this.matchFound = false;
 		this.type5Match = false;
@@ -779,13 +766,13 @@ public class PenMatchService {
 			this.surnamePoints = this.surnamePoints + 5;
 		}
 
-		matchMiddleName(student, master); // 5, 10, 15 or 20 points
+		MiddleNameMatchResult middleNameMatchResult = matchMiddleName(student, master); // 5, 10, 15 or 20 points
 
 		// If given matches middle and middle matches given and there are some
 		// other points, there is a good chance that the names have been flipped
-		if (this.givenFlip && this.middleFlip && (this.surnamePoints >= 10 || birthdayPoints >= 15)) {
+		if (this.givenFlip && middleNameMatchResult.isMiddleNameFlip() && (this.surnamePoints >= 10 || birthdayPoints >= 15)) {
 			this.givenNamePoints = 15;
-			this.middleNamePoints = 15;
+			middleNameMatchResult.setMiddleNamePoints(15);
 		}
 
 		Integer localIDPoints = matchLocalID(student, master); // 5, 10 or 20 points
@@ -805,7 +792,7 @@ public class PenMatchService {
 				this.matchFound = false;
 			}
 			if (!(student.getMiddleName() != null && student.getUsualMiddleName() != null)
-					&& this.middleNamePoints == 0) {
+					&& middleNameMatchResult.getMiddleNamePoints() == 0) {
 				this.matchFound = false;
 			}
 			if (student.getDob() != null && birthdayPoints == 0) {
@@ -834,9 +821,9 @@ public class PenMatchService {
 		// but not same school
 		if (!this.matchFound) {
 			if (localIDPoints == 5 || localIDPoints == 20) {
-				this.bonusPoints = this.givenNamePoints + this.middleNamePoints + localIDPoints;
+				this.bonusPoints = this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints() + localIDPoints;
 			} else {
-				this.bonusPoints = this.givenNamePoints + this.middleNamePoints;
+				this.bonusPoints = this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints();
 			}
 
 			if (sexPoints >= 5 && birthdayPoints >= 20 && this.surnamePoints >= 20) {
@@ -854,7 +841,7 @@ public class PenMatchService {
 		// (65 points total)
 		if (!this.matchFound) {
 			if (localIDPoints >= 20 && this.surnamePoints >= 20) {
-				this.bonusPoints = sexPoints + this.givenNamePoints + this.middleNamePoints + addressPoints;
+				this.bonusPoints = sexPoints + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints() + addressPoints;
 				if (this.bonusPoints >= 25) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
@@ -869,8 +856,7 @@ public class PenMatchService {
 		// (65 points total)
 		if (!this.matchFound) {
 			if (localIDPoints >= 20 && sexPoints >= 5 && birthdayPoints >= 20) {
-				this.bonusPoints = this.surnamePoints + this.givenNamePoints + this.middleNamePoints
-						+ addressPoints;
+				this.bonusPoints = this.surnamePoints + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints() + addressPoints;
 				if (this.bonusPoints >= 20) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
@@ -885,7 +871,7 @@ public class PenMatchService {
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
 			this.bonusPoints = sexPoints + birthdayPoints + this.surnamePoints + this.givenNamePoints
-					+ this.middleNamePoints + localIDPoints + addressPoints;
+					+ middleNameMatchResult.getMiddleNamePoints() + localIDPoints + addressPoints;
 			if (this.bonusPoints >= this.idDemerits) {
 				this.bonusPoints = this.bonusPoints - this.idDemerits;
 			} else {
@@ -921,8 +907,7 @@ public class PenMatchService {
 
 				// Identify a pretty good match - needs to be better than the Questionable Match
 				// but not a full 60 points as above
-				if (this.surnamePoints >= 20 && this.givenNamePoints >= 15 && birthdayPoints >= 15
-						&& sexPoints == 5) {
+				if (this.surnamePoints >= 20 && this.givenNamePoints >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
 					this.prettyGoodMatches = this.prettyGoodMatches + 1;
 					this.totalPoints = 55;
 				}
@@ -998,26 +983,21 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Calculate points for surname match
-	 */
-	private void matchSurname(PenMatchStudent student, PenMasterRecord master) {
-
-	}
-
-	/**
 	 * Calculate points for address match
 	 */
 	private Integer matchAddress(PenMatchStudent student, PenMasterRecord master) {
 		Integer addressPoints = 0;
 		String postal = student.getPostal();
 		String masterPostal = master.getMasterPostal();
-		
-		if(postal != null && masterPostal != null && postal.equals(masterPostal) && !masterPostal.substring(0, 2).equals("V0")) {
+
+		if (postal != null && masterPostal != null && postal.equals(masterPostal)
+				&& !masterPostal.substring(0, 2).equals("V0")) {
 			addressPoints = 10;
-		}else if(postal != null && masterPostal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
+		} else if (postal != null && masterPostal != null && postal.equals(masterPostal)
+				&& masterPostal.substring(0, 2).equals("V0")) {
 			addressPoints = 1;
 		}
-		
+
 		return addressPoints;
 	}
 
@@ -1034,7 +1014,9 @@ public class PenMatchService {
 		String masterLocalID = master.getMasterPenLocalId();
 
 		if (mincode != null && mincode.equals(masterMincode)
-				&& ((localID != null && masterLocalID != null && localID.equals(masterLocalID)) || (this.alternateLocalID != null && this.alternateLocalID.equals(master.getMasterAlternateLocalId())))
+				&& ((localID != null && masterLocalID != null && localID.equals(masterLocalID))
+						|| (this.alternateLocalID != null
+								&& this.alternateLocalID.equals(master.getMasterAlternateLocalId())))
 				&& (localID != null && localID.trim().length() > 1)) {
 			localIDPoints = 20;
 		}
@@ -1048,7 +1030,8 @@ public class PenMatchService {
 
 		// Same district
 		if (localIDPoints == 0) {
-			if (mincode != null && masterMincode != null && mincode.substring(0, 3).equals(masterMincode.substring(0, 3))
+			if (mincode != null && masterMincode != null
+					&& mincode.substring(0, 3).equals(masterMincode.substring(0, 3))
 					&& !mincode.substring(0, 3).equals("102")) {
 				localIDPoints = 5;
 			}
@@ -1059,13 +1042,21 @@ public class PenMatchService {
 			if (localID != null && masterLocalID != null && !localID.equals(masterLocalID)
 					&& mincode.equals(masterMincode)) {
 				if ((this.alternateLocalID != null && master.getMasterAlternateLocalId() != null
-						&& !this.alternateLocalID.equals(master.getMasterAlternateLocalId())) || (this.alternateLocalID == null && master.getMasterAlternateLocalId() == null)) {
+						&& !this.alternateLocalID.equals(master.getMasterAlternateLocalId()))
+						|| (this.alternateLocalID == null && master.getMasterAlternateLocalId() == null)) {
 					this.idDemerits = localIDPoints;
 				}
 			}
 		}
-		
+
 		return localIDPoints;
+	}
+
+	/**
+	 * Calculate points for surname match
+	 */
+	private void matchSurname(PenMatchStudent student, PenMasterRecord master) {
+
 	}
 
 	/**
@@ -1078,8 +1069,149 @@ public class PenMatchService {
 	/**
 	 * Calculate points for middle name match
 	 */
-	private void matchMiddleName(PenMatchStudent student, PenMasterRecord master) {
+	private MiddleNameMatchResult matchMiddleName(PenMatchStudent student, PenMasterRecord master) {
+		Integer middleNamePoints = 0;
+		boolean middleFlip = false;
 
+		String legalMiddle = this.penMatchTransactionNames.getLegalMiddle();
+		String usualMiddle = this.penMatchTransactionNames.getUsualMiddle();
+		String alternateLegalMiddle = this.penMatchTransactionNames.getAlternateLegalMiddle();
+		String alternateUsualMiddle = this.penMatchTransactionNames.getAlternateUsualMiddle();
+
+		// 10 Character match
+		if ((hasMiddleNameSubsetCharMatch(legalMiddle, 10)) || (hasMiddleNameSubsetCharMatch(usualMiddle, 10))
+				|| (hasMiddleNameSubsetCharMatch(alternateLegalMiddle, 10))
+				|| (hasMiddleNameSubsetCharMatch(alternateUsualMiddle, 10))) {
+			middleNamePoints = 20;
+		} else if ((hasMiddleNameSubsetMatch(legalMiddle)) || (hasMiddleNameSubsetMatch(usualMiddle))
+				|| (hasMiddleNameSubsetMatch(alternateLegalMiddle))
+				|| (hasMiddleNameSubsetMatch(alternateUsualMiddle))) {
+			// Has a subset match
+			middleNamePoints = 15;
+		} else if ((hasMiddleNameSubsetCharMatch(legalMiddle, 4)) || (hasMiddleNameSubsetCharMatch(usualMiddle, 4))
+				|| (hasMiddleNameSubsetCharMatch(alternateLegalMiddle, 4))
+				|| (hasMiddleNameSubsetCharMatch(alternateUsualMiddle, 4))) {
+			// 4 Character Match
+			middleNamePoints = 15;
+		} else if ((hasMiddleNameSubsetCharMatch(legalMiddle, 1)) || (hasMiddleNameSubsetCharMatch(usualMiddle, 1))
+				|| (hasMiddleNameSubsetCharMatch(alternateLegalMiddle, 1))
+				|| (hasMiddleNameSubsetCharMatch(alternateUsualMiddle, 1))) {
+			// 1 Character Match
+			middleNamePoints = 5;
+		} else if ((hasMiddleNameSubsetToGivenNameMatch(legalMiddle))
+				|| (hasMiddleNameSubsetToGivenNameMatch(usualMiddle))
+				|| (hasMiddleNameSubsetToGivenNameMatch(alternateLegalMiddle))
+				|| (hasMiddleNameSubsetToGivenNameMatch(alternateUsualMiddle))) {
+			// Check middle to given if no matches above (only try 4 characters)
+			middleNamePoints = 10;
+			middleFlip = true;
+		}
+
+		MiddleNameMatchResult result = new MiddleNameMatchResult();
+		result.setMiddleNamePoints(middleNamePoints);
+		result.setMiddleNameFlip(middleFlip);
+		return result;
+	}
+
+	/**
+	 * Utility function to check for subset middle name matches
+	 * 
+	 * @param middleName
+	 * @return
+	 */
+	private boolean hasMiddleNameSubsetMatch(String middleName) {
+		if (middleName != null && middleName.length() >= 1) {
+			if ((this.penMatchMasterNames.getLegalMiddle() != null
+					&& (this.penMatchMasterNames.getLegalMiddle().contains(middleName)
+							|| middleName.contains(this.penMatchMasterNames.getLegalMiddle())))
+					|| (this.penMatchMasterNames.getUsualMiddle() != null
+							&& (this.penMatchMasterNames.getUsualMiddle().contains(middleName)
+									|| middleName.contains(this.penMatchMasterNames.getUsualMiddle())))
+					|| (this.penMatchMasterNames.getAlternateLegalMiddle() != null
+							&& (this.penMatchMasterNames.getAlternateLegalMiddle().contains(middleName)
+									|| middleName.contains(this.penMatchMasterNames.getAlternateLegalMiddle())))
+					|| (this.penMatchMasterNames.getAlternateUsualMiddle() != null
+							&& (this.penMatchMasterNames.getAlternateUsualMiddle().contains(middleName)
+									|| middleName.contains(this.penMatchMasterNames.getAlternateUsualMiddle())))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function to check for subset middle name matches to given names
+	 * 
+	 * @param middleName
+	 * @return
+	 */
+	private boolean hasMiddleNameSubsetToGivenNameMatch(String middleName) {
+		int numOfChars = 4;
+		if (middleName != null && middleName.length() >= numOfChars) {
+			if ((this.penMatchMasterNames.getLegalGiven() != null
+					&& this.penMatchMasterNames.getLegalGiven().length() >= numOfChars
+					&& this.penMatchMasterNames.getLegalGiven().substring(0, numOfChars)
+							.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getUsualGiven() != null
+							&& this.penMatchMasterNames.getUsualGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getUsualGiven().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateLegalGiven() != null
+							&& this.penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateUsualGiven() != null
+							&& this.penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function for subset match
+	 * 
+	 * @param middleName
+	 * @param numOfChars
+	 * @return
+	 */
+	private boolean hasMiddleNameSubsetCharMatch(String middleName, int numOfChars) {
+		if (middleName != null && middleName.length() >= numOfChars) {
+			if ((this.penMatchMasterNames.getLegalMiddle() != null
+					&& this.penMatchMasterNames.getLegalMiddle().length() >= numOfChars
+					&& this.penMatchMasterNames.getLegalMiddle().substring(0, numOfChars)
+							.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getUsualMiddle() != null
+							&& this.penMatchMasterNames.getUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getUsualMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateLegalMiddle() != null
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateUsualMiddle() != null
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Create a log entry for analytical purposes. Not used in our Java
+	 * implementation
+	 */
+	private void loadPenMatchHistory() {
+		// Not currently implemented
+		// This was a logging function in Basic, we'll likely do something different
+	}
+
+	private void lookupWithAllParts() {
+		// Not currently implemented
 	}
 
 	private void lookupNoInit() {
