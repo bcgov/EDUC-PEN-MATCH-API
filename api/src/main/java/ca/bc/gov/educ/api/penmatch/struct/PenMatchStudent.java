@@ -56,7 +56,7 @@ public class PenMatchStudent {
   private String pen18;
   private String pen19;
   private String pen20;
-  private Integer noMatches;
+  private Integer numberOfMatches;
   private boolean deceased;
 }
 

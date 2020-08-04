@@ -38,6 +38,7 @@ public class PenMatchService {
 	public static final String PEN_STATUS_D = "D";
 	public static final String PEN_STATUS_D0 = "D0";
 	public static final String PEN_STATUS_D1 = "D1";
+	public static final String PEN_STATUS_F = "F";
 	public static final String PEN_STATUS_F1 = "F1";
 	public static final String PEN_STATUS_G0 = "G0";
 	public static final String ALGORITHM_00 = "00";
@@ -97,7 +98,7 @@ public class PenMatchService {
 							student.setPenStatus(PEN_STATUS_B1);
 							student.setStudentNumber(penConfirmation.getMergedPEN());
 							student.setPen1(penConfirmation.getMergedPEN());
-							student.setNoMatches(1);
+							student.setNumberOfMatches(1);
 						}
 					} else if (penConfirmation.getResultCode() == PenConfirmationResult.PEN_ON_FILE) {
 						student.setPenStatus(PEN_STATUS_B);
@@ -177,7 +178,7 @@ public class PenMatchService {
 		this.prettyGoodMatches = 0;
 		this.reallyGoodPEN = null;
 
-		student.setNoMatches(0);
+		student.setNumberOfMatches(0);
 		this.type5Match = false;
 		this.type5F1 = false;
 		this.penFoundOnMaster = false;
@@ -491,10 +492,11 @@ public class PenMatchService {
 
 //		If only one really good match, and no pretty good matches,
 //		just send the one PEN back
-		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && this.reallyGoodMatches == 1 && this.prettyGoodMatches == 0) {
+		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && this.reallyGoodMatches == 1
+				&& this.prettyGoodMatches == 0) {
 			student.setPen1(this.reallyGoodPEN);
 			student.setStudentNumber(this.reallyGoodPEN);
-			student.setNoMatches(1);
+			student.setNumberOfMatches(1);
 			student.setPenStatus(PEN_STATUS_D1);
 			return;
 		} else {
@@ -521,10 +523,26 @@ public class PenMatchService {
 			student.setPen20(matchingPENs.get(19));
 		}
 
-		if (student.getNoMatches() == 0) {
+		if (student.getNumberOfMatches() == 0) {
+			// No matches found
 			student.setPenStatus(student.getPenStatus().trim() + "0");
 			student.setStudentNumber(null);
+		} else if (student.getNumberOfMatches() == 1) {
+			// 1 match only
+			if(this.type5F1) {
+				student.setPenStatus(PEN_STATUS_F);
+				student.setStudentNumber(null);
+			}else {
+				//one solid match, put in t_stud_no
+				student.setStudentNumber(this.matchingPENs.get(0)); 
+			}
+			student.setPenStatus(student.getPenStatus().trim() + "1");
+		}else {
+			student.setPenStatus(student.getPenStatus().trim() + "M");
+			//many matches, so they are all considered questionable, even if some are "solid"
+			student.setStudentNumber(null); 
 		}
+
 	}
 
 	/**
