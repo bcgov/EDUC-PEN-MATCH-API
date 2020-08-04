@@ -641,40 +641,11 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Create a log entry for analytical purposes. Not used in our Java
-	 * implementation
+	 * Soundex calculation 
+	 * 
+	 * @param inputString
+	 * @return
 	 */
-	private void loadPenMatchHistory() {
-		// Not currently implemented
-		// This was a logging function in Basic, we'll likely do something different
-	}
-
-	private void lookupWithAllParts() {
-		// Not currently implemented
-	}
-
-	private void lookupNoInit() {
-		// Not currently implemented
-	}
-
-	private void lookupNoLocalID() {
-		// Not currently implemented
-	}
-
-	private void lookupNoInitNoLocalID() {
-		// Not currently implemented
-	}
-
-	private void lookupNicknames() {
-		// TODO Implement this
-	}
-
-	private Integer lookupSurnameFrequency() {
-		// TODO Implement this
-		// Note this returns in two different places
-		return 0;
-	}
-
 	private String runSoundex(String inputString) {
 		String previousCharRaw = null;
 		Integer previousCharSoundex = null;
@@ -717,5 +688,41 @@ public class PenMatchService {
 		}
 		
 		return soundexString;
+	}
+	
+
+	/**
+	 * Create a log entry for analytical purposes. Not used in our Java
+	 * implementation
+	 */
+	private void loadPenMatchHistory() {
+		// Not currently implemented
+		// This was a logging function in Basic, we'll likely do something different
+	}
+
+	private void lookupWithAllParts() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInit() {
+		// Not currently implemented
+	}
+
+	private void lookupNoLocalID() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInitNoLocalID() {
+		// Not currently implemented
+	}
+
+	private void lookupNicknames() {
+		// TODO Implement this
+	}
+
+	private Integer lookupSurnameFrequency() {
+		// TODO Implement this
+		// Note this returns in two different places
+		return 0;
 	}
 }
