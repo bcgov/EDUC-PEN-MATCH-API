@@ -350,10 +350,6 @@ public class PenMatchService {
 		}
 	}
 
-	private void lookupNicknames() {
-		// TODO Implement this
-	}
-
 	/**
 	 * Check for exact match on surname , given name, birthday and gender OR exact
 	 * match on school and local ID and one or more of surname, given name or
@@ -398,12 +394,6 @@ public class PenMatchService {
 			master.setMasterAlternateLocalId(StringUtils.stripStart(master.getMasterPenLocalId(), "0"));
 			master.setMasterAlternateLocalId(master.getMasterAlternateLocalId().replaceAll(" ", ""));
 		}
-	}
-
-	private Integer lookupSurnameFrequency() {
-		// TODO Implement this
-		// Note this returns in two different places
-		return 0;
 	}
 
 	private PenConfirmationResult confirmPEN(PenMatchStudent student) {
@@ -546,35 +536,6 @@ public class PenMatchService {
 	}
 
 	/**
-	 * Create a log entry for analytical purposes. Not used in our Java
-	 * implementation
-	 */
-	private void loadPenMatchHistory() {
-		// Not currently implemented
-		// This was a logging function in Basic, we'll likely do something different
-	}
-
-	private void mergeNewMatchIntoList() {
-		// Not currently implemented
-	}
-
-	private void lookupWithAllParts() {
-		// Not currently implemented
-	}
-
-	private void lookupNoInit() {
-		// Not currently implemented
-	}
-
-	private void lookupNoLocalID() {
-		// Not currently implemented
-	}
-
-	private void lookupNoInitNoLocalID() {
-		// Not currently implemented
-	}
-
-	/**
 	 * Calculate points for Sex match
 	 */
 	private void matchSex(PenMatchStudent student, PenMasterRecord master) {
@@ -610,4 +571,46 @@ public class PenMatchService {
 
 		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
 	}
+	
+
+	/**
+	 * Create a log entry for analytical purposes. Not used in our Java
+	 * implementation
+	 */
+	private void loadPenMatchHistory() {
+		// Not currently implemented
+		// This was a logging function in Basic, we'll likely do something different
+	}
+
+	private void mergeNewMatchIntoList() {
+		// Not currently implemented
+	}
+
+	private void lookupWithAllParts() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInit() {
+		// Not currently implemented
+	}
+
+	private void lookupNoLocalID() {
+		// Not currently implemented
+	}
+
+	private void lookupNoInitNoLocalID() {
+		// Not currently implemented
+	}
+	
+
+	private void lookupNicknames() {
+		// TODO Implement this
+	}
+
+	private Integer lookupSurnameFrequency() {
+		// TODO Implement this
+		// Note this returns in two different places
+		return 0;
+	}
+
 }
