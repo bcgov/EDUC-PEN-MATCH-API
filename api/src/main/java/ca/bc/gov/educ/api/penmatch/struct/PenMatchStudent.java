@@ -17,13 +17,11 @@ public class PenMatchStudent {
   private String sex;
   private String enrolledGradeCode;
   private String surname;
-  private String soundexSurname;
   private String givenName;
   private String givenInitial;
   private String middleName;
   private String middleInitial;
   private String usualSurname;
-  private String usualSoundexSurname;
   private String usualGivenName;
   private String usualGivenInitial;
   private String usualMiddleName;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SurnameMatchResult {
 
-	private Integer suramePoints;
+	private Integer surnamePoints;
 	private boolean legalSurnameUsed;
 
 }

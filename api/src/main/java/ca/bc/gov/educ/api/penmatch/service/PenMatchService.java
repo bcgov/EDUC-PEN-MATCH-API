@@ -18,6 +18,7 @@ import ca.bc.gov.educ.api.penmatch.struct.PenConfirmationResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,6 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private Integer partSurnameFrequency;
 	private PenAlgorithm algorithmUsed;
-	private Integer surnamePoints;
 	private Integer givenNamePoints;
 	private boolean legalUsed;
 	private boolean givenFlip;
@@ -189,20 +189,6 @@ public class PenMatchService {
 			alternateLocalID = alternateLocalID.replaceAll(" ", "");
 		}
 
-		// Remove blanks from names
-		if (student.getSurname() != null) {
-			String studentSurnameNoBlanks = student.getSurname().replaceAll(" ", "");
-			// Re-calculate Soundex of legal surname
-			student.setSoundexSurname(runSoundex(studentSurnameNoBlanks));
-		}
-
-		if (student.getUsualSurname() != null) {
-			String usualSurnameNoBlanks = student.getUsualSurname().replaceAll(" ", "");
-			// Re-calculate Soundex of usual surname
-			student.setUsualSoundexSurname(runSoundex(usualSurnameNoBlanks));
-		}
-
-		// Store given and middle names from transaction in separate object
 		storeNamesFromTransaction(student);
 
 		this.minSurnameSearchSize = 4;
@@ -751,12 +737,12 @@ public class PenMatchService {
 
 		Integer sexPoints = matchSex(student, master); // 5 points
 		Integer birthdayPoints = matchBirthday(student, master); // 5, 10, 15 or 20 points
-		matchSurname(student, master); // 10 or 20 points
+		SurnameMatchResult surnameMatchResult = matchSurname(student, master); // 10 or 20 points
 		matchGivenName(student, master); // 5, 10, 15 or 20 points
 
 		// If a perfect match on legal surname , add 5 points if a very rare surname
-		if (this.surnamePoints >= 20 && this.fullSurnameFrequency <= VERY_RARE && this.legalUsed) {
-			this.surnamePoints = this.surnamePoints + 5;
+		if (surnameMatchResult.getSurnamePoints() >= 20 && this.fullSurnameFrequency <= VERY_RARE && this.legalUsed) {
+			surnameMatchResult.setSurnamePoints(surnameMatchResult.getSurnamePoints() + 5);
 		}
 
 		MiddleNameMatchResult middleNameMatchResult = matchMiddleName(); // 5, 10, 15 or 20 points
@@ -764,7 +750,7 @@ public class PenMatchService {
 		// If given matches middle and middle matches given and there are some
 		// other points, there is a good chance that the names have been flipped
 		if (this.givenFlip && middleNameMatchResult.isMiddleNameFlip()
-				&& (this.surnamePoints >= 10 || birthdayPoints >= 15)) {
+				&& (surnameMatchResult.getSurnamePoints() >= 10 || birthdayPoints >= 15)) {
 			this.givenNamePoints = 15;
 			middleNameMatchResult.setMiddleNamePoints(15);
 		}
@@ -779,7 +765,7 @@ public class PenMatchService {
 			if (student.getSex() != null && sexPoints == 0) {
 				this.matchFound = false;
 			}
-			if (!(student.getSurname() != null && student.getUsualSurname() != null) && this.surnamePoints == 0) {
+			if (!(student.getSurname() != null && student.getUsualSurname() != null) && surnameMatchResult.getSurnamePoints() == 0) {
 				this.matchFound = false;
 			}
 			if (!(student.getGivenName() != null && student.getUsualGivenName() != null) && this.givenNamePoints == 0) {
@@ -822,12 +808,12 @@ public class PenMatchService {
 				bonusPoints = this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints();
 			}
 
-			if (sexPoints >= 5 && birthdayPoints >= 20 && this.surnamePoints >= 20) {
+			if (sexPoints >= 5 && birthdayPoints >= 20 && surnameMatchResult.getSurnamePoints() >= 20) {
 				if (bonusPoints >= 25) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
-					totalPoints = sexPoints + birthdayPoints + this.surnamePoints + bonusPoints;
+					totalPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints;
 					this.algorithmUsed = PenAlgorithm.ALG_20;
 				}
 			}
@@ -836,14 +822,14 @@ public class PenMatchService {
 		// Algorithm 3 : School/ local ID + Surname + 25 bonus points
 		// (65 points total)
 		if (!this.matchFound) {
-			if (localIDMatchResult.getLocalIDPoints() >= 20 && this.surnamePoints >= 20) {
+			if (localIDMatchResult.getLocalIDPoints() >= 20 && surnameMatchResult.getSurnamePoints() >= 20) {
 				bonusPoints = sexPoints + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
 						+ addressPoints;
 				if (bonusPoints >= 25) {
 					this.matchFound = true;
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
-					totalPoints = localIDMatchResult.getLocalIDPoints() + this.surnamePoints + bonusPoints;
+					totalPoints = localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints() + bonusPoints;
 					this.algorithmUsed = PenAlgorithm.ALG_30;
 				}
 			}
@@ -853,7 +839,7 @@ public class PenMatchService {
 		// (65 points total)
 		if (!this.matchFound) {
 			if (localIDMatchResult.getLocalIDPoints() >= 20 && sexPoints >= 5 && birthdayPoints >= 20) {
-				bonusPoints = this.surnamePoints + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
+				bonusPoints = surnameMatchResult.getSurnamePoints() + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
 						+ addressPoints;
 				if (bonusPoints >= 20) {
 					this.matchFound = true;
@@ -868,7 +854,7 @@ public class PenMatchService {
 		// Algorithm 5: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			bonusPoints = sexPoints + birthdayPoints + this.surnamePoints + this.givenNamePoints
+			bonusPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + this.givenNamePoints
 					+ middleNameMatchResult.getMiddleNamePoints() + localIDMatchResult.getLocalIDPoints()
 					+ addressPoints;
 			if (bonusPoints >= idDemerits) {
@@ -878,7 +864,7 @@ public class PenMatchService {
 			}
 
 			if (bonusPoints >= 55 || (bonusPoints >= 40 && localIDMatchResult.getLocalIDPoints() >= 20)
-					|| (bonusPoints >= 50 && this.surnamePoints >= 10 && birthdayPoints >= 15
+					|| (bonusPoints >= 50 && surnameMatchResult.getSurnamePoints() >= 10 && birthdayPoints >= 15
 							&& this.givenNamePoints >= 15)
 					|| (bonusPoints >= 50 && birthdayPoints >= 20)
 					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
@@ -899,14 +885,14 @@ public class PenMatchService {
 		// Algorithm 5.1: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			if (sexPoints == 5 && birthdayPoints >= 10 && this.surnamePoints >= 20 && this.givenNamePoints >= 10) {
+			if (sexPoints == 5 && birthdayPoints >= 10 && surnameMatchResult.getSurnamePoints() >= 20 && this.givenNamePoints >= 10) {
 				this.matchFound = true;
 				this.algorithmUsed = PenAlgorithm.ALG_51;
 				totalPoints = 45;
 
 				// Identify a pretty good match - needs to be better than the Questionable Match
 				// but not a full 60 points as above
-				if (this.surnamePoints >= 20 && this.givenNamePoints >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
+				if (surnameMatchResult.getSurnamePoints() >= 20 && this.givenNamePoints >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
 					this.prettyGoodMatches = this.prettyGoodMatches + 1;
 					totalPoints = 55;
 				}
@@ -1058,8 +1044,99 @@ public class PenMatchService {
 	/**
 	 * Calculate points for surname match
 	 */
-	private void matchSurname(PenMatchStudent student, PenMasterRecord master) {
+	private SurnameMatchResult matchSurname(PenMatchStudent student, PenMasterRecord master) {
+		Integer surnamePoints = 0;
+		boolean legalSurnameUsed = false;
+		String masterLegalSurnameNoBlanks = null;
+		String masterUsualSurnameNoBlanks = null;
+		String studentSurnameNoBlanks = null;
+		String usualSurnameNoBlanks = null;
 
+		if (master.getMasterStudentSurname() != null) {
+			masterLegalSurnameNoBlanks = master.getMasterStudentSurname().replaceAll(" ", "");
+		}
+		if (master.getMasterUsualSurname() != null) {
+			masterUsualSurnameNoBlanks = master.getMasterUsualSurname().replaceAll(" ", "");
+		}
+		if (student.getSurname() != null) {
+			studentSurnameNoBlanks = student.getSurname().replaceAll(" ", "");
+		}
+		if (student.getUsualSurname() != null) {
+			usualSurnameNoBlanks = student.getUsualSurname().replaceAll(" ", "");
+		}
+
+		if (studentSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
+			// Verify if legal surname matches master legal surname
+			surnamePoints = 20;
+			legalUsed = true;
+		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
+			// Verify is usual surname matches master usual surname
+			surnamePoints = 20;
+		} else if (studentSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
+			// Verify if legal surname matches master usual surname
+			surnamePoints = 20;
+			legalUsed = true;
+		} else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
+			// Verify if usual surname matches master legal surname
+			surnamePoints = 20;
+		} else if (studentSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4
+				&& studentSurnameNoBlanks.substring(0, 3).equals(masterLegalSurnameNoBlanks.substring(0, 3))) {
+			// Do a 4 character match with legal surname and master legal surname
+			surnamePoints = 10;
+		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.length() >= 4 && masterUsualSurnameNoBlanks.length() >= 4
+				&& usualSurnameNoBlanks.substring(0, 3).equals(masterUsualSurnameNoBlanks.substring(0, 3))) {
+			// Do a 4 character match with usual surname and master usual surname
+			surnamePoints = 10;
+		} else if (studentSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.length() >= 4 && masterUsualSurnameNoBlanks.length() >= 4
+				&& studentSurnameNoBlanks.substring(0, 3).equals(masterUsualSurnameNoBlanks.substring(0, 3))) {
+			// Do a 4 character match with legal surname and master usual surname
+			surnamePoints = 10;
+		} else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4
+				&& usualSurnameNoBlanks.substring(0, 3).equals(masterLegalSurnameNoBlanks.substring(0, 3))) {
+			// Do a 4 character match with usual surname and master legal surname
+			surnamePoints = 10;
+		} else if (surnamePoints == 0) {
+			String masterSoundexLegalSurname = runSoundex(masterLegalSurnameNoBlanks);
+			String masterSoundexUsualSurname = runSoundex(masterUsualSurnameNoBlanks);
+
+			String soundexLegalSurname = runSoundex(studentSurnameNoBlanks);
+			String soundexUsualSurname = runSoundex(usualSurnameNoBlanks);
+
+			if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && masterSoundexLegalSurname != null
+					&& !soundexLegalSurname.substring(0, 1).equals(" ")
+					&& soundexLegalSurname.equals(masterSoundexLegalSurname)) {
+				// Check if the legal surname soundex matches the master legal surname soundex
+				surnamePoints = 10;
+			} else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0
+					&& masterSoundexLegalSurname != null && !soundexUsualSurname.substring(0, 1).equals(" ")
+					&& soundexUsualSurname.equals(masterSoundexLegalSurname)) {
+				// Check if the usual surname soundex matches the master legal surname soundex
+				surnamePoints = 10;
+			} else if (soundexLegalSurname != null && soundexLegalSurname.length() > 0
+					&& masterSoundexUsualSurname != null && !soundexLegalSurname.substring(0, 1).equals(" ")
+					&& soundexLegalSurname.equals(masterSoundexUsualSurname)) {
+				// Check if the legal surname soundex matches the master usual surname soundex
+				surnamePoints = 10;
+			} else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0
+					&& masterSoundexUsualSurname != null && !soundexUsualSurname.substring(0, 1).equals(" ")
+					&& soundexUsualSurname.equals(masterSoundexUsualSurname)) {
+				// Check if the usual surname soundex matches the master usual surname soundex
+				surnamePoints = 10;
+			}
+		}
+
+		SurnameMatchResult result = new SurnameMatchResult();
+		result.setLegalSurnameUsed(legalSurnameUsed);
+		result.setSurnamePoints(surnamePoints);
+		return result;
 	}
 
 	/**
