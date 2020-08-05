@@ -16,5 +16,5 @@ public class PenConfirmationResult {
 	private String mergedPEN;
 	private String resultCode;
 	private PenMasterRecord penMasterRecord;
-
+	private String localStudentNumber;
 }
