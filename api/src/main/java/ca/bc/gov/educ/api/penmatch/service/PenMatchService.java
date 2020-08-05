@@ -64,7 +64,6 @@ public class PenMatchService {
 	private String alternateLocalID;
 	private Integer minSurnameSearchSize;
 	private Integer maxSurnameSearchSize;
-	private Integer surnameSize;
 	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
@@ -89,7 +88,7 @@ public class PenMatchService {
 		boolean penFoundOnMaster = false;
 		PenAlgorithm penAlgorithm = null;
 
-		Integer partSurnameFrequency = initialize(student);
+		Integer partialSurnameFrequency = initialize(student);
 
 		if (student.getStudentNumber() != null) {
 			String checkDigitErrorCode = penCheckDigit(student.getStudentNumber());
@@ -112,21 +111,21 @@ public class PenMatchService {
 							penFoundOnMaster = true;
 						}
 						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(),
-								penConfirmation.getAlgorithmUsed(), partSurnameFrequency);
+								penConfirmation.getAlgorithmUsed(), partialSurnameFrequency);
 					} else {
 						student.setPenStatus(PEN_STATUS_C);
 						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(),
-								penConfirmation.getAlgorithmUsed(), partSurnameFrequency);
+								penConfirmation.getAlgorithmUsed(), partialSurnameFrequency);
 					}
 
 				} else if (checkDigitErrorCode.equals(CHECK_DIGIT_ERROR_CODE_001)) {
 					student.setPenStatus(PEN_STATUS_C);
-					findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partSurnameFrequency);
+					findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partialSurnameFrequency);
 				}
 			}
 		} else {
 			student.setPenStatus(PEN_STATUS_D);
-			findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partSurnameFrequency);
+			findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partialSurnameFrequency);
 		}
 
 		/*
@@ -203,16 +202,18 @@ public class PenMatchService {
 		this.minSurnameSearchSize = 4;
 		this.maxSurnameSearchSize = 6;
 
+		Integer surnameSize = 0;
+		
 		if (student.getSurname() != null) {
-			this.surnameSize = student.getSurname().length();
+			surnameSize = student.getSurname().length();
 		} else {
-			this.surnameSize = 0;
+			surnameSize = 0;
 		}
 
-		if (this.surnameSize < this.minSurnameSearchSize) {
-			this.minSurnameSearchSize = this.surnameSize;
-		} else if (this.surnameSize < this.maxSurnameSearchSize) {
-			this.maxSurnameSearchSize = this.surnameSize;
+		if (surnameSize < this.minSurnameSearchSize) {
+			this.minSurnameSearchSize = surnameSize;
+		} else if (surnameSize < this.maxSurnameSearchSize) {
+			this.maxSurnameSearchSize = surnameSize;
 		}
 
 		// Lookup surname frequency
@@ -1551,6 +1552,12 @@ public class PenMatchService {
 
 	}
 
+	/**
+	 * Utility method which sets the penMatchTransactionNames
+	 * 
+	 * @param penMatchTransactionNames
+	 * @param nextNickname
+	 */
 	private void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
 		if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
 			penMatchTransactionNames.setNickname1(nextNickname);
