@@ -12,6 +12,7 @@ import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
+import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenConfirmationResult;
@@ -66,7 +67,6 @@ public class PenMatchService {
 	private Integer partSurnameFrequency;
 	private PenAlgorithm algorithmUsed;
 	private Integer givenNamePoints;
-	private boolean legalUsed;
 	private boolean givenFlip;
 	private String updateCode;
 
@@ -741,7 +741,7 @@ public class PenMatchService {
 		matchGivenName(student, master); // 5, 10, 15 or 20 points
 
 		// If a perfect match on legal surname , add 5 points if a very rare surname
-		if (surnameMatchResult.getSurnamePoints() >= 20 && this.fullSurnameFrequency <= VERY_RARE && this.legalUsed) {
+		if (surnameMatchResult.getSurnamePoints() >= 20 && this.fullSurnameFrequency <= VERY_RARE && surnameMatchResult.isLegalSurnameUsed()) {
 			surnameMatchResult.setSurnamePoints(surnameMatchResult.getSurnamePoints() + 5);
 		}
 
@@ -1069,7 +1069,7 @@ public class PenMatchService {
 				&& studentSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
 			// Verify if legal surname matches master legal surname
 			surnamePoints = 20;
-			legalUsed = true;
+			legalSurnameUsed = true;
 		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
 				&& usualSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
 			// Verify is usual surname matches master usual surname
@@ -1078,7 +1078,7 @@ public class PenMatchService {
 				&& studentSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
 			// Verify if legal surname matches master usual surname
 			surnamePoints = 20;
-			legalUsed = true;
+			legalSurnameUsed = true;
 		} else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
 				&& usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
 			// Verify if usual surname matches master legal surname
@@ -1142,8 +1142,148 @@ public class PenMatchService {
 	/**
 	 * Calculate points for given name match
 	 */
-	private void matchGivenName(PenMatchStudent student, PenMasterRecord master) {
+	private GivenNameMatchResult matchGivenName(PenMatchStudent student, PenMasterRecord master) {
+		Integer givenNamePoints = 0;
+		boolean givenFlip = false;
+		
+		//Match given to given - use 10 characters
 
+		String legalGiven = this.penMatchTransactionNames.getLegalGiven();
+		String usualGiven = this.penMatchTransactionNames.getUsualGiven();
+		String alternateLegalGiven = this.penMatchTransactionNames.getAlternateLegalGiven();
+		String alternateUsualGiven = this.penMatchTransactionNames.getAlternateUsualGiven();
+		
+		String nickname1 = this.penMatchTransactionNames.getNickname1();
+		String nickname2 = this.penMatchTransactionNames.getNickname2();
+		String nickname3 = this.penMatchTransactionNames.getNickname3();
+		String nickname4 = this.penMatchTransactionNames.getNickname4();
+		
+		if ((hasGivenNameSubsetCharMatch(legalGiven, 10)) || (hasGivenNameSubsetCharMatch(usualGiven, 10))
+				|| (hasGivenNameSubsetCharMatch(alternateLegalGiven, 10))
+				|| (hasGivenNameSubsetCharMatch(alternateUsualGiven, 10))) {
+			// 10 Character match
+			givenNamePoints = 20;
+		} else if ((hasGivenNameSubsetMatch(legalGiven)) || (hasGivenNameSubsetMatch(usualGiven))
+				|| (hasGivenNameSubsetMatch(alternateLegalGiven))
+				|| (hasGivenNameSubsetMatch(alternateUsualGiven))) {
+			// Has a subset match
+			givenNamePoints = 15;
+		} else if ((hasGivenNameSubsetCharMatch(legalGiven, 4)) || (hasGivenNameSubsetCharMatch(usualGiven, 4))
+				|| (hasGivenNameSubsetCharMatch(alternateLegalGiven, 4))
+				|| (hasGivenNameSubsetCharMatch(alternateUsualGiven, 4))) {
+			// 4 Character Match
+			givenNamePoints = 15;
+		} else if ((hasGivenNameSubsetCharMatch(nickname1, 10)) || (hasGivenNameSubsetCharMatch(nickname2, 10))
+				|| (hasGivenNameSubsetCharMatch(nickname3, 10))
+				|| (hasGivenNameSubsetCharMatch(nickname4, 10))) {
+			// No 4 character matches found , try nicknames 
+			givenNamePoints = 10;
+		} else if ((hasGivenNameSubsetCharMatch(legalGiven, 1)) || (hasGivenNameSubsetCharMatch(usualGiven, 1))
+				|| (hasGivenNameSubsetCharMatch(alternateLegalGiven, 1))
+				|| (hasGivenNameSubsetCharMatch(alternateUsualGiven, 1))) {
+			// 1 Character Match
+			givenNamePoints = 5;
+		} else if ((hasGivenNameSubsetToMiddleNameMatch(legalGiven))
+				|| (hasGivenNameSubsetToMiddleNameMatch(usualGiven))
+				|| (hasGivenNameSubsetToMiddleNameMatch(alternateLegalGiven))
+				|| (hasGivenNameSubsetToMiddleNameMatch(alternateUsualGiven))) {
+			// Check Given to Middle if no matches above (only try 4 characters)
+			givenNamePoints = 10;
+			givenFlip = true;
+		}
+
+		GivenNameMatchResult result = new GivenNameMatchResult();
+		result.setGivenNamePoints(givenNamePoints);
+		result.setGivenNameFlip(givenFlip);
+		return result;
+	}
+	
+	/**
+	 * Utility function to check for subset given name matches
+	 * 
+	 * @param givenName
+	 * @return
+	 */
+	private boolean hasGivenNameSubsetMatch(String givenName) {
+		if (givenName != null && givenName.length() >= 1) {
+			if ((this.penMatchMasterNames.getLegalGiven() != null
+					&& (this.penMatchMasterNames.getLegalGiven().contains(givenName)
+							|| givenName.contains(this.penMatchMasterNames.getLegalGiven())))
+					|| (this.penMatchMasterNames.getUsualGiven() != null
+							&& (this.penMatchMasterNames.getUsualGiven().contains(givenName)
+									|| givenName.contains(this.penMatchMasterNames.getUsualGiven())))
+					|| (this.penMatchMasterNames.getAlternateLegalGiven() != null
+							&& (this.penMatchMasterNames.getAlternateLegalGiven().contains(givenName)
+									|| givenName.contains(this.penMatchMasterNames.getAlternateLegalGiven())))
+					|| (this.penMatchMasterNames.getAlternateUsualGiven() != null
+							&& (this.penMatchMasterNames.getAlternateUsualGiven().contains(givenName)
+									|| givenName.contains(this.penMatchMasterNames.getAlternateUsualGiven())))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function for subset match
+	 * 
+	 * @param givenName
+	 * @param numOfChars
+	 * @return
+	 */
+	private boolean hasGivenNameSubsetCharMatch(String givenName, int numOfChars) {
+		if (givenName != null && givenName.length() >= numOfChars) {
+			if ((this.penMatchMasterNames.getLegalGiven() != null
+					&& this.penMatchMasterNames.getLegalGiven().length() >= numOfChars
+					&& this.penMatchMasterNames.getLegalGiven().substring(0, numOfChars)
+							.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getUsualGiven() != null
+							&& this.penMatchMasterNames.getUsualGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getUsualGiven().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateLegalGiven() != null
+							&& this.penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateUsualGiven() != null
+							&& this.penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function to check for subset given name matches to given names
+	 * 
+	 * @param givenName
+	 * @return
+	 */
+	private boolean hasGivenNameSubsetToMiddleNameMatch(String givenName) {
+		int numOfChars = 4;
+		if (givenName != null && givenName.length() >= numOfChars) {
+			if ((this.penMatchMasterNames.getLegalMiddle() != null
+					&& this.penMatchMasterNames.getLegalMiddle().length() >= numOfChars
+					&& this.penMatchMasterNames.getLegalMiddle().substring(0, numOfChars)
+							.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getUsualMiddle() != null
+							&& this.penMatchMasterNames.getUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getUsualMiddle().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateLegalMiddle() != null
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateUsualMiddle() != null
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars)
+									.equals(givenName.substring(0, numOfChars)))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
