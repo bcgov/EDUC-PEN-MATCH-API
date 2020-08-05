@@ -66,8 +66,6 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private Integer partSurnameFrequency;
 	private PenAlgorithm algorithmUsed;
-	private Integer givenNamePoints;
-	private boolean givenFlip;
 	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
@@ -738,7 +736,7 @@ public class PenMatchService {
 		Integer sexPoints = matchSex(student, master); // 5 points
 		Integer birthdayPoints = matchBirthday(student, master); // 5, 10, 15 or 20 points
 		SurnameMatchResult surnameMatchResult = matchSurname(student, master); // 10 or 20 points
-		matchGivenName(student, master); // 5, 10, 15 or 20 points
+		GivenNameMatchResult givenNameMatchResult = matchGivenName(student, master); // 5, 10, 15 or 20 points
 
 		// If a perfect match on legal surname , add 5 points if a very rare surname
 		if (surnameMatchResult.getSurnamePoints() >= 20 && this.fullSurnameFrequency <= VERY_RARE && surnameMatchResult.isLegalSurnameUsed()) {
@@ -749,9 +747,9 @@ public class PenMatchService {
 
 		// If given matches middle and middle matches given and there are some
 		// other points, there is a good chance that the names have been flipped
-		if (this.givenFlip && middleNameMatchResult.isMiddleNameFlip()
+		if (givenNameMatchResult.isGivenNameFlip() && middleNameMatchResult.isMiddleNameFlip()
 				&& (surnameMatchResult.getSurnamePoints() >= 10 || birthdayPoints >= 15)) {
-			this.givenNamePoints = 15;
+			givenNameMatchResult.setGivenNamePoints(15);
 			middleNameMatchResult.setMiddleNamePoints(15);
 		}
 
@@ -768,7 +766,7 @@ public class PenMatchService {
 			if (!(student.getSurname() != null && student.getUsualSurname() != null) && surnameMatchResult.getSurnamePoints() == 0) {
 				this.matchFound = false;
 			}
-			if (!(student.getGivenName() != null && student.getUsualGivenName() != null) && this.givenNamePoints == 0) {
+			if (!(student.getGivenName() != null && student.getUsualGivenName() != null) && givenNameMatchResult.getGivenNamePoints() == 0) {
 				this.matchFound = false;
 			}
 			if (!(student.getMiddleName() != null && student.getUsualMiddleName() != null)
@@ -802,10 +800,10 @@ public class PenMatchService {
 		// but not same school
 		if (!this.matchFound) {
 			if (localIDMatchResult.getLocalIDPoints() == 5 || localIDMatchResult.getLocalIDPoints() == 20) {
-				bonusPoints = this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
+				bonusPoints = givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints()
 						+ localIDMatchResult.getLocalIDPoints();
 			} else {
-				bonusPoints = this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints();
+				bonusPoints = givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints();
 			}
 
 			if (sexPoints >= 5 && birthdayPoints >= 20 && surnameMatchResult.getSurnamePoints() >= 20) {
@@ -823,7 +821,7 @@ public class PenMatchService {
 		// (65 points total)
 		if (!this.matchFound) {
 			if (localIDMatchResult.getLocalIDPoints() >= 20 && surnameMatchResult.getSurnamePoints() >= 20) {
-				bonusPoints = sexPoints + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
+				bonusPoints = sexPoints + givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints()
 						+ addressPoints;
 				if (bonusPoints >= 25) {
 					this.matchFound = true;
@@ -839,7 +837,7 @@ public class PenMatchService {
 		// (65 points total)
 		if (!this.matchFound) {
 			if (localIDMatchResult.getLocalIDPoints() >= 20 && sexPoints >= 5 && birthdayPoints >= 20) {
-				bonusPoints = surnameMatchResult.getSurnamePoints() + this.givenNamePoints + middleNameMatchResult.getMiddleNamePoints()
+				bonusPoints = surnameMatchResult.getSurnamePoints() + givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints()
 						+ addressPoints;
 				if (bonusPoints >= 20) {
 					this.matchFound = true;
@@ -854,7 +852,7 @@ public class PenMatchService {
 		// Algorithm 5: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			bonusPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + this.givenNamePoints
+			bonusPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + givenNameMatchResult.getGivenNamePoints()
 					+ middleNameMatchResult.getMiddleNamePoints() + localIDMatchResult.getLocalIDPoints()
 					+ addressPoints;
 			if (bonusPoints >= idDemerits) {
@@ -865,7 +863,7 @@ public class PenMatchService {
 
 			if (bonusPoints >= 55 || (bonusPoints >= 40 && localIDMatchResult.getLocalIDPoints() >= 20)
 					|| (bonusPoints >= 50 && surnameMatchResult.getSurnamePoints() >= 10 && birthdayPoints >= 15
-							&& this.givenNamePoints >= 15)
+							&& givenNameMatchResult.getGivenNamePoints() >= 15)
 					|| (bonusPoints >= 50 && birthdayPoints >= 20)
 					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
 				this.matchFound = true;
@@ -885,14 +883,14 @@ public class PenMatchService {
 		// Algorithm 5.1: Use points for Sex + birthdate + surname + given name +
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!this.matchFound) {
-			if (sexPoints == 5 && birthdayPoints >= 10 && surnameMatchResult.getSurnamePoints() >= 20 && this.givenNamePoints >= 10) {
+			if (sexPoints == 5 && birthdayPoints >= 10 && surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 10) {
 				this.matchFound = true;
 				this.algorithmUsed = PenAlgorithm.ALG_51;
 				totalPoints = 45;
 
 				// Identify a pretty good match - needs to be better than the Questionable Match
 				// but not a full 60 points as above
-				if (surnameMatchResult.getSurnamePoints() >= 20 && this.givenNamePoints >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
+				if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
 					this.prettyGoodMatches = this.prettyGoodMatches + 1;
 					totalPoints = 55;
 				}
