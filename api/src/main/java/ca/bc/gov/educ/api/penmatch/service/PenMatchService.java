@@ -766,7 +766,7 @@ public class PenMatchService {
 			this.surnamePoints = this.surnamePoints + 5;
 		}
 
-		MiddleNameMatchResult middleNameMatchResult = matchMiddleName(student, master); // 5, 10, 15 or 20 points
+		MiddleNameMatchResult middleNameMatchResult = matchMiddleName(); // 5, 10, 15 or 20 points
 
 		// If given matches middle and middle matches given and there are some
 		// other points, there is a good chance that the names have been flipped
@@ -1069,7 +1069,7 @@ public class PenMatchService {
 	/**
 	 * Calculate points for middle name match
 	 */
-	private MiddleNameMatchResult matchMiddleName(PenMatchStudent student, PenMasterRecord master) {
+	private MiddleNameMatchResult matchMiddleName() {
 		Integer middleNamePoints = 0;
 		boolean middleFlip = false;
 
@@ -1138,6 +1138,37 @@ public class PenMatchService {
 		}
 		return false;
 	}
+	
+	/**
+	 * Utility function for subset match
+	 * 
+	 * @param middleName
+	 * @param numOfChars
+	 * @return
+	 */
+	private boolean hasMiddleNameSubsetCharMatch(String middleName, int numOfChars) {
+		if (middleName != null && middleName.length() >= numOfChars) {
+			if ((this.penMatchMasterNames.getLegalMiddle() != null
+					&& this.penMatchMasterNames.getLegalMiddle().length() >= numOfChars
+					&& this.penMatchMasterNames.getLegalMiddle().substring(0, numOfChars)
+							.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getUsualMiddle() != null
+							&& this.penMatchMasterNames.getUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getUsualMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateLegalMiddle() != null
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))
+					|| (this.penMatchMasterNames.getAlternateUsualMiddle() != null
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars
+							&& this.penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars)
+									.equals(middleName.substring(0, numOfChars)))) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Utility function to check for subset middle name matches to given names
@@ -1163,37 +1194,6 @@ public class PenMatchService {
 					|| (this.penMatchMasterNames.getAlternateUsualGiven() != null
 							&& this.penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars
 							&& this.penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars)
-									.equals(middleName.substring(0, numOfChars)))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Utility function for subset match
-	 * 
-	 * @param middleName
-	 * @param numOfChars
-	 * @return
-	 */
-	private boolean hasMiddleNameSubsetCharMatch(String middleName, int numOfChars) {
-		if (middleName != null && middleName.length() >= numOfChars) {
-			if ((this.penMatchMasterNames.getLegalMiddle() != null
-					&& this.penMatchMasterNames.getLegalMiddle().length() >= numOfChars
-					&& this.penMatchMasterNames.getLegalMiddle().substring(0, numOfChars)
-							.equals(middleName.substring(0, numOfChars)))
-					|| (this.penMatchMasterNames.getUsualMiddle() != null
-							&& this.penMatchMasterNames.getUsualMiddle().length() >= numOfChars
-							&& this.penMatchMasterNames.getUsualMiddle().substring(0, numOfChars)
-									.equals(middleName.substring(0, numOfChars)))
-					|| (this.penMatchMasterNames.getAlternateLegalMiddle() != null
-							&& this.penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars
-							&& this.penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars)
-									.equals(middleName.substring(0, numOfChars)))
-					|| (this.penMatchMasterNames.getAlternateUsualMiddle() != null
-							&& this.penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars
-							&& this.penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars)
 									.equals(middleName.substring(0, numOfChars)))) {
 				return true;
 			}
