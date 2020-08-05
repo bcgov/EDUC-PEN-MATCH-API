@@ -64,12 +64,10 @@ public class PenMatchService {
 	private Integer fullSurnameFrequency;
 	private Integer partSurnameFrequency;
 	private PenAlgorithm algorithmUsed;
-	private boolean useGivenInitial;
 	private Integer surnamePoints;
 	private Integer givenNamePoints;
 	private boolean legalUsed;
 	private boolean givenFlip;
-
 	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
@@ -181,7 +179,6 @@ public class PenMatchService {
 		student.setNumberOfMatches(0);
 		this.type5Match = false;
 		this.type5F1 = false;
-		this.useGivenInitial = false;
 		this.alternateLocalID = "TTT";
 
 		// Strip off leading zeros, leading blanks and trailing blanks
@@ -479,14 +476,14 @@ public class PenMatchService {
 	 * is quite rare
 	 */
 	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, String localStudentNumber) {
-		this.useGivenInitial = true;
+		boolean useGivenInitial = true;
 		Integer totalPoints = 0;
 		String partStudentSurname;
 		String partStudentGiven;
 
 		if (this.partSurnameFrequency <= NOT_VERY_FREQUENT) {
 			partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
-			this.useGivenInitial = false;
+			useGivenInitial = false;
 		} else {
 			if (this.partSurnameFrequency <= VERY_FREQUENT) {
 				partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
@@ -498,13 +495,13 @@ public class PenMatchService {
 		}
 
 		if (student.getLocalID() == null) {
-			if (this.useGivenInitial) {
+			if (useGivenInitial) {
 				totalPoints = lookupNoLocalID();
 			} else {
 				totalPoints = lookupNoInitNoLocalID();
 			}
 		} else {
-			if (this.useGivenInitial) {
+			if (useGivenInitial) {
 				totalPoints = lookupWithAllParts();
 			} else {
 				totalPoints = lookupNoInit();
