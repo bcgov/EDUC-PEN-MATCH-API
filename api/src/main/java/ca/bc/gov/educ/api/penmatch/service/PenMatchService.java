@@ -65,7 +65,6 @@ public class PenMatchService {
 	private Integer surnameSize;
 	private Integer fullSurnameFrequency;
 	private Integer partSurnameFrequency;
-	private PenAlgorithm algorithmUsed;
 	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
@@ -84,6 +83,7 @@ public class PenMatchService {
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
 		log.info("Received student payload :: {}", student);
 		boolean penFoundOnMaster = false;
+		PenAlgorithm penAlgorithm = null;
 
 		initialize(student);
 
@@ -107,20 +107,20 @@ public class PenMatchService {
 						if (penConfirmation.getPenMasterRecord().getMasterStudentNumber() != null) {
 							penFoundOnMaster = true;
 						}
-						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber());
+						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(), penConfirmation.getAlgorithmUsed());
 					} else {
 						student.setPenStatus(PEN_STATUS_C);
-						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber());
+						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(), penConfirmation.getAlgorithmUsed());
 					}
 
 				} else if (checkDigitErrorCode.equals(CHECK_DIGIT_ERROR_CODE_001)) {
 					student.setPenStatus(PEN_STATUS_C);
-					findMatchesOnPenDemog(student, penFoundOnMaster, null);
+					findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm);
 				}
 			}
 		} else {
 			student.setPenStatus(PEN_STATUS_D);
-			findMatchesOnPenDemog(student, penFoundOnMaster, null);
+			findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm);
 		}
 
 		/*
@@ -383,16 +383,17 @@ public class PenMatchService {
 	 * match on school and local ID and one or more of surname, given name or
 	 * birthday
 	 */
-	private void simpleCheckForMatch(PenMatchStudent student, PenMasterRecord master) {
+	private PenAlgorithm simpleCheckForMatch(PenMatchStudent student, PenMasterRecord master) {
 		this.matchFound = false;
 		this.type5Match = false;
+		PenAlgorithm algorithmUsed = null;
 
 		if (student.getSurname() != null && student.getSurname() == master.getMasterStudentSurname()
 				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
 				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
 				&& student.getSex() != null && student.getSex() == master.getMasterStudentSex()) {
 			this.matchFound = true;
-			this.algorithmUsed = PenAlgorithm.ALG_S1;
+			algorithmUsed = PenAlgorithm.ALG_S1;
 		} else if (student.getSurname() != null && student.getSurname() == master.getMasterStudentSurname()
 				&& student.getGivenName() != null && student.getGivenName() == master.getMasterStudentGiven()
 				&& student.getDob() != null && student.getDob() == master.getMasterStudentDob()
@@ -402,7 +403,7 @@ public class PenMatchService {
 					&& (student.getLocalID() == master.getMasterPenLocalId()
 							|| this.alternateLocalID == master.getMasterAlternateLocalId())) {
 				this.matchFound = true;
-				this.algorithmUsed = PenAlgorithm.ALG_S2;
+				algorithmUsed = PenAlgorithm.ALG_S2;
 			}
 		}
 
@@ -410,6 +411,7 @@ public class PenMatchService {
 			loadPenMatchHistory();
 		}
 
+		return algorithmUsed;
 	}
 
 	/**
@@ -434,6 +436,7 @@ public class PenMatchService {
 		PenConfirmationResult penConfirmationResult = new PenConfirmationResult();
 		String localStudentNumber = student.getStudentNumber();
 		student.setDeceased(false);
+		PenAlgorithm algorithmUsed = null;
 
 		PenMasterRecord penMasterRecord = lookupStudentByPEN(localStudentNumber);
 
@@ -445,14 +448,14 @@ public class PenMatchService {
 				penConfirmationResult.setMergedPEN(penMasterRecord.getMasterStudentTrueNumber());
 				penMasterRecord = lookupStudentByPEN(localStudentNumber);
 				if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == localStudentNumber) {
-					simpleCheckForMatch(student, penMasterRecord);
+					algorithmUsed = simpleCheckForMatch(student, penMasterRecord);
 					if (penMasterRecord.getMasterStudentStatus().equals("D")) {
 						localStudentNumber = null;
 						student.setDeceased(true);
 					}
 				}
 			} else {
-				simpleCheckForMatch(student, penMasterRecord);
+				algorithmUsed = simpleCheckForMatch(student, penMasterRecord);
 			}
 			if (this.matchFound) {
 				penConfirmationResult.setResultCode(PenConfirmationResult.PEN_CONFIRMED);
@@ -464,6 +467,7 @@ public class PenMatchService {
 		}
 
 		penConfirmationResult.setLocalStudentNumber(localStudentNumber);
+		penConfirmationResult.setAlgorithmUsed(algorithmUsed);
 		return penConfirmationResult;
 	}
 
@@ -474,7 +478,8 @@ public class PenMatchService {
 	 * long use the given initial in the lookup unless 1st 4 characters of surname
 	 * is quite rare
 	 */
-	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, String localStudentNumber) {
+	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, String localStudentNumber,
+			PenAlgorithm algorithmUsed) {
 		boolean useGivenInitial = true;
 		Integer totalPoints = 0;
 		String partStudentSurname;
@@ -512,9 +517,9 @@ public class PenMatchService {
 		// the list of possible students who match.
 		if (student.getPenStatus() == PEN_STATUS_B && penFoundOnMaster) {
 			this.reallyGoodMatches = 0;
-			this.algorithmUsed = PenAlgorithm.ALG_00;
+			algorithmUsed = PenAlgorithm.ALG_00;
 			this.type5F1 = true;
-			mergeNewMatchIntoList(student, localStudentNumber, totalPoints);
+			mergeNewMatchIntoList(student, localStudentNumber, totalPoints, algorithmUsed);
 		}
 
 		// If only one really good match, and no pretty good matches,
@@ -588,12 +593,13 @@ public class PenMatchService {
 	 * Merge new match into the list Assign points for algorithm and score for sort
 	 * use
 	 */
-	private void mergeNewMatchIntoList(PenMatchStudent student, String wyPEN, Integer totalPoints) {
+	private void mergeNewMatchIntoList(PenMatchStudent student, String wyPEN, Integer totalPoints,
+			PenAlgorithm algorithmUsed) {
 		Integer wyAlgorithmResult;
 		Integer wyScore;
 		Integer wyIndex;
 
-		switch (this.algorithmUsed) {
+		switch (algorithmUsed) {
 		case ALG_S1:
 			wyAlgorithmResult = 100;
 			wyScore = 100;
@@ -615,11 +621,11 @@ public class PenMatchService {
 		case ALG_40:
 		case ALG_50:
 		case ALG_51:
-			wyAlgorithmResult = Integer.valueOf(this.algorithmUsed.toString()) * 10;
+			wyAlgorithmResult = Integer.valueOf(algorithmUsed.toString()) * 10;
 			wyScore = totalPoints;
 			break;
 		default:
-			log.debug("Unconvertable algorithm code: {}", this.algorithmUsed);
+			log.debug("Unconvertable algorithm code: {}", algorithmUsed);
 			wyAlgorithmResult = 9999;
 			wyScore = 0;
 			break;
@@ -709,7 +715,7 @@ public class PenMatchService {
 	}
 
 	private Integer checkForMatch(PenMatchStudent student, PenMasterRecord master,
-			PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
+			PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames, PenAlgorithm algorithmUsed) {
 		this.matchFound = false;
 		this.type5Match = false;
 
@@ -786,7 +792,7 @@ public class PenMatchService {
 			if (this.matchFound) {
 				this.type5Match = true;
 				this.type5F1 = true;
-				this.algorithmUsed = PenAlgorithm.ALG_SP;
+				algorithmUsed = PenAlgorithm.ALG_SP;
 			}
 		}
 
@@ -811,7 +817,7 @@ public class PenMatchService {
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
 					totalPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints;
-					this.algorithmUsed = PenAlgorithm.ALG_20;
+					algorithmUsed = PenAlgorithm.ALG_20;
 				}
 			}
 		}
@@ -828,7 +834,7 @@ public class PenMatchService {
 					this.reallyGoodPEN = master.getMasterStudentNumber();
 					totalPoints = localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints()
 							+ bonusPoints;
-					this.algorithmUsed = PenAlgorithm.ALG_30;
+					algorithmUsed = PenAlgorithm.ALG_30;
 				}
 			}
 		}
@@ -844,7 +850,7 @@ public class PenMatchService {
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
 					this.reallyGoodPEN = master.getMasterStudentNumber();
 					totalPoints = localIDMatchResult.getLocalIDPoints() + sexPoints + birthdayPoints + bonusPoints;
-					this.algorithmUsed = PenAlgorithm.ALG_40;
+					algorithmUsed = PenAlgorithm.ALG_40;
 				}
 			}
 		}
@@ -867,7 +873,7 @@ public class PenMatchService {
 					|| (bonusPoints >= 50 && birthdayPoints >= 20)
 					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
 				this.matchFound = true;
-				this.algorithmUsed = PenAlgorithm.ALG_50;
+				algorithmUsed = PenAlgorithm.ALG_50;
 				totalPoints = bonusPoints;
 				if (bonusPoints >= 70) {
 					this.reallyGoodMatches = this.reallyGoodMatches + 1;
@@ -886,7 +892,7 @@ public class PenMatchService {
 			if (sexPoints == 5 && birthdayPoints >= 10 && surnameMatchResult.getSurnamePoints() >= 20
 					&& givenNameMatchResult.getGivenNamePoints() >= 10) {
 				this.matchFound = true;
-				this.algorithmUsed = PenAlgorithm.ALG_51;
+				algorithmUsed = PenAlgorithm.ALG_51;
 				totalPoints = 45;
 
 				// Identify a pretty good match - needs to be better than the Questionable Match
@@ -1558,6 +1564,11 @@ public class PenMatchService {
 		return false;
 	}
 
+	/**
+	 * Check frequency of surname
+	 * 
+	 * @return
+	 */
 	private Integer lookupSurnameFrequency() {
 		// TODO Implement this
 		// Note this returns in two different places
