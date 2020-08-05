@@ -131,7 +131,8 @@ public class PenMatchService {
 		 * digits 3-9 have already been assigned in an earlier version of PEN.
 		 */
 		if ((student.getPenStatus() == PEN_STATUS_C0 || student.getPenStatus() == PEN_STATUS_D0)
-				&& (student.getUpdateCode() == "Y" || student.getUpdateCode() == "R")) {
+				&& (student.getUpdateCode() != null
+						&& (student.getUpdateCode().equals("Y") || student.getUpdateCode().equals("R")))) {
 			checkForCoreData(student);
 		}
 
@@ -371,7 +372,8 @@ public class PenMatchService {
 
 		String penCheckDigit = pen.substring(8, 9);
 
-		if ((finalSum % 10 == 0 && penCheckDigit == "0") || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit))) {
+		if ((finalSum % 10 == 0 && penCheckDigit.equals("0"))
+				|| ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit))) {
 			return CHECK_DIGIT_ERROR_CODE_000;
 		} else {
 			return CHECK_DIGIT_ERROR_CODE_001;
@@ -440,14 +442,14 @@ public class PenMatchService {
 
 		if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == localStudentNumber) {
 			penConfirmationResult.setResultCode(PenConfirmationResult.PEN_ON_FILE);
-			if (penMasterRecord.getMasterStudentStatus() == "M"
+			if (penMasterRecord.getMasterStudentStatus() != null && penMasterRecord.getMasterStudentStatus().equals("M")
 					&& penMasterRecord.getMasterStudentTrueNumber() != null) {
 				localStudentNumber = penMasterRecord.getMasterStudentTrueNumber();
 				penConfirmationResult.setMergedPEN(penMasterRecord.getMasterStudentTrueNumber());
 				penMasterRecord = getPENDemogMasterRecord(localStudentNumber);
 				if (penMasterRecord != null && penMasterRecord.getMasterStudentNumber() == localStudentNumber) {
 					simpleCheckForMatch(student, penMasterRecord);
-					if (penMasterRecord.getMasterStudentStatus() == "D") {
+					if (penMasterRecord.getMasterStudentStatus().equals("D")) {
 						localStudentNumber = null;
 						student.setDeceased(true);
 					}
@@ -772,7 +774,7 @@ public class PenMatchService {
 
 		// Special search algorithm - just looks for any points in all of
 		// the non-blank search fields provided
-		if (this.updateCode == "S") {
+		if (this.updateCode != null && this.updateCode.equals("S")) {
 			this.matchFound = true;
 			if (student.getSex() != null && sexPoints == 0) {
 				this.matchFound = false;
@@ -879,7 +881,7 @@ public class PenMatchService {
 					|| (bonusPoints >= 50 && this.surnamePoints >= 10 && birthdayPoints >= 15
 							&& this.givenNamePoints >= 15)
 					|| (bonusPoints >= 50 && birthdayPoints >= 20)
-					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4) == "ZZZ")) {
+					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
 				this.matchFound = true;
 				this.algorithmUsed = PenAlgorithm.ALG_50;
 				totalPoints = bonusPoints;
