@@ -1,14 +1,14 @@
 package ca.bc.gov.educ.api.penmatch.support;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * How to test spring-security-oauth2 resource server security?

@@ -13,8 +13,10 @@ import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
+import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
+import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
@@ -63,9 +65,10 @@ public class PenMatchService {
 	private Integer minSurnameSearchSize;
 	private Integer maxSurnameSearchSize;
 	private Integer surnameSize;
-	private Integer fullSurnameFrequency;
-	private Integer partSurnameFrequency;
 	private String updateCode;
+
+	@Getter(AccessLevel.PRIVATE)
+	private final SurnameFrequencyRepository surnameFrequencyRepository;
 
 	@Getter(AccessLevel.PRIVATE)
 	private final PenDemographicsRepository penDemographicsRepository;
@@ -75,9 +78,10 @@ public class PenMatchService {
 
 	@Autowired
 	public PenMatchService(final PenDemographicsRepository penDemographicsRepository,
-			NicknamesRepository nicknamesRepository) {
+			NicknamesRepository nicknamesRepository, SurnameFrequencyRepository surnameFrequencyRepository) {
 		this.penDemographicsRepository = penDemographicsRepository;
 		this.nicknamesRepository = nicknamesRepository;
+		this.surnameFrequencyRepository = surnameFrequencyRepository;
 	}
 
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
@@ -85,7 +89,7 @@ public class PenMatchService {
 		boolean penFoundOnMaster = false;
 		PenAlgorithm penAlgorithm = null;
 
-		initialize(student);
+		Integer partSurnameFrequency = initialize(student);
 
 		if (student.getStudentNumber() != null) {
 			String checkDigitErrorCode = penCheckDigit(student.getStudentNumber());
@@ -107,20 +111,22 @@ public class PenMatchService {
 						if (penConfirmation.getPenMasterRecord().getMasterStudentNumber() != null) {
 							penFoundOnMaster = true;
 						}
-						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(), penConfirmation.getAlgorithmUsed());
+						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(),
+								penConfirmation.getAlgorithmUsed(), partSurnameFrequency);
 					} else {
 						student.setPenStatus(PEN_STATUS_C);
-						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(), penConfirmation.getAlgorithmUsed());
+						findMatchesOnPenDemog(student, penFoundOnMaster, penConfirmation.getLocalStudentNumber(),
+								penConfirmation.getAlgorithmUsed(), partSurnameFrequency);
 					}
 
 				} else if (checkDigitErrorCode.equals(CHECK_DIGIT_ERROR_CODE_001)) {
 					student.setPenStatus(PEN_STATUS_C);
-					findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm);
+					findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partSurnameFrequency);
 				}
 			}
 		} else {
 			student.setPenStatus(PEN_STATUS_D);
-			findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm);
+			findMatchesOnPenDemog(student, penFoundOnMaster, null, penAlgorithm, partSurnameFrequency);
 		}
 
 		/*
@@ -172,7 +178,7 @@ public class PenMatchService {
 		return null;
 	}
 
-	private void initialize(PenMatchStudent student) {
+	private Integer initialize(PenMatchStudent student) {
 		student.setPenStatusMessage(null);
 		this.matchingPENs = new String[20];
 
@@ -212,17 +218,19 @@ public class PenMatchService {
 		// Lookup surname frequency
 		// It could generate extra points later if
 		// there is a perfect match on surname
-		this.fullSurnameFrequency = 0;
+		Integer fullSurnameFrequency = 0;
+		Integer partSurnameFrequency = 0;
 		String fullStudentSurname = student.getSurname();
-		this.fullSurnameFrequency = lookupSurnameFrequency();
+		fullSurnameFrequency = lookupSurnameFrequency(fullStudentSurname);
 
-		if (this.fullSurnameFrequency > VERY_FREQUENT) {
-			this.partSurnameFrequency = this.fullSurnameFrequency;
+		if (fullSurnameFrequency > VERY_FREQUENT) {
+			partSurnameFrequency = fullSurnameFrequency;
 		} else {
-			this.partSurnameFrequency = 0;
 			fullStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
-			this.partSurnameFrequency = lookupSurnameFrequency();
+			partSurnameFrequency = lookupSurnameFrequency(fullStudentSurname);
 		}
+
+		return partSurnameFrequency;
 	}
 
 	/**
@@ -479,17 +487,17 @@ public class PenMatchService {
 	 * is quite rare
 	 */
 	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, String localStudentNumber,
-			PenAlgorithm algorithmUsed) {
+			PenAlgorithm algorithmUsed, Integer partSurnameFrequency) {
 		boolean useGivenInitial = true;
 		Integer totalPoints = 0;
 		String partStudentSurname;
 		String partStudentGiven;
 
-		if (this.partSurnameFrequency <= NOT_VERY_FREQUENT) {
+		if (partSurnameFrequency <= NOT_VERY_FREQUENT) {
 			partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
 			useGivenInitial = false;
 		} else {
-			if (this.partSurnameFrequency <= VERY_FREQUENT) {
+			if (partSurnameFrequency <= VERY_FREQUENT) {
 				partStudentSurname = student.getSurname().substring(0, this.minSurnameSearchSize);
 				partStudentGiven = student.getGivenName().substring(0, 1);
 			} else {
@@ -715,7 +723,8 @@ public class PenMatchService {
 	}
 
 	private Integer checkForMatch(PenMatchStudent student, PenMasterRecord master,
-			PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames, PenAlgorithm algorithmUsed) {
+			PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames, PenAlgorithm algorithmUsed,
+			Integer fullSurnameFrequency) {
 		this.matchFound = false;
 		this.type5Match = false;
 
@@ -736,7 +745,7 @@ public class PenMatchService {
 		// points
 
 		// If a perfect match on legal surname , add 5 points if a very rare surname
-		if (surnameMatchResult.getSurnamePoints() >= 20 && this.fullSurnameFrequency <= VERY_RARE
+		if (surnameMatchResult.getSurnamePoints() >= 20 && fullSurnameFrequency <= VERY_RARE
 				&& surnameMatchResult.isLegalSurnameUsed()) {
 			surnameMatchResult.setSurnamePoints(surnameMatchResult.getSurnamePoints() + 5);
 		}
@@ -1569,9 +1578,23 @@ public class PenMatchService {
 	 * 
 	 * @return
 	 */
-	private Integer lookupSurnameFrequency() {
+	private Integer lookupSurnameFrequency(String fullStudentSurname) {
 		// TODO Implement this
 		// Note this returns in two different places
-		return 0;
+		Integer surnameFrequency = 0;
+		String nameForSearch = fullStudentSurname;
+
+		while (surnameFrequency < VERY_FREQUENT) {
+			Optional<SurnameFrequencyEntity> surnameEntity = getSurnameFrequencyRepository()
+					.findBySurname(nameForSearch);
+			if (surnameEntity.isPresent()) {
+				surnameFrequency = surnameFrequency + Integer.valueOf(surnameEntity.get().getSurnameFrequency());
+				nameForSearch = surnameEntity.get().getSurname();
+			} else {
+				break;
+			}
+		}
+
+		return surnameFrequency;
 	}
 }
