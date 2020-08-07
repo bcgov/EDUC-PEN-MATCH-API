@@ -19,7 +19,12 @@ public class PenMatchSession {
 	private PenAlgorithm algorithmUsed;
 	private String mergedPEN;
 	private String penConfirmationResultCode;
-	private PenMasterRecord penMasterRecord;
+	private PenMasterRecord masterRecord;
 	private String localStudentNumber;
 	private boolean matchFound;
+	private boolean type5Match;
+	private boolean type5F1;
+	private Integer minSurnameSearchSize;
+	private Integer maxSurnameSearchSize;
+	private String alternateLocalID;
 }
