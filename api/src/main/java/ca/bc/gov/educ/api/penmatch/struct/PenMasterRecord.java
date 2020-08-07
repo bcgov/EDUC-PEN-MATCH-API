@@ -10,29 +10,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PenMasterRecord {
-    private String  masterArchiveFlag;
-    private String  masterStudentNumber;
-    private String  masterStudentSurname;
-    private String  masterStudentGiven;
-    private String  masterStudentMiddle;
-    private String  masterUsualSurname;
-    private String  masterUsualGivenName;
-    private String  masterUsualMiddleName;
-    private String  masterProvinceCode;
-    private String  masterCountryCode;
-    private String  masterPostal;
-    private String  masterStudentDob;
-    private String  masterStudentSex;
-    private String  masterStudentGrade; 
-    private String  masterStudentCitizenship;
-    private String  masterStudentTrueNumber;
-    private String  masterStudentStatus;
-    private String  masterHomeLanguage;        
-    private String  masterAboriginalIndicator;   
-    private String  masterBandCode;       
-    private String  masterMergedFromPEN;  
-    private String  masterPenMincode;      
-    private String  masterPenLocalId;  
+    private String  archiveFlag;
+    private String  studentNumber;
+    private String  surname;
+    private String  given;
+    private String  middle;
+    private String  usualSurname;
+    private String  usualGivenName;
+    private String  usualMiddleName;
+    private String  provinceCode;
+    private String  countryCode;
+    private String  postal;
+    private String  dob;
+    private String  sex;
+    private String  grade; 
+    private String  citizenship;
+    private String  trueNumber;
+    private String  status;
+    private String  homeLanguage;        
+    private String  aboriginalIndicator;   
+    private String  bandCode;       
+    private String  mergedFromPEN;  
+    private String  mincode;      
+    private String  localId;  
     
-    private String masterAlternateLocalId;
+    private String alternateLocalId;
 }

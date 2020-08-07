@@ -1,59 +1,45 @@
-package ca.bc.gov.educ.api.penmatch.controller;
+package ca.bc.gov.educ.api.penmatch.service;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import java.io.IOException;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
-import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class PenMatchControllerTest {
-	private MockMvc mvc;
+@DataJpaTest
+public class PenMatchServiceTest {
+
+
+	PenMatchService service;
 
 	@Autowired
 	NicknamesRepository nicknamesRepository;
-	
+
 	@Autowired
 	PenDemographicsRepository penDemogRepository;
-	
+
 	@Autowired
 	SurnameFrequencyRepository surnameFreqRepository;
 
-	@Autowired
-	PenMatchController controller;
-
 	@Before
-	public void setUp() throws IOException {
-		MockitoAnnotations.initMocks(this);
-		mvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
+	public void before() {
+		service = new PenMatchService(penDemogRepository, nicknamesRepository, surnameFreqRepository);
 	}
 
 	@Test
-	@WithMockOAuth2Scope(scope = "READ_PEN_MATCH")
-	public void testCreateStudent_GivenValidPayload_ShouldReturnStatusCreated() throws Exception {
-		PenMatchStudent entity = createPenMatchStudent();
-		this.mvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.content(asJsonString(entity))).andDo(print());
+	public void testMatchStudent_WhenPayloadIsValid_ShouldReturnSavedObject() {
+		PenMatchStudent student = createPenMatchStudent();
+		assertNotNull(service.matchStudent(student));
+		assertNotNull(student.getPenStatus());
 	}
 
 	private PenMatchStudent createPenMatchStudent() {
@@ -105,13 +91,4 @@ public class PenMatchControllerTest {
 
 		return student;
 	}
-
-	public static String asJsonString(final Object obj) {
-		try {
-			return new ObjectMapper().writeValueAsString(obj);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 }
