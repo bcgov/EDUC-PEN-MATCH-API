@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Immutable
 @NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInit", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME STARTING WITH ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogWithAllParts", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME STARTING WITH ? AND STUD_GIVEN STARTING WITH ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoLocalID", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME STARTING WITH ? AND STUD_GIVEN STARTING WITH ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInitNoLocalID", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME STARTING WITH ?)", resultClass = PenDemographicsEntity.class)
 @Table(name = "PEN_DEMOG")
 public class PenDemographicsEntity {
 

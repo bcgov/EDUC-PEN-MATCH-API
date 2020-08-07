@@ -58,13 +58,6 @@ public class PenMatchService {
 	public static final Integer VERY_FREQUENT = 500;
 	public static final Integer NOT_VERY_FREQUENT = 50;
 	public static final Integer VERY_RARE = 5;
-	private String[] matchingPENs;
-	private Integer[] matchingAlgorithms;
-	private Integer[] matchingScores;
-	private Integer reallyGoodMatches;
-	private Integer prettyGoodMatches;
-	private String reallyGoodPEN;
-	private String updateCode;
 
 	@Getter(AccessLevel.PRIVATE)
 	private final SurnameFrequencyRepository surnameFrequencyRepository;
@@ -95,7 +88,6 @@ public class PenMatchService {
 	public PenMatchStudent matchStudent(PenMatchStudent student) {
 		log.info("Received student payload :: {}", student);
 		boolean penFoundOnMaster = false;
-		PenAlgorithm penAlgorithm = null;
 
 		PenMatchSession session = initialize(student);
 
@@ -191,12 +183,11 @@ public class PenMatchService {
 	private PenMatchSession initialize(PenMatchStudent student) {
 		PenMatchSession session = new PenMatchSession();
 		student.setPenStatusMessage(null);
-		this.matchingPENs = new String[20];
+		session.setMatchingPENs(new String[20]);
 
-		this.reallyGoodMatches = 0;
-		this.prettyGoodMatches = 0;
-		this.reallyGoodPEN = null;
-
+		session.setReallyGoodMatches(0);
+		session.setPrettyGoodMatches(0);
+		session.setReallyGoodPEN(null);
 		student.setNumberOfMatches(0);
 		session.setType5F1(false);
 		session.setType5Match(false);
@@ -502,34 +493,32 @@ public class PenMatchService {
 	 */
 	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, PenMatchSession session) {
 		boolean useGivenInitial = true;
-		Integer totalPoints = 0;
-		String partStudentSurname;
-		String partStudentGiven;
+
 
 		if (session.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
-			partStudentSurname = student.getSurname().substring(0, session.getMinSurnameSearchSize());
+			session.setPartialStudentSurname(student.getSurname().substring(0, session.getMinSurnameSearchSize()));
 			useGivenInitial = false;
 		} else {
 			if (session.getPartialSurnameFrequency() <= VERY_FREQUENT) {
-				partStudentSurname = student.getSurname().substring(0, session.getMinSurnameSearchSize());
-				partStudentGiven = student.getGivenName().substring(0, 1);
+				session.setPartialStudentSurname(student.getSurname().substring(0, session.getMinSurnameSearchSize()));
+				session.setPartialStudentGiven(student.getGivenName().substring(0, 1));
 			} else {
-				partStudentSurname = student.getSurname().substring(0, session.getMaxSurnameSearchSize());
-				partStudentGiven = student.getGivenName().substring(0, 2);
+				session.setPartialStudentSurname(student.getSurname().substring(0, session.getMaxSurnameSearchSize()));
+				session.setPartialStudentGiven(student.getGivenName().substring(0, 2));
 			}
 		}
 
 		if (student.getLocalID() == null) {
 			if (useGivenInitial) {
-				totalPoints = lookupNoLocalID();
+				lookupNoLocalID(student, session);
 			} else {
-				totalPoints = lookupNoInitNoLocalID();
+				lookupNoInitNoLocalID(student, session);
 			}
 		} else {
 			if (useGivenInitial) {
-				totalPoints = lookupWithAllParts();
+				lookupWithAllParts(student, session);
 			} else {
-				totalPoints = lookupNoInit(student, session);
+				lookupNoInit(student, session);
 			}
 		}
 
@@ -537,43 +526,43 @@ public class PenMatchService {
 		// on PEN-MASTER with that PEN, then add the student on PEN-MASTER to
 		// the list of possible students who match.
 		if (student.getPenStatus() == PEN_STATUS_B && penFoundOnMaster) {
-			this.reallyGoodMatches = 0;
+			session.setReallyGoodMatches(0);
 			session.setAlgorithmUsed(PenAlgorithm.ALG_00);
 			session.setType5F1(true);
-			mergeNewMatchIntoList(student, session.getLocalStudentNumber(), totalPoints, session.getAlgorithmUsed());
+			mergeNewMatchIntoList(student, session.getLocalStudentNumber(), session);
 		}
 
 		// If only one really good match, and no pretty good matches,
 		// just send the one PEN back
-		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && this.reallyGoodMatches == 1
-				&& this.prettyGoodMatches == 0) {
-			student.setPen1(this.reallyGoodPEN);
-			student.setStudentNumber(this.reallyGoodPEN);
+		if (student.getPenStatus().substring(0, 1) == PEN_STATUS_D && session.getReallyGoodMatches() == 1
+				&& session.getPrettyGoodMatches() == 0) {
+			student.setPen1(session.getReallyGoodPEN());
+			student.setStudentNumber(session.getReallyGoodPEN());
 			student.setNumberOfMatches(1);
 			student.setPenStatus(PEN_STATUS_D1);
 			return;
 		} else {
-			log.debug("List of matching PENs: {}", matchingPENs);
-			student.setPen1(matchingPENs[0]);
-			student.setPen2(matchingPENs[1]);
-			student.setPen3(matchingPENs[2]);
-			student.setPen4(matchingPENs[3]);
-			student.setPen5(matchingPENs[4]);
-			student.setPen6(matchingPENs[5]);
-			student.setPen7(matchingPENs[6]);
-			student.setPen8(matchingPENs[7]);
-			student.setPen9(matchingPENs[8]);
-			student.setPen10(matchingPENs[9]);
-			student.setPen11(matchingPENs[10]);
-			student.setPen12(matchingPENs[11]);
-			student.setPen13(matchingPENs[12]);
-			student.setPen14(matchingPENs[13]);
-			student.setPen15(matchingPENs[14]);
-			student.setPen16(matchingPENs[15]);
-			student.setPen17(matchingPENs[16]);
-			student.setPen18(matchingPENs[17]);
-			student.setPen19(matchingPENs[18]);
-			student.setPen20(matchingPENs[19]);
+			log.debug("List of matching PENs: {}", session.getMatchingPENs());
+			student.setPen1(session.getMatchingPENs()[0]);
+			student.setPen2(session.getMatchingPENs()[1]);
+			student.setPen3(session.getMatchingPENs()[2]);
+			student.setPen4(session.getMatchingPENs()[3]);
+			student.setPen5(session.getMatchingPENs()[4]);
+			student.setPen6(session.getMatchingPENs()[5]);
+			student.setPen7(session.getMatchingPENs()[6]);
+			student.setPen8(session.getMatchingPENs()[7]);
+			student.setPen9(session.getMatchingPENs()[8]);
+			student.setPen10(session.getMatchingPENs()[9]);
+			student.setPen11(session.getMatchingPENs()[10]);
+			student.setPen12(session.getMatchingPENs()[11]);
+			student.setPen13(session.getMatchingPENs()[12]);
+			student.setPen14(session.getMatchingPENs()[13]);
+			student.setPen15(session.getMatchingPENs()[14]);
+			student.setPen16(session.getMatchingPENs()[15]);
+			student.setPen17(session.getMatchingPENs()[16]);
+			student.setPen18(session.getMatchingPENs()[17]);
+			student.setPen19(session.getMatchingPENs()[18]);
+			student.setPen20(session.getMatchingPENs()[19]);
 		}
 
 		if (student.getNumberOfMatches() == 0) {
@@ -587,7 +576,7 @@ public class PenMatchService {
 				student.setStudentNumber(null);
 			} else {
 				// one solid match, put in t_stud_no
-				student.setStudentNumber(this.matchingPENs[0]);
+				student.setStudentNumber(session.getMatchingPENs()[0]);
 			}
 			student.setPenStatus(student.getPenStatus().trim() + "1");
 		} else {
@@ -614,13 +603,12 @@ public class PenMatchService {
 	 * Merge new match into the list Assign points for algorithm and score for sort
 	 * use
 	 */
-	private void mergeNewMatchIntoList(PenMatchStudent student, String wyPEN, Integer totalPoints,
-			PenAlgorithm algorithmUsed) {
+	private void mergeNewMatchIntoList(PenMatchStudent student, String wyPEN, PenMatchSession session) {
 		Integer wyAlgorithmResult;
 		Integer wyScore;
 		Integer wyIndex;
 
-		switch (algorithmUsed) {
+		switch (session.getAlgorithmUsed()) {
 		case ALG_S1:
 			wyAlgorithmResult = 100;
 			wyScore = 100;
@@ -642,11 +630,11 @@ public class PenMatchService {
 		case ALG_40:
 		case ALG_50:
 		case ALG_51:
-			wyAlgorithmResult = Integer.valueOf(algorithmUsed.toString()) * 10;
-			wyScore = totalPoints;
+			wyAlgorithmResult = Integer.valueOf(session.getAlgorithmUsed().toString()) * 10;
+			wyScore = session.getTotalPoints();
 			break;
 		default:
-			log.debug("Unconvertable algorithm code: {}", algorithmUsed);
+			log.debug("Unconvertable algorithm code: {}", session.getAlgorithmUsed());
 			wyAlgorithmResult = 9999;
 			wyScore = 0;
 			break;
@@ -662,13 +650,13 @@ public class PenMatchService {
 
 		// Move the insertion point up one slot whenever the new item has a lower
 		// algorithm point set or a matching algorithm and better score
-		while (wyIndex > 1 && (wyAlgorithmResult < this.matchingAlgorithms[wyIndex - 1]
-				|| ((wyAlgorithmResult == this.matchingAlgorithms[wyIndex - 1]
-						&& wyScore > this.matchingScores[wyIndex - 1])))) {
+		while (wyIndex > 1 && (wyAlgorithmResult < session.getMatchingAlgorithms()[wyIndex - 1]
+				|| ((wyAlgorithmResult == session.getMatchingAlgorithms()[wyIndex - 1]
+						&& wyScore > session.getMatchingScores()[wyIndex - 1])))) {
 			wyIndex = wyIndex - 1;
-			this.matchingAlgorithms[wyIndex + 1] = this.matchingAlgorithms[wyIndex];
-			this.matchingScores[wyIndex + 1] = this.matchingScores[wyIndex];
-			this.matchingPENs[wyIndex + 1] = this.matchingPENs[wyIndex];
+			session.getMatchingAlgorithms()[wyIndex + 1] = session.getMatchingAlgorithms()[wyIndex];
+			session.getMatchingScores()[wyIndex + 1] = session.getMatchingScores()[wyIndex];
+			session.getMatchingPENs()[wyIndex + 1] = session.getMatchingPENs()[wyIndex];
 		}
 
 		// Copy new PEN match to current index
@@ -677,9 +665,9 @@ public class PenMatchService {
 		// back to the user anyway, so don't bother copying it into
 		// the array.
 		if (wyIndex < 21) {
-			this.matchingAlgorithms[wyIndex] = wyAlgorithmResult;
-			this.matchingScores[wyIndex] = wyScore;
-			this.matchingPENs[wyIndex] = wyPEN;
+			session.getMatchingAlgorithms()[wyIndex] = wyAlgorithmResult;
+			session.getMatchingScores()[wyIndex] = wyScore;
+			session.getMatchingPENs()[wyIndex] = wyPEN;
 		}
 
 	}
@@ -753,7 +741,6 @@ public class PenMatchService {
 		normalizeLocalIDsFromMaster(master);
 		session.setPenMatchTransactionNames(storeNamesFromMaster(master));
 
-		Integer totalPoints = 0;
 		Integer bonusPoints = 0;
 		Integer idDemerits = 0;
 
@@ -793,7 +780,7 @@ public class PenMatchService {
 
 		// Special search algorithm - just looks for any points in all of
 		// the non-blank search fields provided
-		if (this.updateCode != null && this.updateCode.equals("S")) {
+		if (student.getUpdateCode() != null && student.getUpdateCode().equals("S")) {
 			session.setMatchFound(true);
 			if (student.getSex() != null && sexPoints == 0) {
 				session.setMatchFound(false);
@@ -846,9 +833,10 @@ public class PenMatchService {
 			if (sexPoints >= 5 && birthdayPoints >= 20 && surnameMatchResult.getSurnamePoints() >= 20) {
 				if (bonusPoints >= 25) {
 					session.setMatchFound(true);
-					this.reallyGoodMatches = this.reallyGoodMatches + 1;
-					this.reallyGoodPEN = master.getStudentNumber();
-					totalPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints;
+					session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
+					session.setReallyGoodPEN(master.getStudentNumber());
+					session.setTotalPoints(
+							sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints);
 					session.setAlgorithmUsed(PenAlgorithm.ALG_20);
 				}
 			}
@@ -862,10 +850,10 @@ public class PenMatchService {
 						+ middleNameMatchResult.getMiddleNamePoints() + addressPoints;
 				if (bonusPoints >= 25) {
 					session.setMatchFound(true);
-					this.reallyGoodMatches = this.reallyGoodMatches + 1;
-					this.reallyGoodPEN = master.getStudentNumber();
-					totalPoints = localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints()
-							+ bonusPoints;
+					session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
+					session.setReallyGoodPEN(master.getStudentNumber());
+					session.setTotalPoints(localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints()
+							+ bonusPoints);
 					session.setAlgorithmUsed(PenAlgorithm.ALG_30);
 				}
 			}
@@ -879,9 +867,10 @@ public class PenMatchService {
 						+ middleNameMatchResult.getMiddleNamePoints() + addressPoints;
 				if (bonusPoints >= 20) {
 					session.setMatchFound(true);
-					this.reallyGoodMatches = this.reallyGoodMatches + 1;
-					this.reallyGoodPEN = master.getStudentNumber();
-					totalPoints = localIDMatchResult.getLocalIDPoints() + sexPoints + birthdayPoints + bonusPoints;
+					session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
+					session.setReallyGoodPEN(master.getStudentNumber());
+					session.setTotalPoints(
+							localIDMatchResult.getLocalIDPoints() + sexPoints + birthdayPoints + bonusPoints);
 					session.setAlgorithmUsed(PenAlgorithm.ALG_40);
 				}
 			}
@@ -906,12 +895,12 @@ public class PenMatchService {
 					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
 				session.setMatchFound(true);
 				session.setAlgorithmUsed(PenAlgorithm.ALG_50);
-				totalPoints = bonusPoints;
+				session.setTotalPoints(bonusPoints);
 				if (bonusPoints >= 70) {
-					this.reallyGoodMatches = this.reallyGoodMatches + 1;
-					this.reallyGoodPEN = master.getStudentNumber();
+					session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
+					session.setReallyGoodPEN(master.getStudentNumber());
 				} else if (bonusPoints >= 60 || localIDMatchResult.getLocalIDPoints() >= 20) {
-					this.prettyGoodMatches = this.prettyGoodMatches + 1;
+					session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
 				}
 				session.setType5Match(true);
 				session.setType5F1(true);
@@ -925,14 +914,14 @@ public class PenMatchService {
 					&& givenNameMatchResult.getGivenNamePoints() >= 10) {
 				session.setMatchFound(true);
 				session.setAlgorithmUsed(PenAlgorithm.ALG_51);
-				totalPoints = 45;
+				session.setTotalPoints(45);
 
 				// Identify a pretty good match - needs to be better than the Questionable Match
 				// but not a full 60 points as above
 				if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15
 						&& birthdayPoints >= 15 && sexPoints == 5) {
-					this.prettyGoodMatches = this.prettyGoodMatches + 1;
-					totalPoints = 55;
+					session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
+					session.setTotalPoints(55);
 				}
 				session.setType5Match(true);
 				session.setType5F1(true);
@@ -1476,9 +1465,22 @@ public class PenMatchService {
 		// This was a logging function in Basic, we'll likely do something different
 	}
 
-	private Integer lookupWithAllParts() {
-		// Not currently implemented
-		return 0;
+	/**
+	 * Local ID is not blank, lookup with all parts
+	 * 
+	 * @return
+	 */
+	private void lookupWithAllParts(PenMatchStudent student, PenMatchSession session) {
+		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogWithAllParts");
+		lookupNoInitQuery.setParameter(1, student.getDob());
+		lookupNoInitQuery.setParameter(2, student.getSurname());
+		lookupNoInitQuery.setParameter(3, student.getGivenName());
+		lookupNoInitQuery.setParameter(4, student.getMincode());
+		lookupNoInitQuery.setParameter(5, student.getLocalID());
+
+		List<PenDemographicsEntity> penDemogList = lookupNoInitQuery.getResultList();
+
+		performCheckAndMerge(penDemogList, student, session);
 	}
 
 	/**
@@ -1489,7 +1491,7 @@ public class PenMatchService {
 	 * @param session
 	 * @return
 	 */
-	private Integer lookupNoInit(PenMatchStudent student, PenMatchSession session) {
+	private void lookupNoInit(PenMatchStudent student, PenMatchSession session) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoInit");
 		lookupNoInitQuery.setParameter(1, student.getDob());
 		lookupNoInitQuery.setParameter(2, student.getSurname());
@@ -1498,16 +1500,7 @@ public class PenMatchService {
 
 		List<PenDemographicsEntity> penDemogList = lookupNoInitQuery.getResultList();
 
-		if (penDemogList != null && !penDemogList.isEmpty()) {
-			PenDemographicsEntity entity = penDemogList.get(0);
-			if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PEN_STATUS_M)
-					&& !entity.getStudStatus().equals(PEN_STATUS_D)
-					&& !entity.getStudNo().equals(session.getLocalStudentNumber())) {
-				checkForMatch(student, convertPenDemogToPenMasterRecord(entity), session);
-			}
-		}
-
-		return 0;
+		performCheckAndMerge(penDemogList, student, session);
 	}
 
 	/**
@@ -1537,14 +1530,36 @@ public class PenMatchService {
 		return masterRecord;
 	}
 
-	private Integer lookupNoLocalID() {
-		// Not currently implemented
-		return 0;
+	/**
+	 * Perform lookup with no local ID
+	 * 
+	 * @return
+	 */
+	private void lookupNoLocalID(PenMatchStudent student, PenMatchSession session) {
+		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoLocalID");
+		lookupNoInitQuery.setParameter(1, student.getDob());
+		lookupNoInitQuery.setParameter(2, student.getSurname());
+		lookupNoInitQuery.setParameter(3, student.getGivenName());
+
+		List<PenDemographicsEntity> penDemogList = lookupNoInitQuery.getResultList();
+
+		performCheckAndMerge(penDemogList, student, session);
 	}
 
-	private Integer lookupNoInitNoLocalID() {
-		// Not currently implemented
-		return 0;
+	/**
+	 * Lookup with no initial or local ID
+	 * 
+	 * @param student
+	 * @param session
+	 */
+	private void lookupNoInitNoLocalID(PenMatchStudent student, PenMatchSession session) {
+		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoInitNoLocalID");
+		lookupNoInitQuery.setParameter(1, student.getDob());
+		lookupNoInitQuery.setParameter(2, student.getSurname());
+
+		List<PenDemographicsEntity> penDemogList = lookupNoInitQuery.getResultList();
+
+		performCheckAndMerge(penDemogList, student, session);
 	}
 
 	/**
@@ -1561,6 +1576,29 @@ public class PenMatchService {
 		}
 
 		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
+	}
+
+	private void performCheckAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudent student,
+			PenMatchSession session) {
+		if (penDemogList != null && !penDemogList.isEmpty()) {
+			PenDemographicsEntity entity = penDemogList.get(0);
+			if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PEN_STATUS_M)
+					&& !entity.getStudStatus().equals(PEN_STATUS_D)
+					&& !entity.getStudNo().equals(session.getLocalStudentNumber())) {
+				PenMasterRecord masterRecord = convertPenDemogToPenMasterRecord(entity);
+				checkForMatch(student, masterRecord, session);
+
+				if (session.isMatchFound()) {
+					String wyPEN = null;
+					if (session.isType5Match()) {
+						wyPEN = masterRecord.getStudentNumber().trim() + "?";
+					} else {
+						wyPEN = masterRecord.getStudentNumber();
+					}
+					mergeNewMatchIntoList(student, wyPEN, session.getTotalPoints(), session.getAlgorithmUsed());
+				}
+			}
+		}
 	}
 
 	/**

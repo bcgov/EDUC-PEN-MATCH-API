@@ -27,4 +27,13 @@ public class PenMatchSession {
 	private Integer minSurnameSearchSize;
 	private Integer maxSurnameSearchSize;
 	private String alternateLocalID;
+	private Integer totalPoints;
+	private String partialStudentSurname;
+	private String partialStudentGiven;
+	private String[] matchingPENs;
+	private Integer[] matchingAlgorithms;
+	private Integer[] matchingScores;
+	private Integer reallyGoodMatches;
+	private Integer prettyGoodMatches;
+	private String reallyGoodPEN;
 }
