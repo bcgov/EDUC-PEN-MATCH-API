@@ -16,7 +16,7 @@ public class ScoringUtils {
 
 	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202"
 			+ StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
-	
+
 	/**
 	 * Calculate points for Birthday match
 	 */
@@ -30,7 +30,7 @@ public class ScoringUtils {
 			return null;
 		}
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 3; i < 8; i++) {
 			if (dob.substring(i, i + 1).equals(masterDob.substring(i, i + 1))) {
 				birthdayMatches = birthdayMatches + 1;
 			}
@@ -90,7 +90,7 @@ public class ScoringUtils {
 		String masterMincode = master.getMincode();
 		String masterLocalID = master.getLocalId();
 
-		if (mincode != null && mincode.equals(masterMincode)
+		if (mincode != null && masterMincode != null && mincode.equals(masterMincode)
 				&& ((localID != null && masterLocalID != null && localID.equals(masterLocalID))
 						|| (session.getAlternateLocalID() != null
 								&& session.getAlternateLocalID().equals(master.getAlternateLocalId())))
@@ -116,8 +116,7 @@ public class ScoringUtils {
 
 		// Prepare to negate any local_id_points if the local ids actually conflict
 		if (localIDPoints > 0 && mincode != null && masterMincode != null && mincode.equals(masterMincode)) {
-			if (localID != null && masterLocalID != null && !localID.equals(masterLocalID)
-					&& mincode.equals(masterMincode)) {
+			if (localID != null && masterLocalID != null && !localID.equals(masterLocalID)) {
 				if ((session.getAlternateLocalID() != null && master.getAlternateLocalId() != null
 						&& !session.getAlternateLocalID().equals(master.getAlternateLocalId()))
 						|| (session.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
@@ -364,7 +363,7 @@ public class ScoringUtils {
 		result.setMiddleNameFlip(middleFlip);
 		return result;
 	}
-	
+
 	/**
 	 * Soundex calculation
 	 * 
@@ -415,7 +414,7 @@ public class ScoringUtils {
 
 		return soundexString;
 	}
-	
+
 	/**
 	 * Utility function to check for subset given name matches
 	 * 
@@ -590,7 +589,6 @@ public class ScoringUtils {
 		}
 		return false;
 	}
-	
 
 	/**
 	 * Calculate points for Sex match

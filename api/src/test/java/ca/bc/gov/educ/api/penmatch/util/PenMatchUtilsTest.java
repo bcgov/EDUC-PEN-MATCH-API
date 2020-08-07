@@ -150,7 +150,6 @@ public class PenMatchUtilsTest {
 		entity.setLocalID("9876575");
 
 		PenMasterRecord masterRecord = utils.convertPenDemogToPenMasterRecord(entity);
-
 		assertNotNull(masterRecord.getStudentNumber());
 		assertNotNull(masterRecord.getDob());
 		assertNotNull(masterRecord.getSurname());
