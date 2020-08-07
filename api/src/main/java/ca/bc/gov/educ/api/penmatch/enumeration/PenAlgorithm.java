@@ -18,7 +18,7 @@ public enum PenAlgorithm
         this.algorithmValue = algorithmValue;
     }
  
-    public String getUrl() {
+    public String getValue() {
         return algorithmValue;
     }
 }

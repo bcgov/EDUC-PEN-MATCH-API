@@ -2,6 +2,8 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +15,12 @@ import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
+import ca.bc.gov.educ.api.penmatch.util.ScoringUtils;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class PenMatchServiceTest {
-
 
 	PenMatchService service;
 
@@ -30,9 +33,19 @@ public class PenMatchServiceTest {
 	@Autowired
 	SurnameFrequencyRepository surnameFreqRepository;
 
+	@Autowired
+	private EntityManager entityManager;
+
+	@Autowired
+	private PenMatchUtils penMatchUtils;
+
+	@Autowired
+	private ScoringUtils scoringUtils;
+
 	@Before
 	public void before() {
-		service = new PenMatchService(penDemogRepository, nicknamesRepository, surnameFreqRepository);
+		service = new PenMatchService(entityManager, penDemogRepository, nicknamesRepository, surnameFreqRepository,
+				penMatchUtils, scoringUtils);
 	}
 
 	@Test
@@ -44,29 +57,31 @@ public class PenMatchServiceTest {
 
 	private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
+		student.setStudentNumber(null);
+		student.setSurname("JACKSON");
+		student.setGivenName("MIKE");
+		student.setMiddleName(null);
+		student.setUsualSurname(null);
+		student.setUsualGivenName(null);
+		student.setUsualMiddleName(null);
+		student.setPostal(null);
+		student.setDob("19800518");
+		student.setLocalID(null);
+		student.setSex("M");
+
+		student.setUsualMiddleInitial(null);
+		student.setUsualGivenInitial(null);
+
+		student.setGivenInitial(null);
+		student.setMiddleInitial(null);
+		student.setUpdateCode(null);
+		student.setMincode(null);
 		student.setAssignmentCode(null);
 		student.setAssignmentDate(null);
 		student.setEnrolledGradeCode(null);
 		student.setFypFlag(null);
-		student.setMincode(null);
 		student.setPenStatus(null);
 		student.setPenStatusMessage(null);
-		student.setPostal(null);
-		student.setDob(null);
-		student.setGivenName(null);
-		student.setGivenInitial(null);
-		student.setLocalID(null);
-		student.setMiddleName(null);
-		student.setMiddleInitial(null);
-		student.setStudentNumber(null);
-		student.setSex(null);
-		student.setSurname(null);
-		student.setUpdateCode(null);
-		student.setUsualGivenName(null);
-		student.setUsualGivenInitial(null);
-		student.setUsualMiddleName(null);
-		student.setUsualMiddleInitial(null);
-		student.setUsualSurname(null);
 		student.setVersion(null);
 		student.setPen1(null);
 		student.setPen2(null);
