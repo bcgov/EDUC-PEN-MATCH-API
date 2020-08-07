@@ -36,100 +36,100 @@ public class PenMatchUtilsTest {
 		utils.setNextNickname(penMatchTransactionNames, "Wayne");
 		assertNotNull(penMatchTransactionNames.getNickname1());
 		assertNull(penMatchTransactionNames.getNickname2());
-		
+
 		utils.setNextNickname(penMatchTransactionNames, "Wayner");
 		assertNotNull(penMatchTransactionNames.getNickname1());
 		assertNotNull(penMatchTransactionNames.getNickname2());
 		assertNull(penMatchTransactionNames.getNickname3());
-		
+
 		utils.setNextNickname(penMatchTransactionNames, "Wayners");
 		assertNotNull(penMatchTransactionNames.getNickname1());
 		assertNotNull(penMatchTransactionNames.getNickname2());
 		assertNotNull(penMatchTransactionNames.getNickname3());
 		assertNull(penMatchTransactionNames.getNickname4());
-		
+
 		utils.setNextNickname(penMatchTransactionNames, "Way");
 		assertNotNull(penMatchTransactionNames.getNickname1());
 		assertNotNull(penMatchTransactionNames.getNickname2());
 		assertNotNull(penMatchTransactionNames.getNickname3());
 		assertNotNull(penMatchTransactionNames.getNickname4());
 	}
-	
+
 	@Test
 	public void testEmptyNicknameListHasNameAsGiven_NotFound() {
 		PenMatchUtils utils = new PenMatchUtils();
-		
+
 		List<NicknamesEntity> nicknameEntityList = new ArrayList<NicknamesEntity>();
-		
+
 		assertFalse(utils.hasGivenNameAsNickname2(nicknameEntityList, "Wayne"));
 	}
-	
+
 	@Test
 	public void testNicknameListHasNameAsGiven_Found() {
 		PenMatchUtils utils = new PenMatchUtils();
-		
+
 		List<NicknamesEntity> nicknameEntityList = new ArrayList<NicknamesEntity>();
-		
+
 		NicknamesEntity entity = new NicknamesEntity("Wayner", "Wayne");
 		nicknameEntityList.add(entity);
-		
+
 		assertTrue(utils.hasGivenNameAsNickname2(nicknameEntityList, "Wayne"));
 	}
-	
+
 	@Test
 	public void testNicknameListHasNameAsGiven_NotFound() {
 		PenMatchUtils utils = new PenMatchUtils();
-		
+
 		List<NicknamesEntity> nicknameEntityList = new ArrayList<NicknamesEntity>();
-		
+
 		NicknamesEntity entity = new NicknamesEntity("Peter", "Pete");
 		nicknameEntityList.add(entity);
-		
+
 		assertFalse(utils.hasGivenNameAsNickname2(nicknameEntityList, "Wayne"));
 	}
-	
+
 	@Test
 	public void testCheckForCoreData_ShouldNotSetStatus() {
 		PenMatchUtils utils = new PenMatchUtils();
-	
+
 		PenMatchStudent student = createPenMatchStudent();
 		utils.checkForCoreData(student);
-		
+
 		assertNull(student.getPenStatus());
 	}
-	
+
 	@Test
 	public void testCheckForCoreData_ShouldSetG0Status() {
 		PenMatchUtils utils = new PenMatchUtils();
-	
+
 		PenMatchStudent student = createPenMatchStudent();
 		student.setSurname(null);
 		utils.checkForCoreData(student);
-		
+
 		assertTrue(student.getPenStatus().equals(PenStatus.G0.getValue()));
 	}
-	
+
 	@Test
 	public void testNormalizeLocalIDsFromMaster_ShouldSetMMM() {
 		PenMatchUtils utils = new PenMatchUtils();
-	
+
 		PenMasterRecord master = new PenMasterRecord();
 		utils.normalizeLocalIDsFromMaster(master);
-		
+
 		assertTrue(master.getAlternateLocalId().equals("MMM"));
 	}
-	
+
 	@Test
 	public void testNormalizeLocalIDsFromMaster_ShouldSetLocalID() {
 		PenMatchUtils utils = new PenMatchUtils();
-	
+
 		PenMasterRecord master = new PenMasterRecord();
 		master.setLocalId("123456");
 		utils.normalizeLocalIDsFromMaster(master);
-		
+
 		assertTrue(master.getAlternateLocalId().equals(master.getLocalId()));
 	}
-	
+
 	@Test
 	public void testConvertToPenMasterRecord_ShouldAssertOk() {
 		PenMatchUtils utils = new PenMatchUtils();
@@ -148,7 +148,7 @@ public class PenMatchUtilsTest {
 		entity.setStudStatus("B0");
 		entity.setMincode("12345678");
 		entity.setLocalID("9876575");
-		
+
 		PenMasterRecord masterRecord = utils.convertPenDemogToPenMasterRecord(entity);
 
 		assertNotNull(masterRecord.getStudentNumber());
@@ -188,7 +188,7 @@ public class PenMatchUtilsTest {
 		student.setGivenInitial(null);
 		student.setMiddleInitial(null);
 		student.setUpdateCode(null);
-		
+
 		student.setAssignmentCode(null);
 		student.setAssignmentDate(null);
 		student.setEnrolledGradeCode(null);
