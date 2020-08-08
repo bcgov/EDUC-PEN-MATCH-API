@@ -1,7 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import org.apache.commons.lang3.StringUtils;
-import org.fujion.common.StrUtil;
+import org.apache.commons.codec.language.Soundex;
 
 import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
@@ -14,8 +13,8 @@ import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 
 public class ScoringUtils {
 
-	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202"
-			+ StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
+//	public static final String SOUNDEX_CHARACTERS = StringUtils.repeat(" ", 65) + "01230120022455012623010202"
+//			+ StringUtils.repeat(" ", 6) + "01230120022455012623010202" + StringUtils.repeat(" ", 5);
 
 	/**
 	 * Calculate points for Birthday match
@@ -156,7 +155,7 @@ public class ScoringUtils {
 		Integer surnamePoints = 0;
 		boolean legalSurnameUsed = false;
 		String masterLegalSurnameNoBlanks = null;
-		String UsualSurnameNoBlanks = null;
+		String masterUsualSurnameNoBlanks = null;
 		String studentSurnameNoBlanks = null;
 		String usualSurnameNoBlanks = null;
 
@@ -164,7 +163,7 @@ public class ScoringUtils {
 			masterLegalSurnameNoBlanks = master.getSurname().replaceAll(" ", "");
 		}
 		if (master.getUsualSurname() != null) {
-			UsualSurnameNoBlanks = master.getUsualSurname().replaceAll(" ", "");
+			masterUsualSurnameNoBlanks = master.getUsualSurname().replaceAll(" ", "");
 		}
 		if (student.getSurname() != null) {
 			studentSurnameNoBlanks = student.getSurname().replaceAll(" ", "");
@@ -178,12 +177,12 @@ public class ScoringUtils {
 			// Verify if legal surname matches master legal surname
 			surnamePoints = 20;
 			legalSurnameUsed = true;
-		} else if (usualSurnameNoBlanks != null && UsualSurnameNoBlanks != null
-				&& usualSurnameNoBlanks.equals(UsualSurnameNoBlanks)) {
+		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
 			// Verify is usual surname matches master usual surname
 			surnamePoints = 20;
-		} else if (studentSurnameNoBlanks != null && UsualSurnameNoBlanks != null
-				&& studentSurnameNoBlanks.equals(UsualSurnameNoBlanks)) {
+		} else if (studentSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
 			// Verify if legal surname matches master usual surname
 			surnamePoints = 20;
 			legalSurnameUsed = true;
@@ -193,27 +192,27 @@ public class ScoringUtils {
 			surnamePoints = 20;
 		} else if (studentSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
 				&& studentSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4
-				&& studentSurnameNoBlanks.substring(0, 3).equals(masterLegalSurnameNoBlanks.substring(0, 3))) {
+				&& studentSurnameNoBlanks.substring(0, 4).equals(masterLegalSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with legal surname and master legal surname
 			surnamePoints = 10;
-		} else if (usualSurnameNoBlanks != null && UsualSurnameNoBlanks != null && usualSurnameNoBlanks.length() >= 4
-				&& UsualSurnameNoBlanks.length() >= 4
-				&& usualSurnameNoBlanks.substring(0, 3).equals(UsualSurnameNoBlanks.substring(0, 3))) {
+		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null && usualSurnameNoBlanks.length() >= 4
+				&& masterUsualSurnameNoBlanks.length() >= 4
+				&& usualSurnameNoBlanks.substring(0, 4).equals(masterUsualSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with usual surname and master usual surname
 			surnamePoints = 10;
-		} else if (studentSurnameNoBlanks != null && UsualSurnameNoBlanks != null
-				&& studentSurnameNoBlanks.length() >= 4 && UsualSurnameNoBlanks.length() >= 4
-				&& studentSurnameNoBlanks.substring(0, 3).equals(UsualSurnameNoBlanks.substring(0, 3))) {
+		} else if (studentSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& studentSurnameNoBlanks.length() >= 4 && masterUsualSurnameNoBlanks.length() >= 4
+				&& studentSurnameNoBlanks.substring(0, 4).equals(masterUsualSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with legal surname and master usual surname
 			surnamePoints = 10;
 		} else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null
 				&& usualSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4
-				&& usualSurnameNoBlanks.substring(0, 3).equals(masterLegalSurnameNoBlanks.substring(0, 3))) {
+				&& usualSurnameNoBlanks.substring(0, 4).equals(masterLegalSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with usual surname and master legal surname
 			surnamePoints = 10;
 		} else if (surnamePoints == 0) {
 			String masterSoundexLegalSurname = runSoundex(masterLegalSurnameNoBlanks);
-			String masterSoundexUsualSurname = runSoundex(UsualSurnameNoBlanks);
+			String masterSoundexUsualSurname = runSoundex(masterUsualSurnameNoBlanks);
 
 			String soundexLegalSurname = runSoundex(studentSurnameNoBlanks);
 			String soundexUsualSurname = runSoundex(usualSurnameNoBlanks);
@@ -371,6 +370,7 @@ public class ScoringUtils {
 	 * @return
 	 */
 	private String runSoundex(String inputString) {
+		
 		String previousCharRaw = null;
 		Integer previousCharSoundex = null;
 		String currentCharRaw = null;
@@ -379,12 +379,14 @@ public class ScoringUtils {
 		String tempString = null;
 
 		if (inputString != null && inputString.length() >= 1) {
-			tempString = StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
+			Soundex soundex = new Soundex();
+			tempString = soundex.soundex(inputString);
+			//tempString = StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
 			soundexString = inputString.substring(0, 1);
 			previousCharRaw = inputString.substring(0, 1);
 			previousCharSoundex = -1;
 
-			for (int i = 2; i < tempString.length(); i++) {
+			for (int i = 1; i < tempString.length(); i++) {
 				currentCharRaw = inputString.substring(i, i + 1);
 				currentCharSoundex = Integer.valueOf(tempString.substring(i, i + 1));
 
@@ -395,7 +397,7 @@ public class ScoringUtils {
 					// soundex
 					// value of the character is not equal to the soundex value of the previous
 					// character, then append that soundex value to the soundex string.
-					if (i == 2) {
+					if (i == 1) {
 						if (currentCharRaw != previousCharRaw) {
 							soundexString = soundexString + currentCharSoundex;
 							previousCharSoundex = currentCharSoundex;
@@ -409,7 +411,8 @@ public class ScoringUtils {
 
 			soundexString = (soundexString + "00000000").substring(0, 8);
 		} else {
-			soundexString = "10000000";
+			//soundexString = "10000000";
+			return null;
 		}
 
 		return soundexString;

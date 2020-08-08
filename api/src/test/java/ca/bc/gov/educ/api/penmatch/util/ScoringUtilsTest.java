@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -13,6 +14,7 @@ import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -207,6 +209,155 @@ public class ScoringUtilsTest {
 		LocalIDMatchResult result = utils.matchLocalID(student, master, session);
 		assertTrue(result.getIdDemerits() == 10);
 		assertTrue(result.getLocalIDPoints() == 10);
+	}
+	
+	@Test
+	public void testMatchSex_ShouldScore5() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSex("M");
+		master.setSex("M");
+
+		assertTrue(utils.matchSex(student, master) == 5);
+	}
+	
+	@Test
+	public void testMatchSurnameLegal_ShouldScore20() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Micheals");
+		master.setSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 20);
+		assertTrue(result.isLegalSurnameUsed());
+	}
+	
+	@Test
+	public void testMatchSurnameUsual_ShouldScore20() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname(null);
+		master.setSurname(null);
+		student.setUsualSurname("Micheals");
+		master.setUsualSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 20);
+		assertFalse(result.isLegalSurnameUsed());
+	}
+	
+	@Test
+	public void testMatchSurnameLegalToUsual_ShouldScore20() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Micheals");
+		student.setUsualSurname(null);
+		master.setSurname(null);
+		master.setUsualSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 20);
+		assertTrue(result.isLegalSurnameUsed());
+	}
+	
+	@Test
+	public void testMatchSurnameLegal4Char_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Michells");
+		master.setSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchSurnameUsualToLegal4Char_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Michells");
+		master.setSurname(null);
+		student.setUsualSurname(null);
+		master.setUsualSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchSurnameLegalToUsual4Char_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname(null);
+		master.setSurname("Michells");
+		student.setUsualSurname("Micheals");
+		master.setUsualSurname(null);
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchLegalSurnameSoundex_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Micheals");
+		master.setSurname("Micells");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchUsualSurnameSoundex_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname(null);
+		master.setSurname(null);
+		student.setUsualSurname("Micells");
+		master.setUsualSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchUsualToLegalSurnameSoundex_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname("Micells");
+		master.setSurname(null);
+		student.setUsualSurname(null);
+		master.setUsualSurname("Micheals");
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchLegalToUsualSurnameSoundex_ShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSurname(null);
+		master.setSurname("Micells");
+		student.setUsualSurname("Micheals");
+		master.setUsualSurname(null);
+		SurnameMatchResult result =utils.matchSurname(student, master);
+		assertTrue(result.getSurnamePoints() == 10);
+	}
+	
+	@Test
+	public void testMatchSex_ShouldScore0() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchStudent student = createPenMatchStudent();
+		PenMasterRecord master = createPenMasterRecord();
+		student.setSex("M");
+		master.setSex("F");
+
+		assertTrue(utils.matchSex(student, master) == 0);
 	}
 
 	public PenMasterRecord createPenMasterRecord() {
