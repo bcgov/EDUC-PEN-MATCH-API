@@ -44,7 +44,7 @@ public class PenMatchService {
 	public static final Integer VERY_FREQUENT = 500;
 	public static final Integer NOT_VERY_FREQUENT = 50;
 	public static final Integer VERY_RARE = 5;
-
+ 
 	@Getter(AccessLevel.PRIVATE)
 	private final SurnameFrequencyRepository surnameFrequencyRepository;
 

@@ -267,7 +267,13 @@ public class ScoringUtils {
 		String nickname3 = penMatchTransactionNames.getNickname3();
 		String nickname4 = penMatchTransactionNames.getNickname4();
 
-		if ((hasGivenNameSubsetCharMatch(legalGiven, 10, penMatchMasterNames))
+		if ((hasGivenNameFullCharMatch(legalGiven, penMatchMasterNames))
+				|| (hasGivenNameFullCharMatch(usualGiven, penMatchMasterNames))
+				|| (hasGivenNameFullCharMatch(alternateLegalGiven, penMatchMasterNames))
+				|| (hasGivenNameFullCharMatch(alternateUsualGiven, penMatchMasterNames))) {
+			// 10 Character match
+			givenNamePoints = 20;
+		} else if ((hasGivenNameSubsetCharMatch(legalGiven, 10, penMatchMasterNames))
 				|| (hasGivenNameSubsetCharMatch(usualGiven, 10, penMatchMasterNames))
 				|| (hasGivenNameSubsetCharMatch(alternateLegalGiven, 10, penMatchMasterNames))
 				|| (hasGivenNameSubsetCharMatch(alternateUsualGiven, 10, penMatchMasterNames))) {
@@ -444,6 +450,28 @@ public class ScoringUtils {
 					|| (penMatchMasterNames.getAlternateUsualGiven() != null
 							&& (penMatchMasterNames.getAlternateUsualGiven().contains(givenName)
 									|| givenName.contains(penMatchMasterNames.getAlternateUsualGiven())))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function for subset match
+	 * 
+	 * @param givenName
+	 * @param numOfChars
+	 * @return
+	 */
+	public boolean hasGivenNameFullCharMatch(String givenName, PenMatchNames penMatchMasterNames) {
+		if (givenName != null) {
+			if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().equals(givenName))
+					|| (penMatchMasterNames.getUsualGiven() != null
+							&& penMatchMasterNames.getUsualGiven().equals(givenName))
+					|| (penMatchMasterNames.getAlternateLegalGiven() != null
+							&& penMatchMasterNames.getAlternateLegalGiven().equals(givenName))
+					|| (penMatchMasterNames.getAlternateUsualGiven() != null
+							&& penMatchMasterNames.getAlternateUsualGiven().equals(givenName))) {
 				return true;
 			}
 		}

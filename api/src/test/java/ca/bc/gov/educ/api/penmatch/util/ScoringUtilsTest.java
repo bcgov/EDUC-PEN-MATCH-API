@@ -596,6 +596,54 @@ public class ScoringUtilsTest {
 	}
 
 	@Test
+	public void testMatchGivenNameNickname1_SubsetShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchNames penMatchTransactionNames = new PenMatchNames();
+		PenMatchNames penMatchMasterNames = new PenMatchNames();
+		penMatchTransactionNames.setNickname1("Michealalad");
+		penMatchMasterNames.setLegalGiven("Michealalad");
+		GivenNameMatchResult result = utils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
+		assertTrue(result.getGivenNamePoints() == 10);
+		assertFalse(result.isGivenNameFlip());
+	}
+
+	@Test
+	public void testMatchGivenNameNickname2_SubsetShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchNames penMatchTransactionNames = new PenMatchNames();
+		PenMatchNames penMatchMasterNames = new PenMatchNames();
+		penMatchTransactionNames.setNickname2("Michealalad");
+		penMatchMasterNames.setLegalGiven("Michealalad");
+		GivenNameMatchResult result = utils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
+		assertTrue(result.getGivenNamePoints() == 10);
+		assertFalse(result.isGivenNameFlip());
+	}
+
+	@Test
+	public void testMatchGivenNameNickname3_SubsetShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchNames penMatchTransactionNames = new PenMatchNames();
+		PenMatchNames penMatchMasterNames = new PenMatchNames();
+		penMatchTransactionNames.setNickname3("Michealalad");
+		penMatchMasterNames.setLegalGiven("Michealalad");
+		GivenNameMatchResult result = utils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
+		assertTrue(result.getGivenNamePoints() == 10);
+		assertFalse(result.isGivenNameFlip());
+	}
+
+	@Test
+	public void testMatchGivenNameNickname4_SubsetShouldScore10() {
+		ScoringUtils utils = new ScoringUtils();
+		PenMatchNames penMatchTransactionNames = new PenMatchNames();
+		PenMatchNames penMatchMasterNames = new PenMatchNames();
+		penMatchTransactionNames.setNickname4("Michealalad");
+		penMatchMasterNames.setLegalGiven("Michealalad");
+		GivenNameMatchResult result = utils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
+		assertTrue(result.getGivenNamePoints() == 10);
+		assertFalse(result.isGivenNameFlip());
+	}
+
+	@Test
 	public void testMatchMiddleNameLegal_FullShouldScore20() {
 		ScoringUtils utils = new ScoringUtils();
 		PenMatchNames penMatchTransactionNames = new PenMatchNames();
