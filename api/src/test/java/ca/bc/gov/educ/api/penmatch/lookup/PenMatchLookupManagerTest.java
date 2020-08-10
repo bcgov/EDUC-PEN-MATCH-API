@@ -1,6 +1,7 @@
-package ca.bc.gov.educ.api.penmatch.service;
+package ca.bc.gov.educ.api.penmatch.lookup;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 
@@ -21,41 +22,31 @@ import ca.bc.gov.educ.api.penmatch.util.ScoringUtils;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class PenMatchServiceTest {
-
-	PenMatchService service;
+public class PenMatchLookupManagerTest {
 
 	@Autowired
 	NicknamesRepository nicknamesRepository;
 
 	@Autowired
-	PenDemographicsRepository penDemogRepository;
+	PenDemographicsRepository penDemographicsRepository;
 
 	@Autowired
-	SurnameFrequencyRepository surnameFreqRepository;
+	SurnameFrequencyRepository surnameFrequencyRepository;
 
 	@Autowired
 	private EntityManager entityManager;
 
-	@Autowired
 	PenMatchLookupManager lookupManager;
-
-	@Autowired
-	private PenMatchUtils penMatchUtils;
-
-	@Autowired
-	private ScoringUtils scoringUtils;
 
 	@Before
 	public void before() {
-		service = new PenMatchService(lookupManager);
+		lookupManager = new PenMatchLookupManager(entityManager, penDemographicsRepository, nicknamesRepository, surnameFrequencyRepository);
 	}
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValid_ShouldReturnSavedObject() {
 		PenMatchStudent student = createPenMatchStudent();
-		assertNotNull(service.matchStudent(student));
-		assertNotNull(student.getPenStatus());
+		assertTrue(lookupManager.lookupSurnameFrequency("Micheals") == 20);
 	}
 
 	private PenMatchStudent createPenMatchStudent() {

@@ -19,7 +19,7 @@ public class PenMatchUtils {
 	 * @param penMatchTransactionNames
 	 * @param nextNickname
 	 */
-	public void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
+	public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
 		if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
 			penMatchTransactionNames.setNickname1(nextNickname);
 		} else if (penMatchTransactionNames.getNickname2() == null
@@ -41,7 +41,7 @@ public class PenMatchUtils {
 	 * @param givenName
 	 * @return
 	 */
-	public boolean hasGivenNameAsNickname2(List<NicknamesEntity> nicknamesList, String givenName) {
+	public static boolean hasGivenNameAsNickname2(List<NicknamesEntity> nicknamesList, String givenName) {
 		if (nicknamesList != null && !nicknamesList.isEmpty() && nicknamesList.get(0).getNickname2().equals(givenName)) {
 			return true;
 		}
@@ -54,7 +54,7 @@ public class PenMatchUtils {
 	 * @param entity
 	 * @return
 	 */
-	public PenMasterRecord convertPenDemogToPenMasterRecord(PenDemographicsEntity entity) {
+	public static PenMasterRecord convertPenDemogToPenMasterRecord(PenDemographicsEntity entity) {
 		PenMasterRecord masterRecord = new PenMasterRecord();
 
 		masterRecord.setStudentNumber(entity.getStudNo());
@@ -80,7 +80,7 @@ public class PenMatchUtils {
 	 * 
 	 * @param student
 	 */
-	public void checkForCoreData(PenMatchStudent student) {
+	public static void checkForCoreData(PenMatchStudent student) {
 		if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null
 				|| student.getSex() == null || student.getMincode() == null) {
 			student.setPenStatus(PenStatus.G0.getValue());
@@ -91,7 +91,7 @@ public class PenMatchUtils {
 	 * Strip off leading zeros , leading blanks and trailing blanks from the
 	 * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
 	 */
-	public void normalizeLocalIDsFromMaster(PenMasterRecord master) {
+	public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
 		master.setAlternateLocalId("MMM");
 		if (master.getLocalId() != null) {
 			master.setAlternateLocalId(StringUtils.stripStart(master.getLocalId(), "0").replaceAll(" ", ""));
@@ -104,7 +104,7 @@ public class PenMatchUtils {
 	 * 
 	 * @param master
 	 */
-	public PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
+	public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
 		String given = master.getGiven();
 		String usualGiven = master.getUsualGivenName();
 
