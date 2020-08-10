@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Immutable
-@Table(name = "NICKNAMES")
+@Table(name = "NICKNAMES@penlink.world")
 public class NicknamesEntity {
 
   @Id

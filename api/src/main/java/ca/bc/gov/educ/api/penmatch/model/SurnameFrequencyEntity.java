@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Immutable
-@Table(name = "SURNAME_FREQUENCY")
+@Table(name = "SURNAME_FREQUENCY@penlink.world")
 public class SurnameFrequencyEntity {
 
   @Id

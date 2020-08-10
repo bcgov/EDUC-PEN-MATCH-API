@@ -188,18 +188,15 @@ public class PenMatchLookupManager {
 	 * @return
 	 */
 	public Integer lookupSurnameFrequency(String fullStudentSurname) {
-		// TODO Implement this
 		// Note this returns in two different places
 		Integer surnameFrequency = 0;
-		String nameForSearch = fullStudentSurname;
+		List<SurnameFrequencyEntity> surnameFreqEntityList = getSurnameFrequencyRepository()
+				.findAllBySurnameStartingWith(fullStudentSurname);
 
-		while (surnameFrequency < VERY_FREQUENT) {
-			Optional<SurnameFrequencyEntity> surnameEntity = getSurnameFrequencyRepository()
-					.findBySurname(nameForSearch);
-			if (surnameEntity.isPresent()) {
-				surnameFrequency = surnameFrequency + Integer.valueOf(surnameEntity.get().getSurnameFrequency());
-				nameForSearch = surnameEntity.get().getSurname();
-			} else {
+		for (SurnameFrequencyEntity surnameFreqEntity : surnameFreqEntityList) {
+			surnameFrequency = surnameFrequency + Integer.valueOf(surnameFreqEntity.getSurnameFrequency());
+
+			if (surnameFrequency >= VERY_FREQUENT) {
 				break;
 			}
 		}
