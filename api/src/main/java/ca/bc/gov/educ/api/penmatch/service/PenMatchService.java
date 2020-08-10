@@ -612,8 +612,8 @@ public class PenMatchService {
 		Integer sexPoints = scoringUtils.matchSex(student, master); // 5 points
 		Integer birthdayPoints = scoringUtils.matchBirthday(student, master); // 5, 10, 15 or 20 points
 		SurnameMatchResult surnameMatchResult = scoringUtils.matchSurname(student, master); // 10 or 20 points
-		GivenNameMatchResult givenNameMatchResult = scoringUtils.matchGivenName(student, master,
-				session.getPenMatchTransactionNames(), session.getPenMatchMasterNames()); // 5, 10,
+		GivenNameMatchResult givenNameMatchResult = scoringUtils.matchGivenName(session.getPenMatchTransactionNames(),
+				session.getPenMatchMasterNames()); // 5, 10,
 		// 15 or
 		// 20
 		// points

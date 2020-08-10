@@ -48,6 +48,7 @@ public class PenMatchUtilsTest {
 		assertNotNull(penMatchTransactionNames.getNickname3());
 		assertNull(penMatchTransactionNames.getNickname4());
 
+		penMatchTransactionNames.setNickname4("");
 		utils.setNextNickname(penMatchTransactionNames, "Way");
 		assertNotNull(penMatchTransactionNames.getNickname1());
 		assertNotNull(penMatchTransactionNames.getNickname2());
@@ -129,6 +130,46 @@ public class PenMatchUtilsTest {
 
 		assertTrue(master.getAlternateLocalId().equals(master.getLocalId()));
 	}
+	
+	@Test
+	public void testStoreNamesFromMaster_ShouldCreateMatchMasterNames() {
+		PenMatchUtils utils = new PenMatchUtils();
+
+		assertNotNull(utils.storeNamesFromMaster(createPenMasterRecord()));
+	}
+	
+	@Test
+	public void testStoreNamesFromMasterWithSpace_ShouldCreateMatchMasterNames() {
+		PenMatchUtils utils = new PenMatchUtils();
+		PenMasterRecord master = createPenMasterRecord();
+		master.setGiven("Billy Joe");
+		assertNotNull(utils.storeNamesFromMaster(master));
+	}
+
+	@Test
+	public void testStoreNamesFromMasterWithDash_ShouldCreateMatchMasterNames() {
+		PenMatchUtils utils = new PenMatchUtils();
+		PenMasterRecord master = createPenMasterRecord();
+		master.setGiven("Billy-Joe");
+		assertNotNull(utils.storeNamesFromMaster(master));
+	}
+	
+	@Test
+	public void testUsualStoreNamesFromMasterWithSpace_ShouldCreateMatchMasterNames() {
+		PenMatchUtils utils = new PenMatchUtils();
+		PenMasterRecord master = createPenMasterRecord();
+		master.setUsualGivenName("Billy Joe");
+		assertNotNull(utils.storeNamesFromMaster(master));
+	}
+
+	@Test
+	public void testUsualStoreNamesFromMasterWithDash_ShouldCreateMatchMasterNames() {
+		PenMatchUtils utils = new PenMatchUtils();
+		PenMasterRecord master = createPenMasterRecord();
+		master.setUsualGivenName("Billy-Joe");
+		assertNotNull(utils.storeNamesFromMaster(master));
+	}
+
 
 	@Test
 	public void testConvertToPenMasterRecord_ShouldAssertOk() {
@@ -164,6 +205,27 @@ public class PenMatchUtilsTest {
 		assertNotNull(masterRecord.getStatus());
 		assertNotNull(masterRecord.getMincode());
 		assertNotNull(masterRecord.getLocalId());
+	}
+	
+	public PenMasterRecord createPenMasterRecord() {
+		PenMasterRecord masterRecord = new PenMasterRecord();
+
+		masterRecord.setStudentNumber("12345647");
+		masterRecord.setDob("19800518");
+		masterRecord.setSurname("JACKSON");
+		masterRecord.setGiven("PETER");
+		masterRecord.setMiddle(null);
+		masterRecord.setUsualSurname(null);
+		masterRecord.setUsualGivenName(null);
+		masterRecord.setUsualMiddleName(null);
+		masterRecord.setPostal(null);
+		masterRecord.setSex("M");
+		masterRecord.setGrade("10");
+		masterRecord.setStatus(PenStatus.AA.getValue());
+		masterRecord.setMincode("123456978");
+		masterRecord.setLocalId(null);
+
+		return masterRecord;
 	}
 
 	private PenMatchStudent createPenMatchStudent() {

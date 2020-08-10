@@ -115,7 +115,8 @@ public class ScoringUtils {
 
 		// Prepare to negate any local_id_points if the local ids actually conflict
 		if (localIDPoints > 0 && mincode != null && masterMincode != null && mincode.equals(masterMincode)) {
-			if (localID != null && masterLocalID != null && !localID.equals(masterLocalID)) {
+			if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null)
+					|| (localID != null && masterLocalID != null && !localID.equals(masterLocalID))) {
 				if ((session.getAlternateLocalID() != null && master.getAlternateLocalId() != null
 						&& !session.getAlternateLocalID().equals(master.getAlternateLocalId()))
 						|| (session.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
@@ -195,8 +196,8 @@ public class ScoringUtils {
 				&& studentSurnameNoBlanks.substring(0, 4).equals(masterLegalSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with legal surname and master legal surname
 			surnamePoints = 10;
-		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null && usualSurnameNoBlanks.length() >= 4
-				&& masterUsualSurnameNoBlanks.length() >= 4
+		} else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null
+				&& usualSurnameNoBlanks.length() >= 4 && masterUsualSurnameNoBlanks.length() >= 4
 				&& usualSurnameNoBlanks.substring(0, 4).equals(masterUsualSurnameNoBlanks.substring(0, 4))) {
 			// Do a 4 character match with usual surname and master usual surname
 			surnamePoints = 10;
@@ -249,8 +250,8 @@ public class ScoringUtils {
 	/**
 	 * Calculate points for given name match
 	 */
-	public GivenNameMatchResult matchGivenName(PenMatchStudent student, PenMasterRecord master,
-			PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
+	public GivenNameMatchResult matchGivenName(PenMatchNames penMatchTransactionNames,
+			PenMatchNames penMatchMasterNames) {
 		Integer givenNamePoints = 0;
 		boolean givenFlip = false;
 
@@ -324,7 +325,13 @@ public class ScoringUtils {
 		String alternateLegalMiddle = penMatchTransactionNames.getAlternateLegalMiddle();
 		String alternateUsualMiddle = penMatchTransactionNames.getAlternateUsualMiddle();
 
-		if ((hasMiddleNameSubsetCharMatch(legalMiddle, 10, penMatchMasterNames))
+		if ((hasMiddleNameFullCharMatch(legalMiddle, penMatchMasterNames))
+				|| (hasMiddleNameFullCharMatch(usualMiddle, penMatchMasterNames))
+				|| (hasMiddleNameFullCharMatch(alternateLegalMiddle, penMatchMasterNames))
+				|| (hasMiddleNameFullCharMatch(alternateUsualMiddle, penMatchMasterNames))) {
+			// Full Match
+			middleNamePoints = 20;
+		} else if ((hasMiddleNameSubsetCharMatch(legalMiddle, 10, penMatchMasterNames))
 				|| (hasMiddleNameSubsetCharMatch(usualMiddle, 10, penMatchMasterNames))
 				|| (hasMiddleNameSubsetCharMatch(alternateLegalMiddle, 10, penMatchMasterNames))
 				|| (hasMiddleNameSubsetCharMatch(alternateUsualMiddle, 10, penMatchMasterNames))) {
@@ -370,7 +377,7 @@ public class ScoringUtils {
 	 * @return
 	 */
 	private String runSoundex(String inputString) {
-		
+
 		String previousCharRaw = null;
 		Integer previousCharSoundex = null;
 		String currentCharRaw = null;
@@ -381,7 +388,7 @@ public class ScoringUtils {
 		if (inputString != null && inputString.length() >= 1) {
 			Soundex soundex = new Soundex();
 			tempString = soundex.soundex(inputString);
-			//tempString = StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
+			// tempString = StrUtil.xlate(inputString, inputString, SOUNDEX_CHARACTERS);
 			soundexString = inputString.substring(0, 1);
 			previousCharRaw = inputString.substring(0, 1);
 			previousCharSoundex = -1;
@@ -411,7 +418,7 @@ public class ScoringUtils {
 
 			soundexString = (soundexString + "00000000").substring(0, 8);
 		} else {
-			//soundexString = "10000000";
+			// soundexString = "10000000";
 			return null;
 		}
 
@@ -525,6 +532,29 @@ public class ScoringUtils {
 					|| (penMatchMasterNames.getAlternateUsualMiddle() != null
 							&& (penMatchMasterNames.getAlternateUsualMiddle().contains(middleName)
 									|| middleName.contains(penMatchMasterNames.getAlternateUsualMiddle())))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Utility function for subset match
+	 * 
+	 * @param middleName
+	 * @param numOfChars
+	 * @return
+	 */
+	public boolean hasMiddleNameFullCharMatch(String middleName, PenMatchNames penMatchMasterNames) {
+		if (middleName != null) {
+			if ((penMatchMasterNames.getLegalMiddle() != null
+					&& penMatchMasterNames.getLegalMiddle().equals(middleName))
+					|| (penMatchMasterNames.getUsualMiddle() != null
+							&& penMatchMasterNames.getUsualMiddle().equals(middleName))
+					|| (penMatchMasterNames.getAlternateLegalMiddle() != null
+							&& penMatchMasterNames.getAlternateLegalMiddle().equals(middleName))
+					|| (penMatchMasterNames.getAlternateUsualMiddle() != null
+							&& penMatchMasterNames.getAlternateUsualMiddle().equals(middleName))) {
 				return true;
 			}
 		}
