@@ -19,14 +19,11 @@ public class PenMatchUtils {
 	public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
 		if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
 			penMatchTransactionNames.setNickname1(nextNickname);
-		} else if (penMatchTransactionNames.getNickname2() == null
-				|| penMatchTransactionNames.getNickname2().length() < 1) {
+		} else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
 			penMatchTransactionNames.setNickname2(nextNickname);
-		} else if (penMatchTransactionNames.getNickname3() == null
-				|| penMatchTransactionNames.getNickname3().length() < 1) {
+		} else if (penMatchTransactionNames.getNickname3() == null || penMatchTransactionNames.getNickname3().length() < 1) {
 			penMatchTransactionNames.setNickname3(nextNickname);
-		} else if (penMatchTransactionNames.getNickname4() == null
-				|| penMatchTransactionNames.getNickname4().length() < 1) {
+		} else if (penMatchTransactionNames.getNickname4() == null || penMatchTransactionNames.getNickname4().length() < 1) {
 			penMatchTransactionNames.setNickname4(nextNickname);
 		}
 	}
@@ -64,8 +61,7 @@ public class PenMatchUtils {
 	 * @param student
 	 */
 	public static void checkForCoreData(PenMatchStudent student) {
-		if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null
-				|| student.getSex() == null || student.getMincode() == null) {
+		if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
 			student.setPenStatus(PenStatus.G0.getValue());
 		}
 	}
@@ -93,21 +89,22 @@ public class PenMatchUtils {
 
 		PenMatchNames penMatchMasterNames;
 		penMatchMasterNames = new PenMatchNames();
-		penMatchMasterNames.setLegalGiven(given);
-		penMatchMasterNames.setLegalMiddle(master.getMiddle());
-		penMatchMasterNames.setUsualGiven(usualGiven);
-		penMatchMasterNames.setUsualMiddle(master.getUsualMiddleName());
+
+		penMatchMasterNames.setLegalGiven(storeNameIfNotNull(given));
+		penMatchMasterNames.setLegalMiddle(storeNameIfNotNull(master.getMiddle()));
+		penMatchMasterNames.setUsualGiven(storeNameIfNotNull(usualGiven));
+		penMatchMasterNames.setUsualMiddle(storeNameIfNotNull(master.getUsualMiddleName()));
 
 		if (given != null) {
 			int spaceIndex = StringUtils.indexOf(given, " ");
 			if (spaceIndex != -1) {
 				penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
-				penMatchMasterNames.setAlternateLegalMiddle(given.substring(spaceIndex));
+				penMatchMasterNames.setAlternateLegalMiddle(given.substring(spaceIndex).trim());
 			}
 			int dashIndex = StringUtils.indexOf(given, "-");
 			if (dashIndex != -1) {
 				penMatchMasterNames.setAlternateLegalGiven(given.substring(0, dashIndex));
-				penMatchMasterNames.setAlternateLegalMiddle(given.substring(dashIndex));
+				penMatchMasterNames.setAlternateLegalMiddle(given.substring(dashIndex).trim());
 			}
 		}
 
@@ -115,15 +112,27 @@ public class PenMatchUtils {
 			int spaceIndex = StringUtils.indexOf(usualGiven, " ");
 			if (spaceIndex != -1) {
 				penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
-				penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex));
+				penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex).trim());
 			}
 			int dashIndex = StringUtils.indexOf(usualGiven, "-");
 			if (dashIndex != -1) {
 				penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
-				penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex));
+				penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
 			}
 		}
 		return penMatchMasterNames;
+	}
+
+	/**
+	 * Small utility method for storing names to keep things clean
+	 * 
+	 * @return
+	 */
+	private static String storeNameIfNotNull(String name) {
+		if (name != null && !name.isEmpty()) {
+			return name.trim();
+		}
+		return null;
 	}
 
 }

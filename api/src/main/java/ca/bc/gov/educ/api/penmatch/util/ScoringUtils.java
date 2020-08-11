@@ -400,8 +400,14 @@ public class ScoringUtils {
 			previousCharSoundex = -1;
 
 			for (int i = 1; i < tempString.length(); i++) {
-				currentCharRaw = inputString.substring(i, i + 1);
-				currentCharSoundex = Integer.valueOf(tempString.substring(i, i + 1));
+				currentCharRaw = inputString.substring(i-1, i);
+				currentCharSoundex = -1;
+				
+				try {
+					currentCharSoundex = Integer.valueOf(tempString.substring(i-1, i));
+				} catch (NumberFormatException e) {
+					//This is OK
+				}
 
 				if (currentCharSoundex >= 1 && currentCharSoundex <= 7) {
 					// If the second "soundexable" character is not the same as the first raw
