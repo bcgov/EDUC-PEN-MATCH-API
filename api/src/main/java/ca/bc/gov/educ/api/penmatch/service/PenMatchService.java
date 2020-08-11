@@ -108,15 +108,15 @@ public class PenMatchService {
 
 		if (student.getPenStatus() == PenStatus.AA.getValue() || student.getPenStatus() == PenStatus.B1.getValue() || student.getPenStatus() == PenStatus.C1.getValue() || student.getPenStatus() == PenStatus.D1.getValue()) {
 			PenMasterRecord masterRecord = lookupManager.lookupStudentByPEN(student.getStudentNumber());
-			if (masterRecord != null && masterRecord.getDob() != student.getDob()) {
+			if (masterRecord != null && !masterRecord.getDob().equals(student.getDob())) {
 				student.setPenStatusMessage("Birthdays are suspect: " + masterRecord.getDob() + " vs " + student.getDob());
 				student.setPenStatus(PenStatus.F1.getValue());
 				student.setPen1(student.getStudentNumber());
 				student.setStudentNumber(null);
 			}
 
-			if (masterRecord.getSurname() == student.getSurname() && masterRecord.getGiven() != student.getGivenName() && masterRecord.getDob() == student.getDob() && masterRecord.getMincode() == student.getMincode() && masterRecord.getLocalId() != student.getLocalID()
-					&& masterRecord.getLocalId() != null && student.getLocalID() != null) {
+			if (masterRecord.getSurname() == student.getSurname() && masterRecord.getGiven() != student.getGivenName() && masterRecord.getDob() == student.getDob() && masterRecord.getMincode() == student.getMincode() && masterRecord.getLocalId() != null && student.getLocalID() != null
+					&& masterRecord.getLocalId() != student.getLocalID()) {
 				student.setPenStatusMessage("Possible twin: " + masterRecord.getGiven().trim() + " vs " + student.getGivenName().trim());
 				student.setPenStatus(PenStatus.F1.getValue());
 				student.setPen1(student.getStudentNumber());
@@ -129,7 +129,7 @@ public class PenMatchService {
 			student.setStudentNumber(null);
 		}
 
-		return null;
+		return student;
 	}
 
 	/**
@@ -142,6 +142,8 @@ public class PenMatchService {
 		PenMatchSession session = new PenMatchSession();
 		student.setPenStatusMessage(null);
 		session.setMatchingPENs(new String[20]);
+		session.setMatchingAlgorithms(new Integer[20]);
+		session.setMatchingScores(new Integer[20]);
 
 		session.setReallyGoodMatches(0);
 		session.setPrettyGoodMatches(0);
@@ -500,7 +502,7 @@ public class PenMatchService {
 		case ALG_40:
 		case ALG_50:
 		case ALG_51:
-			wyAlgorithmResult = Integer.valueOf(session.getAlgorithmUsed().toString()) * 10;
+			wyAlgorithmResult = Integer.valueOf(session.getAlgorithmUsed().getValue()) * 10;
 			wyScore = session.getTotalPoints();
 			break;
 		default:
