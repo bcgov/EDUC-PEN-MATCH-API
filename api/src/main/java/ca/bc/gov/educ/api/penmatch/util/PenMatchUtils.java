@@ -6,6 +6,7 @@ import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 
 public class PenMatchUtils {
@@ -60,9 +61,9 @@ public class PenMatchUtils {
 	 * 
 	 * @param student
 	 */
-	public static void checkForCoreData(PenMatchStudent student) {
+	public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
 		if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
-			student.setPenStatus(PenStatus.G0.getValue());
+			session.setPenStatus(PenStatus.G0.getValue());
 		}
 	}
 

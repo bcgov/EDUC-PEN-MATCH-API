@@ -150,7 +150,7 @@ public class ScoringUtils {
 		if (master.getSurname() != null) {
 			masterLegalSurnameNoBlanks = master.getSurname().replaceAll(" ", "");
 		}
-		if (master.getUsualSurname() != null) {
+		if (master.getUsualSurname() != null) { 
 			masterUsualSurnameNoBlanks = master.getUsualSurname().replaceAll(" ", "");
 		}
 		if (student.getSurname() != null) {
@@ -516,7 +516,7 @@ public class ScoringUtils {
 	 */
 	public static Integer matchSex(PenMatchStudent student, PenMasterRecord master) {
 		Integer sexPoints = 0;
-		if (student.getSex() != null && student.getSex() == master.getSex()) {
+		if (student.getSex() != null && master.getSex() != null && student.getSex().equals(master.getSex().trim())) {
 			sexPoints = 5;
 		}
 		return sexPoints;
