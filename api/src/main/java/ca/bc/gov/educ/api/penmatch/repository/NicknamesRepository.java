@@ -9,6 +9,6 @@ import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 
 @Repository
 public interface NicknamesRepository extends CrudRepository<NicknamesEntity, String> {
-	List<NicknamesEntity> findByNickname1OrNickname2(String nickname1, String nickname2);
+	List<NicknamesEntity> findAllByNickname1OrNickname2(String nickname1, String nickname2);
 
 }

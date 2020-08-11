@@ -18,8 +18,6 @@ import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,9 +45,7 @@ public class PenMatchLookupManager {
 	private final EntityManager entityManager;
 
 	@Autowired
-	public PenMatchLookupManager(final EntityManager entityManager,
-			final PenDemographicsRepository penDemographicsRepository, final NicknamesRepository nicknamesRepository,
-			final SurnameFrequencyRepository surnameFrequencyRepository) {
+	public PenMatchLookupManager(final EntityManager entityManager, final PenDemographicsRepository penDemographicsRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository) {
 		this.penDemographicsRepository = penDemographicsRepository;
 		this.nicknamesRepository = nicknamesRepository;
 		this.surnameFrequencyRepository = surnameFrequencyRepository;
@@ -61,13 +57,13 @@ public class PenMatchLookupManager {
 	 * 
 	 * @return
 	 */
-	public List<PenDemographicsEntity> lookupWithAllParts(PenMatchStudent student, PenMatchSession session) {
+	public List<PenDemographicsEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogWithAllParts");
-		lookupNoInitQuery.setParameter(1, student.getDob());
-		lookupNoInitQuery.setParameter(2, student.getSurname() + "%");
-		lookupNoInitQuery.setParameter(3, student.getGivenName() + "%");
-		lookupNoInitQuery.setParameter(4, student.getMincode());
-		lookupNoInitQuery.setParameter(5, student.getLocalID());
+		lookupNoInitQuery.setParameter(1, dob);
+		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(3, givenName.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(4, mincode);
+		lookupNoInitQuery.setParameter(5, localID);
 
 		return lookupNoInitQuery.getResultList();
 	}
@@ -80,12 +76,12 @@ public class PenMatchLookupManager {
 	 * @param session
 	 * @return
 	 */
-	public List<PenDemographicsEntity> lookupNoInit(PenMatchStudent student, PenMatchSession session) {
+	public List<PenDemographicsEntity> lookupNoInit(String dob, String surname, String mincode, String localID) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoInit");
-		lookupNoInitQuery.setParameter(1, student.getDob());
-		lookupNoInitQuery.setParameter(2, student.getSurname() + "%");
-		lookupNoInitQuery.setParameter(3, student.getMincode());
-		lookupNoInitQuery.setParameter(4, student.getLocalID());
+		lookupNoInitQuery.setParameter(1, dob);
+		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(3, mincode);
+		lookupNoInitQuery.setParameter(4, localID);
 
 		return lookupNoInitQuery.getResultList();
 
@@ -96,11 +92,11 @@ public class PenMatchLookupManager {
 	 * 
 	 * @return
 	 */
-	public List<PenDemographicsEntity> lookupNoLocalID(PenMatchStudent student, PenMatchSession session) {
+	public List<PenDemographicsEntity> lookupNoLocalID(String dob, String surname, String givenName) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoLocalID");
-		lookupNoInitQuery.setParameter(1, student.getDob());
-		lookupNoInitQuery.setParameter(2, student.getSurname() + "%");
-		lookupNoInitQuery.setParameter(3, student.getGivenName() + "%");
+		lookupNoInitQuery.setParameter(1, dob);
+		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(3, givenName.toUpperCase() + "%");
 
 		return lookupNoInitQuery.getResultList();
 	}
@@ -111,10 +107,10 @@ public class PenMatchLookupManager {
 	 * @param student
 	 * @param session
 	 */
-	public List<PenDemographicsEntity> lookupNoInitNoLocalID(PenMatchStudent student, PenMatchSession session) {
+	public List<PenDemographicsEntity> lookupNoInitNoLocalID(String dob, String surname) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoInitNoLocalID");
-		lookupNoInitQuery.setParameter(1, student.getDob());
-		lookupNoInitQuery.setParameter(2, student.getSurname() + "%");
+		lookupNoInitQuery.setParameter(1, dob);
+		lookupNoInitQuery.setParameter(2, surname + "%");
 
 		return lookupNoInitQuery.getResultList();
 	}
@@ -128,8 +124,7 @@ public class PenMatchLookupManager {
 	public PenMasterRecord lookupStudentByPEN(String studentNumber) {
 		Optional<PenDemographicsEntity> demog = getPenDemographicsRepository().findByStudNo(studentNumber);
 		if (demog.isPresent()) {
-			PenDemographicsEntity entity = demog.get();
-			return PenMatchUtils.convertPenDemogToPenMasterRecord(entity);
+			return PenMatchUtils.convertPenDemogToPenMasterRecord(demog.get());
 		}
 
 		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
@@ -146,13 +141,14 @@ public class PenMatchLookupManager {
 			return;
 		}
 
+		String givenNameUpper = givenName.toUpperCase();
+
 		// Part 1 - Find the base nickname
 		String baseNickname = null;
 
-		List<NicknamesEntity> nicknamesBaseList = getNicknamesRepository().findByNickname1OrNickname2(givenName,
-				givenName);
+		List<NicknamesEntity> nicknamesBaseList = getNicknamesRepository().findAllByNickname1OrNickname2(givenNameUpper, givenNameUpper);
 		if (nicknamesBaseList != null && !nicknamesBaseList.isEmpty()) {
-			baseNickname = nicknamesBaseList.get(0).getNickname1();
+			baseNickname = nicknamesBaseList.get(0).getNickname1().trim();
 		}
 
 		// Part 2 - Base nickname has been found; now find all the nickname2's,
@@ -160,23 +156,20 @@ public class PenMatchLookupManager {
 		// The base nickname should be stored as well if it is not the same as the given
 		// name
 		if (baseNickname != null) {
-			if (!baseNickname.equals(givenName)) {
+			if (!baseNickname.equals(givenNameUpper)) {
 				penMatchTransactionNames.setNickname1(baseNickname);
 			}
 
-			List<NicknamesEntity> tempNicknamesList;
+			List<NicknamesEntity> tempNicknamesList = getNicknamesRepository().findAllByNickname1OrNickname2(baseNickname, baseNickname);
 
-			String currentNickname1 = nicknamesBaseList.get(0).getNickname1();
-			String currentNickname2 = nicknamesBaseList.get(0).getNickname2();
-
-			for (int i = 0; i < 3; i++) {
-				tempNicknamesList = getNicknamesRepository().findByNickname1OrNickname2(currentNickname1,
-						currentNickname2);
-				if (!PenMatchUtils.hasGivenNameAsNickname2(tempNicknamesList, givenName)) {
-					PenMatchUtils.setNextNickname(penMatchTransactionNames, tempNicknamesList.get(0).getNickname2());
+			for (NicknamesEntity nickEntity : tempNicknamesList) {
+				if (!nickEntity.getNickname2().equals(givenNameUpper)) {
+					PenMatchUtils.setNextNickname(penMatchTransactionNames, nickEntity.getNickname2().trim());
 				}
-				currentNickname1 = tempNicknamesList.get(0).getNickname1();
-				currentNickname2 = tempNicknamesList.get(0).getNickname2();
+
+				if (penMatchTransactionNames.getNickname4() != null && !penMatchTransactionNames.getNickname4().isEmpty()) {
+					break;
+				}
 			}
 		}
 
@@ -188,10 +181,12 @@ public class PenMatchLookupManager {
 	 * @return
 	 */
 	public Integer lookupSurnameFrequency(String fullStudentSurname) {
+		if (fullStudentSurname == null) {
+			return 0;
+		}
 		// Note this returns in two different places
 		Integer surnameFrequency = 0;
-		List<SurnameFrequencyEntity> surnameFreqEntityList = getSurnameFrequencyRepository()
-				.findAllBySurnameStartingWith(fullStudentSurname);
+		List<SurnameFrequencyEntity> surnameFreqEntityList = getSurnameFrequencyRepository().findAllBySurnameStartingWith(fullStudentSurname);
 
 		for (SurnameFrequencyEntity surnameFreqEntity : surnameFreqEntityList) {
 			surnameFrequency = surnameFrequency + Integer.valueOf(surnameFreqEntity.getSurnameFrequency());

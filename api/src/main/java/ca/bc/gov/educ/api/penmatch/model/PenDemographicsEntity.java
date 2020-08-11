@@ -23,10 +23,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Immutable
-@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInit", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
-@NamedNativeQuery(name = "PenDemographicsEntity.penDemogWithAllParts", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ? AND STUD_GIVEN LIKE ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
-@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoLocalID", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ? AND STUD_GIVEN LIKE ?)", resultClass = PenDemographicsEntity.class)
-@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInitNoLocalID", query = "SELECT * FROM PEN_DEMOG WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInit", query = "SELECT * FROM PEN_DEMOG@penlink.world WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogWithAllParts", query = "SELECT * FROM PEN_DEMOG@penlink.world WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ? AND STUD_GIVEN LIKE ?) OR (PEN_MINCODE = ? AND PEN_LOCAL_ID = ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoLocalID", query = "SELECT * FROM PEN_DEMOG@penlink.world WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ? AND STUD_GIVEN LIKE ?)", resultClass = PenDemographicsEntity.class)
+@NamedNativeQuery(name = "PenDemographicsEntity.penDemogNoInitNoLocalID", query = "SELECT * FROM PEN_DEMOG@penlink.world WHERE (STUD_BIRTH = ?) OR (STUD_SURNAME LIKE ?)", resultClass = PenDemographicsEntity.class)
 @Table(name = "PEN_DEMOG@penlink.world")
 public class PenDemographicsEntity {
 

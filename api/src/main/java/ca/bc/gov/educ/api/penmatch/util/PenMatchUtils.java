@@ -1,11 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 
 import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
@@ -32,20 +29,6 @@ public class PenMatchUtils {
 				|| penMatchTransactionNames.getNickname4().length() < 1) {
 			penMatchTransactionNames.setNickname4(nextNickname);
 		}
-	}
-
-	/**
-	 * Utility method to determine if the nickname list contains
-	 * 
-	 * @param nicknamesList
-	 * @param givenName
-	 * @return
-	 */
-	public static boolean hasGivenNameAsNickname2(List<NicknamesEntity> nicknamesList, String givenName) {
-		if (nicknamesList != null && !nicknamesList.isEmpty() && nicknamesList.get(0).getNickname2().equals(givenName)) {
-			return true;
-		}
-		return false;
 	}
 
 	/**

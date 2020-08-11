@@ -39,7 +39,7 @@ public class PenMatchService {
 	@Getter(AccessLevel.PRIVATE)
 	private final PenMatchLookupManager lookupManager;
 
-	@Autowired
+	@Autowired 
 	public PenMatchService(final PenMatchLookupManager lookupManager) {
 		this.lookupManager = lookupManager;
 	}
@@ -250,7 +250,7 @@ public class PenMatchService {
 
 		lookupManager.lookupNicknames(penMatchTransactionNames, given);
 		return penMatchTransactionNames;
-	}
+	} 
 
 	/**
 	 * Example: the original PEN number is 746282656 1. First 8 digits are 74628265
@@ -407,16 +407,16 @@ public class PenMatchService {
 		List<PenDemographicsEntity> penDemogList;
 		if (student.getLocalID() == null) {
 			if (useGivenInitial) {
-				penDemogList = lookupManager.lookupNoLocalID(student, session);
+				penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getSurname(), student.getGivenName());
 			} else {
-				penDemogList = lookupManager.lookupNoInitNoLocalID(student, session);
+				penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getSurname());
 			}
 			performCheckAndMerge(penDemogList, student, session);
 		} else {
 			if (useGivenInitial) {
-				penDemogList = lookupManager.lookupWithAllParts(student, session);
+				penDemogList = lookupManager.lookupWithAllParts(student.getDob(), student.getSurname(), student.getGivenName(), student.getMincode(), student.getLocalID());
 			} else {
-				penDemogList = lookupManager.lookupNoInit(student, session);
+				penDemogList = lookupManager.lookupNoInit(student.getDob(), student.getSurname(), student.getMincode(), student.getLocalID());
 			}
 		}
 		performCheckAndMerge(penDemogList, student, session);
