@@ -96,7 +96,7 @@ public class PenMatchUtils {
 		penMatchMasterNames.setUsualGiven(storeNameIfNotNull(usualGiven));
 		penMatchMasterNames.setUsualMiddle(storeNameIfNotNull(master.getUsualMiddleName()));
 
-		if (given != null) {
+		if (given != null) { 
 			int spaceIndex = StringUtils.indexOf(given, " ");
 			if (spaceIndex != -1) {
 				penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));

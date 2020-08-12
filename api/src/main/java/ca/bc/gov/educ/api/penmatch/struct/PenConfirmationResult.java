@@ -14,7 +14,5 @@ public class PenConfirmationResult {
 	public static final String PEN_ON_FILE = "PEN_ON_FILE";
 
 	private String mergedPEN;
-	private String resultCode;
-	private PenMasterRecord penMasterRecord;
-	private String localStudentNumber;
+	private boolean deceased;
 }

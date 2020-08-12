@@ -301,7 +301,7 @@ public class ScoringUtils {
 				|| (hasMiddleNameSubsetToGivenNameMatch(alternateUsualMiddle, penMatchMasterNames))) {
 			// Check middle to given if no matches above (only try 4 characters)
 			middleNamePoints = 10;
-			middleFlip = true;
+			middleFlip = true; 
 		}
 
 		MiddleNameMatchResult result = new MiddleNameMatchResult();
@@ -445,7 +445,7 @@ public class ScoringUtils {
 	 * @return
 	 */
 	public static boolean hasMiddleNameSubsetMatch(String middleName, PenMatchNames penMatchMasterNames) {
-		if (middleName != null && middleName.length() >= 1) {
+		if (middleName != null && middleName.length() > 1) {
 			if ((penMatchMasterNames.getLegalMiddle() != null && (penMatchMasterNames.getLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getLegalMiddle())))
 					|| (penMatchMasterNames.getUsualMiddle() != null && (penMatchMasterNames.getUsualMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getUsualMiddle())))
 					|| (penMatchMasterNames.getAlternateLegalMiddle() != null && (penMatchMasterNames.getAlternateLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getAlternateLegalMiddle())))
