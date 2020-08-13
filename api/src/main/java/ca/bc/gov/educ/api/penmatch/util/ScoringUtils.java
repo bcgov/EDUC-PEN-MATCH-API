@@ -86,7 +86,7 @@ public class ScoringUtils {
 		String masterMincode = master.getMincode();
 		String masterLocalID = master.getLocalId();
 
-		if (mincode != null && masterMincode != null && mincode.equals(masterMincode) && ((localID != null && masterLocalID != null && localID.equals(masterLocalID)) || (session.getAlternateLocalID() != null && session.getAlternateLocalID().equals(master.getAlternateLocalId())))
+		if (mincode != null && masterMincode != null && mincode.equals(masterMincode) && ((localID != null && masterLocalID != null && localID.equals(masterLocalID)) || (student.getAlternateLocalID() != null && student.getAlternateLocalID().equals(master.getAlternateLocalId())))
 				&& (localID != null && localID.trim().length() > 1)) {
 			localIDPoints = 20;
 		}
@@ -108,7 +108,7 @@ public class ScoringUtils {
 		// Prepare to negate any local_id_points if the local ids actually conflict
 		if (localIDPoints > 0 && mincode != null && masterMincode != null && mincode.equals(masterMincode)) {
 			if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null) || (localID != null && masterLocalID != null && !localID.equals(masterLocalID))) {
-				if ((session.getAlternateLocalID() != null && master.getAlternateLocalId() != null && !session.getAlternateLocalID().equals(master.getAlternateLocalId())) || (session.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
+				if ((student.getAlternateLocalID() != null && master.getAlternateLocalId() != null && !student.getAlternateLocalID().equals(master.getAlternateLocalId())) || (student.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
 					matchResult.setIdDemerits(localIDPoints);
 				}
 			}

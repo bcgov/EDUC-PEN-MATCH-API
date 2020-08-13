@@ -28,4 +28,14 @@ public class PenMatchStudent {
 	private String localID;
 	private String postal;
 	private String updateCode;
+	
+	//These are updated by the match algorithm
+	private PenMatchNames penMatchTransactionNames;
+	private String alternateLocalID;
+	private Integer minSurnameSearchSize;
+	private Integer maxSurnameSearchSize;
+	private String partialStudentSurname;
+	private String partialStudentGiven;
+	private Integer fullSurnameFrequency;
+	private Integer partialSurnameFrequency;
 }

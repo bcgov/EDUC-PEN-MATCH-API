@@ -13,14 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PenMatchSession {
 
-	private Integer fullSurnameFrequency;
-	private Integer partialSurnameFrequency;
-	private PenMatchNames penMatchTransactionNames;
-	private Integer minSurnameSearchSize;
-	private Integer maxSurnameSearchSize;
-	private String alternateLocalID;
-	private String partialStudentSurname;
-	private String partialStudentGiven;
 	private PriorityQueue<PenMatchRecord> matchingRecords;
 	private Integer reallyGoodMatches;
 	private Integer prettyGoodMatches;

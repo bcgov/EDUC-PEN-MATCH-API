@@ -82,7 +82,7 @@ public class PenMatchService {
 					}
 				} else {
 					session.setPenStatus(PenStatus.C.getValue());
-					findMatchesOnPenDemog(student, false, session, confirmationResult.getLocalStudentNumber());
+					findMatchesOnPenDemog(student, false, session, null);
 				}
 
 			} else {
@@ -149,18 +149,18 @@ public class PenMatchService {
 		session.setPrettyGoodMatches(0);
 		session.setReallyGoodPEN(null);
 		session.setNumberOfMatches(0);
-		session.setAlternateLocalID("TTT");
+		student.setAlternateLocalID("TTT");
 
 		// Strip off leading zeros, leading blanks and trailing blanks
 		// from the local_id. Put result in alternateLocalID.
 		if (student.getLocalID() != null) {
-			session.setAlternateLocalID(StringUtils.stripStart(student.getLocalID(), "0").replaceAll(" ", ""));
+			student.setAlternateLocalID(StringUtils.stripStart(student.getLocalID(), "0").replaceAll(" ", ""));
 		}
 
-		session.setPenMatchTransactionNames(storeNamesFromTransaction(student));
+		student.setPenMatchTransactionNames(storeNamesFromTransaction(student));
 
-		session.setMinSurnameSearchSize(4);
-		session.setMaxSurnameSearchSize(6);
+		student.setMinSurnameSearchSize(4);
+		student.setMaxSurnameSearchSize(6);
 
 		Integer surnameSize = 0;
 
@@ -170,10 +170,10 @@ public class PenMatchService {
 			surnameSize = 0;
 		}
 
-		if (surnameSize < session.getMinSurnameSearchSize()) {
-			session.setMinSurnameSearchSize(surnameSize);
-		} else if (surnameSize < session.getMaxSurnameSearchSize()) {
-			session.setMaxSurnameSearchSize(surnameSize);
+		if (surnameSize < student.getMinSurnameSearchSize()) {
+			student.setMinSurnameSearchSize(surnameSize);
+		} else if (surnameSize < student.getMaxSurnameSearchSize()) {
+			student.setMaxSurnameSearchSize(surnameSize);
 		}
 
 		// Lookup surname frequency
@@ -187,12 +187,12 @@ public class PenMatchService {
 		if (fullSurnameFrequency > VERY_FREQUENT) {
 			partialSurnameFrequency = fullSurnameFrequency;
 		} else {
-			fullStudentSurname = student.getSurname().substring(0, session.getMinSurnameSearchSize());
+			fullStudentSurname = student.getSurname().substring(0, student.getMinSurnameSearchSize());
 			partialSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
 		}
 
-		session.setFullSurnameFrequency(fullSurnameFrequency);
-		session.setPartialSurnameFrequency(partialSurnameFrequency);
+		student.setFullSurnameFrequency(fullSurnameFrequency);
+		student.setPartialSurnameFrequency(partialSurnameFrequency);
 
 		return session;
 	}
@@ -257,10 +257,10 @@ public class PenMatchService {
 				&& student.getSex().equals(master.getSex())) {
 			matchFound = true;
 			algorithmUsed = PenAlgorithm.ALG_S1;
-		} else if (student.getSurname() != null && student.getSurname().equals(master.getSurname().trim()) && student.getGivenName() != null && student.getGivenName().equals(master.getGiven().trim()) && student.getDob() != null && student.getDob().equals(master.getDob()) && student.getLocalID() != null
-				&& student.getLocalID().length() > 1) {
+		} else if (student.getSurname() != null && student.getSurname().equals(master.getSurname().trim()) && student.getGivenName() != null && student.getGivenName().equals(master.getGiven().trim()) && student.getDob() != null && student.getDob().equals(master.getDob())
+				&& student.getLocalID() != null && student.getLocalID().length() > 1) {
 			PenMatchUtils.normalizeLocalIDsFromMaster(master);
-			if (student.getMincode() != null && student.getMincode().equals(master.getMincode()) && (student.getLocalID().equals(master.getLocalId()) || session.getAlternateLocalID().equals(master.getAlternateLocalId()))) {
+			if (student.getMincode() != null && student.getMincode().equals(master.getMincode()) && ((student.getLocalID() != null && student.getLocalID().equals(master.getLocalId())) || (student.getAlternateLocalID() != null && student.getAlternateLocalID().equals(master.getAlternateLocalId())))) {
 				matchFound = true;
 				algorithmUsed = PenAlgorithm.ALG_S2;
 			}
@@ -321,7 +321,7 @@ public class PenMatchService {
 
 		result.setLocalStudentNumber(localStudentNumber);
 		result.setMasterRecord(masterRecord);
-		
+
 		return result;
 	}
 
@@ -336,31 +336,31 @@ public class PenMatchService {
 		boolean useGivenInitial = true;
 		boolean type5F1 = false;
 
-		if (session.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
-			session.setPartialStudentSurname(student.getSurname().substring(0, session.getMinSurnameSearchSize()));
+		if (student.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
+			student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
 			useGivenInitial = false;
 		} else {
-			if (session.getPartialSurnameFrequency() <= VERY_FREQUENT) {
-				session.setPartialStudentSurname(student.getSurname().substring(0, session.getMinSurnameSearchSize()));
-				session.setPartialStudentGiven(student.getGivenName().substring(0, 1));
+			if (student.getPartialSurnameFrequency() <= VERY_FREQUENT) {
+				student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
+				student.setPartialStudentGiven(student.getGivenName().substring(0, 1));
 			} else {
-				session.setPartialStudentSurname(student.getSurname().substring(0, session.getMaxSurnameSearchSize()));
-				session.setPartialStudentGiven(student.getGivenName().substring(0, 2));
+				student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
+				student.setPartialStudentGiven(student.getGivenName().substring(0, 2));
 			}
 		}
 
 		List<PenDemographicsEntity> penDemogList;
 		if (student.getLocalID() == null) {
 			if (useGivenInitial) {
-				penDemogList = lookupManager.lookupNoLocalID(student.getDob(), session.getPartialStudentSurname(), session.getPartialStudentGiven());
+				penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
 			} else {
-				penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), session.getPartialStudentSurname());
+				penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname());
 			}
 		} else {
 			if (useGivenInitial) {
-				penDemogList = lookupManager.lookupWithAllParts(student.getDob(), session.getPartialStudentSurname(), session.getPartialStudentGiven(), student.getMincode(), student.getLocalID());
+				penDemogList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), student.getMincode(), student.getLocalID());
 			} else {
-				penDemogList = lookupManager.lookupNoInit(student.getDob(), session.getPartialStudentSurname(), student.getMincode(), student.getLocalID());
+				penDemogList = lookupManager.lookupNoInit(student.getDob(), student.getPartialStudentSurname(), student.getMincode(), student.getLocalID());
 			}
 		}
 		performCheckAndMerge(penDemogList, student, session, localStudentNumber);
@@ -505,17 +505,17 @@ public class PenMatchService {
 		Integer sexPoints = ScoringUtils.matchSex(student, master); // 5 points
 		Integer birthdayPoints = ScoringUtils.matchBirthday(student, master); // 5, 10, 15 or 20 points
 		SurnameMatchResult surnameMatchResult = ScoringUtils.matchSurname(student, master); // 10 or 20 points
-		GivenNameMatchResult givenNameMatchResult = ScoringUtils.matchGivenName(session.getPenMatchTransactionNames(), penMatchMasterNames); // 5, 10,
+		GivenNameMatchResult givenNameMatchResult = ScoringUtils.matchGivenName(student.getPenMatchTransactionNames(), penMatchMasterNames); // 5, 10,
 		// 15 or
 		// 20
 		// points
 
 		// If a perfect match on legal surname , add 5 points if a very rare surname
-		if (surnameMatchResult.getSurnamePoints() >= 20 && session.getFullSurnameFrequency() <= VERY_RARE && surnameMatchResult.isLegalSurnameUsed()) {
+		if (surnameMatchResult.getSurnamePoints() >= 20 && student.getFullSurnameFrequency() <= VERY_RARE && surnameMatchResult.isLegalSurnameUsed()) {
 			surnameMatchResult.setSurnamePoints(surnameMatchResult.getSurnamePoints() + 5);
 		}
 
-		MiddleNameMatchResult middleNameMatchResult = ScoringUtils.matchMiddleName(session.getPenMatchTransactionNames(), penMatchMasterNames); // 5,
+		MiddleNameMatchResult middleNameMatchResult = ScoringUtils.matchMiddleName(student.getPenMatchTransactionNames(), penMatchMasterNames); // 5,
 		// 10,
 		// 15
 		// or
@@ -699,7 +699,7 @@ public class PenMatchService {
 	private void performCheckAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudent student, PenMatchSession session, String localStudentNumber) {
 		if (penDemogList != null) {
 			for (PenDemographicsEntity entity : penDemogList) {
-				if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().equals(localStudentNumber))) {
+				if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().trim().equals(localStudentNumber))) {
 					PenMasterRecord masterRecord = PenMatchUtils.convertPenDemogToPenMasterRecord(entity);
 					CheckForMatchResult result = checkForMatch(student, masterRecord, session);
 
