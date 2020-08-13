@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.educ.api.penmatch.endpoint.PenMatchEndpoint;
 import ca.bc.gov.educ.api.penmatch.service.PenMatchService;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,11 +21,11 @@ public class PenMatchController implements PenMatchEndpoint {
   @Autowired
   public PenMatchController(final PenMatchService penMatchService) {
     this.penMatchService = penMatchService;
-  }
+  } 
  
 
   @Override
-  public PenMatchSession matchStudent(PenMatchStudent student) {
+  public PenMatchResult matchStudent(PenMatchStudent student) {
 	return penMatchService.matchStudent(student);
   }
 

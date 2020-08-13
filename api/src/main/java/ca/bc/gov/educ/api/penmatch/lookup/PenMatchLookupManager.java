@@ -9,7 +9,6 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
@@ -122,12 +121,13 @@ public class PenMatchLookupManager {
 	 * @return
 	 */
 	public PenMasterRecord lookupStudentByPEN(String studentNumber) {
-		Optional<PenDemographicsEntity> demog = getPenDemographicsRepository().findByStudNo(studentNumber);
-		if (demog.isPresent()) {
-			return PenMatchUtils.convertPenDemogToPenMasterRecord(demog.get());
+		if (studentNumber != null) {
+			Optional<PenDemographicsEntity> demog = getPenDemographicsRepository().findByStudNo(studentNumber);
+			if (demog.isPresent()) {
+				return PenMatchUtils.convertPenDemogToPenMasterRecord(demog.get());
+			}
 		}
-
-		throw new PENMatchRuntimeException("No PEN Demog master record found for student number: " + studentNumber);
+		return null;
 	}
 
 	/**
