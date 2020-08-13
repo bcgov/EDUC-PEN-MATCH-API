@@ -15,4 +15,7 @@ public class PenConfirmationResult {
 
 	private String mergedPEN;
 	private boolean deceased;
+	private String penConfirmationResultCode;
+	private PenMasterRecord masterRecord;
+	private String localStudentNumber;
 }

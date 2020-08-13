@@ -1,5 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
@@ -96,7 +98,7 @@ public class PenMatchUtils {
 		penMatchMasterNames.setUsualGiven(storeNameIfNotNull(usualGiven));
 		penMatchMasterNames.setUsualMiddle(storeNameIfNotNull(master.getUsualMiddleName()));
 
-		if (given != null) { 
+		if (given != null) {
 			int spaceIndex = StringUtils.indexOf(given, " ");
 			if (spaceIndex != -1) {
 				penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
@@ -134,6 +136,60 @@ public class PenMatchUtils {
 			return name.trim();
 		}
 		return null;
+	}
+
+	/**
+	 * Example: the original PEN number is 746282656 1. First 8 digits are 74628265
+	 * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1) 3. Extract the even digits
+	 * 4,2,2,5 to get A = 4225. 4. Multiply A times 2 to get B = 8450 5. Sum the
+	 * digits of B: 8 + 4 + 5 + 0 = 17 (S2) 6. 27 + 17 = 44 (S3) 7. S3 is not a
+	 * multiple of 10 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) =
+	 * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
+	 * 50 B) Subtract S3 from this: 50 - 44 = 6
+	 * 
+	 * @param pen
+	 * @return
+	 */
+	public static boolean penCheckDigit(String pen) {
+		if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
+			return false;
+		}
+
+		ArrayList<Integer> odds = new ArrayList<>();
+		ArrayList<Integer> evens = new ArrayList<>();
+		for (int i = 0; i < pen.length() - 1; i++) {
+			int number = Integer.parseInt(pen.substring(i, i + 1));
+			if (i % 2 == 0) {
+				odds.add(number);
+			} else {
+				evens.add(number);
+			}
+		}
+
+		int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
+
+		String fullEvenValueString = "";
+		for (int i = 0; i < evens.size(); i++) {
+			fullEvenValueString += evens.get(i);
+		}
+
+		ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
+		String fullEvenValueDoubledString = Integer.valueOf(Integer.parseInt(fullEvenValueString) * 2).toString();
+		for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
+			listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
+		}
+
+		int sumEvens = listOfFullEvenValueDoubled.stream().mapToInt(Integer::intValue).sum();
+
+		int finalSum = sumEvens + sumOdds;
+
+		String penCheckDigit = pen.substring(8, 9);
+
+		if ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
