@@ -100,7 +100,7 @@ public class ScoringUtilsTest {
 	public void testMatchBirthdaySameYearMonth_ShouldScore10() {
 		PenMatchStudent student = createPenMatchStudent();
 		PenMasterRecord master = createPenMasterRecord();
-		student.setDob("19800510");
+		student.setDob("19800510"); 
 		master.setDob("19800518");
 
 		assertTrue(ScoringUtils.matchBirthday(student, master) == 10);
@@ -146,7 +146,7 @@ public class ScoringUtilsTest {
 		master.setAlternateLocalId("123456789");
 
 		PenMatchSession session = new PenMatchSession();
-		session.setAlternateLocalID("123456789");
+		student.setAlternateLocalID("123456789");
 
 		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 20);
 	}
@@ -162,7 +162,7 @@ public class ScoringUtilsTest {
 		master.setAlternateLocalId("123456789");
 
 		PenMatchSession session = new PenMatchSession();
-		session.setAlternateLocalID("123456789");
+		student.setAlternateLocalID("123456789");
 
 		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 20);
 	}
@@ -235,7 +235,7 @@ public class ScoringUtilsTest {
 		master.setAlternateLocalId("123456788");
 
 		PenMatchSession session = new PenMatchSession();
-		session.setAlternateLocalID("123456789");
+		student.setAlternateLocalID("123456789");
 
 		LocalIDMatchResult result = ScoringUtils.matchLocalID(student, master, session);
 		assertTrue(result.getIdDemerits() == 10);
@@ -1081,7 +1081,7 @@ public class ScoringUtilsTest {
 
 	private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
-		student.setStudentNumber(null);
+		student.setPen(null);
 		student.setSurname("JACKSON");
 		student.setGivenName("MIKE");
 		student.setMiddleName(null);
@@ -1101,33 +1101,7 @@ public class ScoringUtilsTest {
 		student.setMiddleInitial(null);
 		student.setUpdateCode(null);
 
-		student.setAssignmentCode(null);
-		student.setAssignmentDate(null);
 		student.setEnrolledGradeCode(null);
-		student.setFypFlag(null);
-		student.setPenStatus(null);
-		student.setPenStatusMessage(null);
-		student.setVersion(null);
-		student.setPen1(null);
-		student.setPen2(null);
-		student.setPen3(null);
-		student.setPen4(null);
-		student.setPen5(null);
-		student.setPen6(null);
-		student.setPen7(null);
-		student.setPen8(null);
-		student.setPen9(null);
-		student.setPen10(null);
-		student.setPen11(null);
-		student.setPen12(null);
-		student.setPen13(null);
-		student.setPen14(null);
-		student.setPen15(null);
-		student.setPen16(null);
-		student.setPen17(null);
-		student.setPen18(null);
-		student.setPen19(null);
-		student.setPen20(null);
 
 		return student;
 	}

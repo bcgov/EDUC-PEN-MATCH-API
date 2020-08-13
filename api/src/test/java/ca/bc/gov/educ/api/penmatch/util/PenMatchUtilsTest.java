@@ -14,6 +14,7 @@ import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 
 @RunWith(SpringRunner.class)
@@ -54,18 +55,20 @@ public class PenMatchUtilsTest {
 	@Test
 	public void testCheckForCoreData_ShouldNotSetStatus() {
 		PenMatchStudent student = createPenMatchStudent();
-		PenMatchUtils.checkForCoreData(student);
+		PenMatchSession session = new PenMatchSession();
+		PenMatchUtils.checkForCoreData(student, session);
 
-		assertNull(student.getPenStatus());
+		assertNull(session.getPenStatus());
 	}
 
 	@Test
 	public void testCheckForCoreData_ShouldSetG0Status() {
 		PenMatchStudent student = createPenMatchStudent();
+		PenMatchSession session = new PenMatchSession();
 		student.setSurname(null);
-		PenMatchUtils.checkForCoreData(student);
+		PenMatchUtils.checkForCoreData(student, session);
 
-		assertTrue(student.getPenStatus().equals(PenStatus.G0.getValue()));
+		assertTrue(session.getPenStatus().equals(PenStatus.G0.getValue()));
 	}
 
 	@Test
@@ -177,7 +180,7 @@ public class PenMatchUtilsTest {
 
 	private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
-		student.setStudentNumber(null);
+		student.setPen(null);
 		student.setSurname("JACKSON");
 		student.setGivenName("MIKE");
 		student.setMiddleName(null);
@@ -196,34 +199,7 @@ public class PenMatchUtilsTest {
 		student.setGivenInitial(null);
 		student.setMiddleInitial(null);
 		student.setUpdateCode(null);
-
-		student.setAssignmentCode(null);
-		student.setAssignmentDate(null);
 		student.setEnrolledGradeCode(null);
-		student.setFypFlag(null);
-		student.setPenStatus(null);
-		student.setPenStatusMessage(null);
-		student.setVersion(null);
-		student.setPen1(null);
-		student.setPen2(null);
-		student.setPen3(null);
-		student.setPen4(null);
-		student.setPen5(null);
-		student.setPen6(null);
-		student.setPen7(null);
-		student.setPen8(null);
-		student.setPen9(null);
-		student.setPen10(null);
-		student.setPen11(null);
-		student.setPen12(null);
-		student.setPen13(null);
-		student.setPen14(null);
-		student.setPen15(null);
-		student.setPen16(null);
-		student.setPen17(null);
-		student.setPen18(null);
-		student.setPen19(null);
-		student.setPen20(null);
 
 		return student;
 	}
