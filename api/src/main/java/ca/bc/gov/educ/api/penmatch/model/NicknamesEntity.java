@@ -10,21 +10,18 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Immutable
-@Table(name = "NICKNAMES@penlink.world")
+@Table(name = "NICKNAMES")
 @IdClass(NicknamesEntity.class)
 public class NicknamesEntity implements Serializable {
 
+	private static final long serialVersionUID = -8918085130403633012L;
 	@Id
 	@Column(name = "NICKNAME1")
 	private String nickname1;

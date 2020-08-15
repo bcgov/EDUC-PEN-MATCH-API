@@ -7,25 +7,21 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Immutable
-@Table(name = "SURNAME_FREQUENCY@penlink.world")
+@Table(name = "SURNAME_FREQUENCY")
 public class SurnameFrequencyEntity {
 
-  @Id
-  @Column(name = "SURNAME")
-  private String surname;
+	@Id
+	@Column(name = "SURNAME")
+	private String surname;
 
-  @Column(name = "SURNAME_FREQUENCY")
-  private String surnameFrequency;
+	@Column(name = "SURNAME_FREQUENCY")
+	private String surnameFrequency;
 
 }

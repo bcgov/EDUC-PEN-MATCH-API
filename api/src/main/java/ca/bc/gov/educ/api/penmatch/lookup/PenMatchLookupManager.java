@@ -40,7 +40,7 @@ public class PenMatchLookupManager {
 	@Getter(AccessLevel.PRIVATE)
 	private final NicknamesRepository nicknamesRepository;
 
-	@Getter(AccessLevel.PRIVATE)
+	@Autowired
 	private final EntityManager entityManager;
 
 	@Autowired
@@ -59,8 +59,8 @@ public class PenMatchLookupManager {
 	public List<PenDemographicsEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogWithAllParts");
 		lookupNoInitQuery.setParameter(1, dob);
-		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
-		lookupNoInitQuery.setParameter(3, givenName.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(2, surname + "%");
+		lookupNoInitQuery.setParameter(3, givenName + "%");
 		lookupNoInitQuery.setParameter(4, mincode);
 		lookupNoInitQuery.setParameter(5, localID);
 
@@ -78,7 +78,7 @@ public class PenMatchLookupManager {
 	public List<PenDemographicsEntity> lookupNoInit(String dob, String surname, String mincode, String localID) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoInit");
 		lookupNoInitQuery.setParameter(1, dob);
-		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(2, surname + "%");
 		lookupNoInitQuery.setParameter(3, mincode);
 		lookupNoInitQuery.setParameter(4, localID);
 
@@ -94,8 +94,8 @@ public class PenMatchLookupManager {
 	public List<PenDemographicsEntity> lookupNoLocalID(String dob, String surname, String givenName) {
 		Query lookupNoInitQuery = entityManager.createNamedQuery("PenDemographicsEntity.penDemogNoLocalID");
 		lookupNoInitQuery.setParameter(1, dob);
-		lookupNoInitQuery.setParameter(2, surname.toUpperCase() + "%");
-		lookupNoInitQuery.setParameter(3, givenName.toUpperCase() + "%");
+		lookupNoInitQuery.setParameter(2, surname + "%");
+		lookupNoInitQuery.setParameter(3, givenName + "%");
 
 		return lookupNoInitQuery.getResultList();
 	}
@@ -141,7 +141,7 @@ public class PenMatchLookupManager {
 			return;
 		}
 
-		String givenNameUpper = givenName.toUpperCase();
+		String givenNameUpper = givenName;
 
 		// Part 1 - Find the base nickname
 		String baseNickname = null;

@@ -20,7 +20,7 @@ public class ScoringUtils {
 	 * Calculate points for Birthday match
 	 */
 	public static Integer matchBirthday(PenMatchStudent student, PenMasterRecord master) {
-		Integer birthdayPoints = 0;
+		Integer birthdayPoints = 0; 
 		Integer birthdayMatches = 0;
 		String dob = student.getDob();
 

@@ -30,32 +30,88 @@ public class PenMatchUtils {
 			penMatchTransactionNames.setNickname4(nextNickname);
 		}
 	}
+	
+	/**
+	 * Utility function to uppercase all incoming student data
+	 * 
+	 * @param student
+	 */
+	public static void upperCaseInputStudent(PenMatchStudent student) {
+		if (student.getSurname() != null) {
+			student.setSurname(student.getSurname().trim().toUpperCase());
+		}
+
+		if (student.getGivenName() != null) {
+			student.setGivenName(student.getGivenName().trim().toUpperCase());
+		}
+
+		if (student.getMiddleName() != null) {
+			student.setMiddleName(student.getMiddleName().trim().toUpperCase());
+		}
+
+		if (student.getUsualSurname() != null) {
+			student.setUsualSurname(student.getUsualSurname().trim().toUpperCase());
+		}
+
+		if (student.getUsualGivenName() != null) {
+			student.setUsualGivenName(student.getUsualGivenName().trim().toUpperCase());
+		}
+
+		if (student.getUsualMiddleName() != null) {
+			student.setUsualMiddleName(student.getUsualMiddleName().trim().toUpperCase());
+		}
+
+		if (student.getSex() != null) {
+			student.setSex(student.getSex().trim().toUpperCase());
+		}
+
+		if (student.getPostal() != null) {
+			student.setPostal(student.getPostal().trim().toUpperCase());
+		}
+
+		if (student.getGivenInitial() != null) {
+			student.setGivenInitial(student.getGivenInitial().trim().toUpperCase());
+		}
+
+		if (student.getMiddleInitial() != null) {
+			student.setMiddleInitial(student.getMiddleInitial().trim().toUpperCase());
+		}
+
+	}
 
 	/**
 	 * Converts PEN Demog record to a PEN Master record
-	 * 
+	 *  
 	 * @param entity
 	 * @return
 	 */
 	public static PenMasterRecord convertPenDemogToPenMasterRecord(PenDemographicsEntity entity) {
 		PenMasterRecord masterRecord = new PenMasterRecord();
 
-		masterRecord.setStudentNumber(entity.getStudNo());
-		masterRecord.setDob(entity.getStudBirth());
-		masterRecord.setSurname(entity.getStudSurname());
-		masterRecord.setGiven(entity.getStudGiven());
-		masterRecord.setMiddle(entity.getStudMiddle());
-		masterRecord.setUsualSurname(entity.getUsualSurname());
-		masterRecord.setUsualGivenName(entity.getUsualGiven());
-		masterRecord.setUsualMiddleName(entity.getUsualMiddle());
-		masterRecord.setPostal(entity.getPostalCode());
-		masterRecord.setSex(entity.getStudSex());
-		masterRecord.setGrade(entity.getGrade());
-		masterRecord.setStatus(entity.getStudStatus());
-		masterRecord.setMincode(entity.getMincode());
-		masterRecord.setLocalId(entity.getLocalID());
+		masterRecord.setStudentNumber(checkForValidValue(entity.getStudNo()));
+		masterRecord.setDob(checkForValidValue(entity.getStudBirth()));
+		masterRecord.setSurname(checkForValidValue(entity.getStudSurname()));
+		masterRecord.setGiven(checkForValidValue(entity.getStudGiven()));
+		masterRecord.setMiddle(checkForValidValue(entity.getStudMiddle()));
+		masterRecord.setUsualSurname(checkForValidValue(entity.getUsualSurname()));
+		masterRecord.setUsualGivenName(checkForValidValue(entity.getUsualGiven()));
+		masterRecord.setUsualMiddleName(checkForValidValue(entity.getUsualMiddle()));
+		masterRecord.setPostal(checkForValidValue(entity.getPostalCode()));
+		masterRecord.setSex(checkForValidValue(entity.getStudSex()));
+		masterRecord.setGrade(checkForValidValue(entity.getGrade()));
+		masterRecord.setStatus(checkForValidValue(entity.getStudStatus()));
+		masterRecord.setMincode(checkForValidValue(entity.getMincode()));
+		masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
+		masterRecord.setTrueNumber(checkForValidValue(entity.getTrueNumber()));
 
 		return masterRecord;
+	}
+	
+	private static String checkForValidValue(String value) {
+		if(value != null && !value.trim().isEmpty()) {
+			return value.trim();
+		}
+		return null;
 	}
 
 	/**
