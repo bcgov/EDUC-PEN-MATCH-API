@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
@@ -18,7 +18,7 @@ import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@SpringBootTest
 public class PenMatchUtilsTest {
 
 	@Before
