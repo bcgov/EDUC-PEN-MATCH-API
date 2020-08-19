@@ -193,11 +193,11 @@ public class PenMatchUtilsTest {
 		student.setSex("M");
 		student.setMincode("12345567");
 
-		student.setUsualMiddleInitial(null);
-		student.setUsualGivenInitial(null);
+		student.setUsualMiddleInitial("G");
+		student.setUsualGivenInitial("J");
 
-		student.setGivenInitial(null);
-		student.setMiddleInitial(null);
+		student.setGivenInitial("G");
+		student.setMiddleInitial("J");
 		student.setUpdateCode(null);
 		student.setEnrolledGradeCode(null);
 

@@ -230,7 +230,7 @@ public class PenMatchUtils {
 		}
 
 		ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
-		String fullEvenValueDoubledString = Integer.valueOf(Integer.parseInt(fullEvenValueString) * 2).toString();
+		String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenValueString) * 2);
 		for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
 			listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
 		}

@@ -2,8 +2,9 @@ package ca.bc.gov.educ.api.penmatch.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import java.io.IOException;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.io.File;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +17,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
+import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
@@ -28,7 +33,8 @@ import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PenMatchControllerTest {
-	private MockMvc mvc;
+
+	private MockMvc mockMvc;
 
 	@Autowired
 	NicknamesRepository nicknamesRepository;
@@ -43,38 +49,45 @@ public class PenMatchControllerTest {
 	PenMatchController controller;
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		mvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
+	    final File file = new File("src/test/resources/mock_pen_demog.json");
+	    List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+	    });
+	    penDemogRepository.saveAll(penDemogEntities);
+	    
+	    final File fileNick = new File("src/test/resources/mock_nicknames.json");
+	    List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+	    });
+	    nicknamesRepository.saveAll(nicknameEntities);
+	    
+	    final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
+	    List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+	    });
+	    surnameFreqRepository.saveAll(surnameFreqEntities);
 	}
 
 	@Test
 	@WithMockOAuth2Scope(scope = "READ_PEN_MATCH")
 	public void testCreateStudent_GivenValidPayload_ShouldReturnStatusCreated() throws Exception {
 		PenMatchStudent entity = createPenMatchStudent();
-		this.mvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity))).andDo(print());
+		this.mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity))).andDo(print()).andExpect(status().isOk());
 	}
 
 	private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
-		student.setEnrolledGradeCode(null);
-		student.setMincode(null);
+		student.setPen("108999400");
+		student.setSurname("VANDERLEEK");
+		student.setGivenName("JAKE");
+		student.setMiddleName("WILLIAM");
+		student.setUsualSurname("VANDERLEEK");
+		student.setUsualGivenName("JAKE");
+		student.setUsualMiddleName("WILLIAM");
 		student.setPostal(null);
-		student.setDob(null);
-		student.setGivenName(null);
-		student.setGivenInitial(null);
-		student.setLocalID(null);
-		student.setMiddleName(null);
-		student.setMiddleInitial(null);
-		student.setPen(null);
-		student.setSex(null);
-		student.setSurname(null);
-		student.setUpdateCode(null);
-		student.setUsualGivenName(null);
-		student.setUsualGivenInitial(null);
-		student.setUsualMiddleName(null);
-		student.setUsualMiddleInitial(null);
-		student.setUsualSurname(null);
+		student.setDob("19791018");
+		student.setLocalID("285261");
+		student.setSex("M");
 
 		return student;
 	}
