@@ -1,2 +1,2 @@
-# EDUC-PEN-DEMOG-API
-Getting student demographics data from open vms systems connected to RDB.
+# EDUC-PEN-MATCH-API
+API which will determine if a PEN match is found. 
