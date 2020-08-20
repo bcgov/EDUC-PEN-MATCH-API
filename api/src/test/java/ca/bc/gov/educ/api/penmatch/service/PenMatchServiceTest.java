@@ -24,7 +24,7 @@ import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -73,7 +73,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidAlg30_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
 		student.setMiddleName("LUKE");
@@ -90,7 +90,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidAlg40_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
 		student.setMiddleName(null);
@@ -106,7 +106,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidAlg50_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
 		student.setMiddleName(null);
@@ -122,7 +122,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidAlg51_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName("CLA");
 		student.setMiddleName(null);
@@ -140,7 +140,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -152,7 +152,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidForCoreCheck_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentForCoreCheck();
+		PenMatchStudentDetail student = createPenMatchStudentDetailForCoreCheck();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -164,7 +164,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidTwin_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setLocalID("285262");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -177,7 +177,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsInValidPEN_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen("123456888");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -190,7 +190,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudent_WhenPayloadIsValidWithInvalidPEN_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen("109508853");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -203,7 +203,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithoutPEN_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithoutPEN();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithoutPEN();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -215,7 +215,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentNoMatches_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = new PenMatchStudent();
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen(null);
 		student.setSurname("PASCAL");
 		student.setGivenName("JOSEPH");
@@ -238,7 +238,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithoutPENNoLocalID_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithoutPEN();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithoutPEN();
 		student.setLocalID(null);
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -251,7 +251,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithFull_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -263,7 +263,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithFullNoSex_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSex(null);
 		student.setDob("19991201");
 		PenMatchResult result = service.matchStudent(student);
@@ -277,7 +277,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithFullSplitGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setGivenName("LUKE JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -290,7 +290,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithFullSplitGivenDash_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setGivenName("LUKE-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -303,7 +303,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithUsualSplitGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("LUKE JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -314,7 +314,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithUsualSmallSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSurname("LOR");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -325,7 +325,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithFullSplitMiddleDash_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("luke-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -338,7 +338,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithMergedRecord_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("luke-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -351,7 +351,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithNoSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchFullStudent();
+		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSurname(null);
 		student.setUsualSurname(null);
 		PenMatchResult result = service.matchStudent(student);
@@ -365,7 +365,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithMergedDeceased_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentMergedDeceased();
+		PenMatchStudentDetail student = createPenMatchStudentDetailMergedDeceased();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -377,7 +377,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithMergedValid_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentMergedValid();
+		PenMatchStudentDetail student = createPenMatchStudentDetailMergedValid();
 
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -390,7 +390,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithMergedValidComplete_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentMergedValidComplete();
+		PenMatchStudentDetail student = createPenMatchStudentDetailMergedValidComplete();
 
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -403,7 +403,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareName_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
@@ -415,7 +415,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameMiddleFlip_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setMiddleName("VICTORIA");
 		student.setGivenName("WILLIAM");
 		PenMatchResult result = service.matchStudent(student);
@@ -429,7 +429,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeS_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setMincode("00501007");
 		PenMatchResult result = service.matchStudent(student);
@@ -443,7 +443,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWrongGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setGivenName("PETE");
 		PenMatchResult result = service.matchStudent(student);
@@ -457,7 +457,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWrongMiddle_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setMiddleName("YARN");
 		PenMatchResult result = service.matchStudent(student);
@@ -471,7 +471,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWrongLocalID_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setLocalID("239661");
 		PenMatchResult result = service.matchStudent(student);
@@ -485,7 +485,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setSurname("JAKE");
 		PenMatchResult result = service.matchStudent(student);
@@ -499,7 +499,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSex_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setSex("F");
 		PenMatchResult result = service.matchStudent(student);
@@ -513,7 +513,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongPostal_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setPostal("V0B1R2");
 		PenMatchResult result = service.matchStudent(student);
@@ -527,7 +527,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongDob_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setDob("19920223");
 		PenMatchResult result = service.matchStudent(student);
@@ -541,7 +541,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSValid_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -554,7 +554,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeSWithPostal_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentWithRareName();
+		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setPostal("V0B1R0");
 		PenMatchResult result = service.matchStudent(student);
@@ -568,7 +568,7 @@ public class PenMatchServiceTest {
 
 	@Test
 	public void testMatchStudentWithRareNameWithUpdateCodeY_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
-		PenMatchStudent student = createPenMatchStudentMergedDeceased();
+		PenMatchStudentDetail student = createPenMatchStudentDetailMergedDeceased();
 		student.setUpdateCode("Y");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
@@ -579,8 +579,8 @@ public class PenMatchServiceTest {
 
 	}
 
-	private PenMatchStudent createPenMatchStudent() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetail() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("122740046");
 		student.setSurname("LORD");
 		student.setGivenName("CLAYTON");
@@ -593,8 +593,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchFullStudent() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchFullStudent() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("122740046");
 		student.setSurname("LORD");
 		student.setGivenName("CLAYTON");
@@ -608,8 +608,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentWithoutPEN() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailWithoutPEN() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setSurname("LORD");
 		student.setGivenName("CLAYTON");
 		student.setMiddleName("L");
@@ -620,8 +620,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentWithRareName() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailWithRareName() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setSurname("ODLUS");
 		student.setGivenName("VICTORIA");
 		student.setMiddleName("WILLIAM");
@@ -632,8 +632,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentMergedDeceased() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailMergedDeceased() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("108999400");
 		student.setSurname("VANDERLEEK");
 		student.setGivenName("JAKE");
@@ -648,8 +648,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentMergedValid() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailMergedValid() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("113874044");
 		student.setSurname("SMITH");
 		student.setGivenName("JOE");
@@ -663,8 +663,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentMergedValidComplete() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailMergedValidComplete() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("113874044");
 		student.setSurname("SMITH");
 		student.setGivenName("JOE");
@@ -678,8 +678,8 @@ public class PenMatchServiceTest {
 		return student;
 	}
 
-	private PenMatchStudent createPenMatchStudentForCoreCheck() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetailForCoreCheck() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen("113874041");
 		student.setSurname("VANDERLEEK");
 		student.setGivenName("JAKE");

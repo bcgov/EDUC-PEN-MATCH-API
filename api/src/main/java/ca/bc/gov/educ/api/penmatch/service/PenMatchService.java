@@ -23,6 +23,7 @@ import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import ca.bc.gov.educ.api.penmatch.util.ScoringUtils;
@@ -50,7 +51,7 @@ public class PenMatchService {
 	 * @param student
 	 * @return
 	 */
-	public PenMatchResult matchStudent(PenMatchStudent student) {
+	public PenMatchResult matchStudent(PenMatchStudentDetail student) {
 		log.debug("Received student payload :: {}", student);
 
 		PenMatchSession session = initialize(student);
@@ -137,7 +138,7 @@ public class PenMatchService {
 	 * @param student
 	 * @return
 	 */
-	private PenMatchSession initialize(PenMatchStudent student) {
+	private PenMatchSession initialize(PenMatchStudentDetail student) {
 		PenMatchSession session = new PenMatchSession();
 		session.setPenStatusMessage(null);
 		session.setMatchingRecords(new PriorityQueue<PenMatchRecord>(new PenMatchComparator()));
@@ -204,7 +205,7 @@ public class PenMatchService {
 	 * 
 	 * @param student
 	 */
-	private PenMatchNames storeNamesFromTransaction(PenMatchStudent student) {
+	private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
 		String given = student.getGivenName();
 		String usualGiven = student.getUsualGivenName();
 		PenMatchNames penMatchTransactionNames;
@@ -250,7 +251,7 @@ public class PenMatchService {
 	 * match on school and local ID and one or more of surname, given name or
 	 * birthday
 	 */
-	private CheckForMatchResult simpleCheckForMatch(PenMatchStudent student, PenMasterRecord master, PenMatchSession session) {
+	private CheckForMatchResult simpleCheckForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
 		boolean matchFound = false;
 		PenAlgorithm algorithmUsed = null;
 
@@ -285,7 +286,7 @@ public class PenMatchService {
 	 * @param student
 	 * @return
 	 */
-	private PenConfirmationResult confirmPEN(PenMatchStudent student, PenMatchSession session) {
+	private PenConfirmationResult confirmPEN(PenMatchStudentDetail student, PenMatchSession session) {
 		PenConfirmationResult result = new PenConfirmationResult();
 
 		String localStudentNumber = student.getPen();
@@ -333,7 +334,7 @@ public class PenMatchService {
 	 * long use the given initial in the lookup unless 1st 4 characters of surname
 	 * is quite rare
 	 */
-	private void findMatchesOnPenDemog(PenMatchStudent student, boolean penFoundOnMaster, PenMatchSession session, String localStudentNumber) {
+	private void findMatchesOnPenDemog(PenMatchStudentDetail student, boolean penFoundOnMaster, PenMatchSession session, String localStudentNumber) {
 		boolean useGivenInitial = true;
 		boolean type5F1 = false;
 
@@ -446,7 +447,7 @@ public class PenMatchService {
 	 * Merge new match into the list Assign points for algorithm and score for sort
 	 * use
 	 */
-	private void mergeNewMatchIntoList(PenMatchStudent student, String matchingPEN, PenMatchSession session, PenAlgorithm algorithmUsed, int totalPoints) {
+	private void mergeNewMatchIntoList(PenMatchStudentDetail student, String matchingPEN, PenMatchSession session, PenAlgorithm algorithmUsed, int totalPoints) {
 		int matchingAlgorithmResult;
 		int matchingScore;
 
@@ -502,7 +503,7 @@ public class PenMatchService {
 	 * @param fullSurnameFrequency
 	 * @return
 	 */
-	private CheckForMatchResult checkForMatch(PenMatchStudent student, PenMasterRecord master, PenMatchSession session) {
+	private CheckForMatchResult checkForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
 		boolean matchFound = false;
 		boolean type5F1 = false;
 		boolean type5Match = false;
@@ -708,7 +709,7 @@ public class PenMatchService {
 	 * @param student
 	 * @param session
 	 */
-	private void performCheckForMatchAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudent student, PenMatchSession session, String localStudentNumber) {
+	private void performCheckForMatchAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
 		if (penDemogList != null) {
 			for (PenDemographicsEntity entity : penDemogList) {
 				if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().trim().equals(localStudentNumber))) {

@@ -17,7 +17,7 @@ import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +30,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchAddress_ShouldScore0() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 
 		assertTrue(ScoringUtils.matchAddress(student, master) == 0);
@@ -38,7 +38,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchAddressRural_ShouldScore1() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setPostal("V0R3W5");
 		master.setPostal("V0R3W5");
@@ -48,7 +48,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchAddressValid_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setPostal("V1R3W5");
 		master.setPostal("V1R3W5");
@@ -58,7 +58,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthday_NoDob() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob(null);
 		master.setDob(null);
@@ -68,7 +68,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthday_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("19800518");
 		master.setDob("19800518");
@@ -78,7 +78,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthdayMonthDayFlip_ShouldScore15() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("19801805");
 		master.setDob("19800518");
@@ -88,7 +88,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthday5outOf6_ShouldScore15() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("20100518");
 		master.setDob("19800518");
@@ -98,7 +98,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthdaySameYearMonth_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("19800510"); 
 		master.setDob("19800518");
@@ -108,7 +108,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthdaySameYearDay_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("19801018");
 		master.setDob("19800518");
@@ -118,7 +118,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthdaySameMonthDay_ShouldScore5() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("20010518");
 		master.setDob("19800518");
@@ -128,7 +128,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchBirthdaySameYear_ShouldScore5() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setDob("19801018");
 		master.setDob("19800519");
@@ -138,7 +138,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalID_AlternateLocalIdScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("123456789");
 		student.setMincode("987654321");
@@ -153,7 +153,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalID_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("123456789");
 		student.setMincode("987654321");
@@ -169,7 +169,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalIDSameSchool_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("123456789");
 		student.setMincode("987654321");
@@ -183,7 +183,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalIDSameDistrict_ShouldScore5() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("12388888");
 		student.setMincode("987654321");
@@ -197,7 +197,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalIDSameDistrict102_ShouldScore0() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("12388888");
 		student.setMincode("102654321");
@@ -211,7 +211,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalIDWithDemerits_ShouldScore10Demerits() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("123456789");
 		student.setMincode("123456788");
@@ -227,7 +227,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLocalIDWithDemerits_ShouldScore10DemeritsWithAlternate() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setLocalID("123456789");
 		student.setMincode("987654321");
@@ -244,7 +244,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSex_ShouldScore5() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSex("M");
 		master.setSex("M");
@@ -905,7 +905,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameLegal_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Micheals");
 		master.setSurname("Micheals");
@@ -916,7 +916,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameUsual_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		master.setSurname(null);
@@ -929,7 +929,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameLegalToUsual_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Micheals");
 		student.setUsualSurname(null);
@@ -942,7 +942,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameUsualToLegal_ShouldScore20() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		student.setUsualSurname("Micheals");
@@ -956,7 +956,7 @@ public class ScoringUtilsTest {
 	@Test
 	public void testMatchSurnameLegal4Char_ShouldScore10() {
 
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Michells");
 		master.setSurname("Micheals");
@@ -967,7 +967,7 @@ public class ScoringUtilsTest {
 	@Test
 	public void testMatchSurnameUsualToLegal4Char_ShouldScore10() {
 
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Michells");
 		master.setSurname(null);
@@ -979,7 +979,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameLegalToUsual4Char_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		master.setSurname("Michells");
@@ -991,7 +991,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSurnameUsualToUsual4Char_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		master.setSurname(null);
@@ -1004,7 +1004,7 @@ public class ScoringUtilsTest {
 	@Test
 	public void testMatchLegalSurnameSoundex_ShouldScore10() {
 
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Micheals");
 		master.setSurname("Micells");
@@ -1014,7 +1014,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchUsualSurnameSoundex_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		master.setSurname(null);
@@ -1026,7 +1026,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchUsualToLegalSurnameSoundex_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname("Micells");
 		master.setSurname(null);
@@ -1038,7 +1038,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchLegalToUsualSurnameSoundex_ShouldScore10() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSurname(null);
 		master.setSurname("Micells");
@@ -1050,7 +1050,7 @@ public class ScoringUtilsTest {
 
 	@Test
 	public void testMatchSex_ShouldScore0() {
-		PenMatchStudent student = createPenMatchStudent();
+		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 		student.setSex("M");
 		master.setSex("F");
@@ -1079,8 +1079,8 @@ public class ScoringUtilsTest {
 		return masterRecord;
 	}
 
-	private PenMatchStudent createPenMatchStudent() {
-		PenMatchStudent student = new PenMatchStudent();
+	private PenMatchStudentDetail createPenMatchStudentDetail() {
+		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen(null);
 		student.setSurname("JACKSON");
 		student.setGivenName("MIKE");

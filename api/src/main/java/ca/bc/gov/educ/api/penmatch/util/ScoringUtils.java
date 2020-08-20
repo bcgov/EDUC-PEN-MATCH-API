@@ -8,7 +8,7 @@ import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
 
 public class ScoringUtils {
@@ -19,7 +19,7 @@ public class ScoringUtils {
 	/**
 	 * Calculate points for Birthday match
 	 */
-	public static Integer matchBirthday(PenMatchStudent student, PenMasterRecord master) {
+	public static Integer matchBirthday(PenMatchStudentDetail student, PenMasterRecord master) {
 		Integer birthdayPoints = 0; 
 		Integer birthdayMatches = 0;
 		String dob = student.getDob();
@@ -78,7 +78,7 @@ public class ScoringUtils {
 	 * the local ID field with a bogus 1 character local ID unfortunately this will
 	 * jeopardize the checking for legit 1 character local IDs
 	 */
-	public static LocalIDMatchResult matchLocalID(PenMatchStudent student, PenMasterRecord master, PenMatchSession session) {
+	public static LocalIDMatchResult matchLocalID(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
 		LocalIDMatchResult matchResult = new LocalIDMatchResult();
 		Integer localIDPoints = 0;
 		String mincode = student.getMincode();
@@ -122,7 +122,7 @@ public class ScoringUtils {
 	/**
 	 * Calculate points for address match
 	 */
-	public static Integer matchAddress(PenMatchStudent student, PenMasterRecord master) {
+	public static Integer matchAddress(PenMatchStudentDetail student, PenMasterRecord master) {
 		Integer addressPoints = 0;
 		String postal = student.getPostal();
 		String masterPostal = master.getPostal();
@@ -139,7 +139,7 @@ public class ScoringUtils {
 	/**
 	 * Calculate points for surname match
 	 */
-	public static SurnameMatchResult matchSurname(PenMatchStudent student, PenMasterRecord master) {
+	public static SurnameMatchResult matchSurname(PenMatchStudentDetail student, PenMasterRecord master) {
 		Integer surnamePoints = 0;
 		boolean legalSurnameUsed = false;
 		String masterLegalSurnameNoBlanks = null;
@@ -514,7 +514,7 @@ public class ScoringUtils {
 	/**
 	 * Calculate points for Sex match
 	 */
-	public static Integer matchSex(PenMatchStudent student, PenMasterRecord master) {
+	public static Integer matchSex(PenMatchStudentDetail student, PenMasterRecord master) {
 		Integer sexPoints = 0;
 		if (student.getSex() != null && master.getSex() != null && student.getSex().equals(master.getSex().trim())) {
 			sexPoints = 5;
