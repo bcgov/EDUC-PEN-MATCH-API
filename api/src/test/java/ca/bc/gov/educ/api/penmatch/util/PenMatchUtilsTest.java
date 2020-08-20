@@ -135,7 +135,6 @@ public class PenMatchUtilsTest {
 		entity.setUsualMiddle("AXE");
 		entity.setPostalCode("V2R3W4");
 		entity.setStudSex("M");
-		entity.setGrade("10");
 		entity.setStudStatus("B0");
 		entity.setMincode("12345678");
 		entity.setLocalID("9876575");
@@ -151,7 +150,6 @@ public class PenMatchUtilsTest {
 		assertNotNull(masterRecord.getUsualMiddleName());
 		assertNotNull(masterRecord.getPostal());
 		assertNotNull(masterRecord.getSex());
-		assertNotNull(masterRecord.getGrade());
 		assertNotNull(masterRecord.getStatus());
 		assertNotNull(masterRecord.getMincode());
 		assertNotNull(masterRecord.getLocalId());
