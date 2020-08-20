@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LocalIDMatchResult {
 
-	private Integer idDemerits;
-	private Integer localIDPoints;
+	private int idDemerits;
+	private int localIDPoints;
 
 }

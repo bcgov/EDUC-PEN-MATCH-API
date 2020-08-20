@@ -48,24 +48,29 @@ public class PenMatchControllerTest {
 	@Autowired
 	PenMatchController controller;
 
+	private static boolean dataLoaded = false;
+
 	@Before
 	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
-	    final File file = new File("src/test/resources/mock_pen_demog.json");
-	    List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
-	    });
-	    penDemogRepository.saveAll(penDemogEntities);
-	    
-	    final File fileNick = new File("src/test/resources/mock_nicknames.json");
-	    List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
-	    });
-	    nicknamesRepository.saveAll(nicknameEntities);
-	    
-	    final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-	    List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
-	    });
-	    surnameFreqRepository.saveAll(surnameFreqEntities);
+		if (!dataLoaded) {
+			MockitoAnnotations.initMocks(this);
+			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
+			final File file = new File("src/test/resources/mock_pen_demog.json");
+			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+			});
+			penDemogRepository.saveAll(penDemogEntities);
+
+			final File fileNick = new File("src/test/resources/mock_nicknames.json");
+			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+			});
+			nicknamesRepository.saveAll(nicknameEntities);
+
+			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
+			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+			});
+			surnameFreqRepository.saveAll(surnameFreqEntities);
+			dataLoaded = true;
+		}
 	}
 
 	@Test

@@ -101,7 +101,7 @@ public class PenMatchService {
 		 * once PEN 222222226 is reached. That PEN number as well as PENs starting with
 		 * digits 3-9 have already been assigned in an earlier version of PEN.
 		 */
-		if ((session.getPenStatus().equals(PenStatus.C0.getValue()) || session.getPenStatus().equals(PenStatus.D0.getValue()) && (student.getUpdateCode() != null && (student.getUpdateCode().equals("Y") || student.getUpdateCode().equals("R"))))) {
+		if ((session.getPenStatus().equals(PenStatus.C0.getValue()) || session.getPenStatus().equals(PenStatus.D0.getValue())) && ((student.getUpdateCode() != null && (student.getUpdateCode().equals("Y") || student.getUpdateCode().equals("R"))))) {
 			PenMatchUtils.checkForCoreData(student, session);
 		}
 
@@ -513,7 +513,6 @@ public class PenMatchService {
 
 		int totalPoints = 0;
 		int bonusPoints = 0;
-		int idDemerits = 0;
 
 		int sexPoints = ScoringUtils.matchSex(student, master); // 5 points
 		int birthdayPoints = ScoringUtils.matchBirthday(student, master); // 5, 10, 15 or 20 points
@@ -553,19 +552,19 @@ public class PenMatchService {
 			if (student.getSex() != null && sexPoints == 0) {
 				matchFound = false;
 			}
-			if (!(student.getSurname() != null && student.getUsualSurname() != null) && surnameMatchResult.getSurnamePoints() == 0) {
+			if ((student.getSurname() != null || student.getUsualSurname() != null) && surnameMatchResult.getSurnamePoints() == 0) {
 				matchFound = false;
 			}
-			if (!(student.getGivenName() != null && student.getUsualGivenName() != null) && givenNameMatchResult.getGivenNamePoints() == 0) {
+			if ((student.getGivenName() != null || student.getUsualGivenName() != null) && givenNameMatchResult.getGivenNamePoints() == 0) {
 				matchFound = false;
 			}
-			if (!(student.getMiddleName() != null && student.getUsualMiddleName() != null) && middleNameMatchResult.getMiddleNamePoints() == 0) {
+			if ((student.getMiddleName() != null || student.getUsualMiddleName() != null) && middleNameMatchResult.getMiddleNamePoints() == 0) {
 				matchFound = false;
 			}
 			if (student.getDob() != null && birthdayPoints == 0) {
 				matchFound = false;
 			}
-			if (!(student.getLocalID() != null && student.getMincode() != null) && localIDMatchResult.getLocalIDPoints() == 0) {
+			if ((student.getLocalID() != null || student.getMincode() != null) && localIDMatchResult.getLocalIDPoints() == 0) {
 				matchFound = false;
 			}
 			if (student.getPostal() != null && addressPoints == 0) {
@@ -638,14 +637,14 @@ public class PenMatchService {
 		// middle name + address + local_id + school >= 55 bonus points
 		if (!matchFound) {
 			bonusPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints() + localIDMatchResult.getLocalIDPoints() + addressPoints;
-			if (bonusPoints >= idDemerits) {
-				bonusPoints = bonusPoints - idDemerits;
+			if (bonusPoints >= localIDMatchResult.getIdDemerits()) {
+				bonusPoints = bonusPoints - localIDMatchResult.getIdDemerits();
 			} else {
 				bonusPoints = 0;
 			}
 
 			if (bonusPoints >= 55 || (bonusPoints >= 40 && localIDMatchResult.getLocalIDPoints() >= 20) || (bonusPoints >= 50 && surnameMatchResult.getSurnamePoints() >= 10 && birthdayPoints >= 15 && givenNameMatchResult.getGivenNamePoints() >= 15) || (bonusPoints >= 50 && birthdayPoints >= 20)
-					|| (bonusPoints >= 50 && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
+					|| (bonusPoints >= 50 && student.getLocalID() != null && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
 				matchFound = true;
 				algorithmUsed = PenAlgorithm.ALG_50;
 				totalPoints = bonusPoints;
