@@ -33,8 +33,8 @@ getPublicKey(){
 echo Fetching public key from SOAM
 soamFullPublicKey="-----BEGIN PUBLIC KEY----- $(getPublicKey) -----END PUBLIC KEY-----"
 
-#READ_PEN_DEMOGRAPHICS
-$KCADM_FILE_BIN_FOLDER/kcadm.sh create client-scopes -r $SOAM_KC_REALM_ID --body "{\"description\": \"SOAM send email scope\",\"id\": \"READ_PEN_DEMOGRAPHICS\",\"name\": \"READ_PEN_DEMOGRAPHICS\",\"protocol\": \"openid-connect\",\"attributes\" : {\"include.in.token.scope\" : \"true\",\"display.on.consent.screen\" : \"false\"}}"
+#READ_PEN_MATCH
+$KCADM_FILE_BIN_FOLDER/kcadm.sh create client-scopes -r $SOAM_KC_REALM_ID --body "{\"description\": \"Read PEN Matches\",\"id\": \"READ_PEN_MATCH\",\"name\": \"READ_PEN_MATCH\",\"protocol\": \"openid-connect\",\"attributes\" : {\"include.in.token.scope\" : \"true\",\"display.on.consent.screen\" : \"false\"}}"
 
 ###########################################################
 #Setup for config-map

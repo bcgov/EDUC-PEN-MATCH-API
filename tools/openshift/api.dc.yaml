@@ -23,7 +23,7 @@ objects:
       template:
         metadata:
           annotations:
-            openshift.io/generated-by: pendemogapi
+            openshift.io/generated-by: penmatchapi
             prometheus.io/path: /actuator/prometheus
             prometheus.io/port: '8080'
             prometheus.io/scrape: 'true'
@@ -107,7 +107,7 @@ objects:
           volumes:
             - name: tls-certs
               secret:
-                secretName: pen-demog-api-cert
+                secretName: pen-match-api-cert
             - name: log-storage
               emptyDir: {}
             - name: flb-sc-config-volume
@@ -120,7 +120,7 @@ objects:
     kind: Service
     metadata:
       annotations:
-        service.alpha.openshift.io/serving-cert-secret-name: "pen-demog-api-cert"
+        service.alpha.openshift.io/serving-cert-secret-name: "pen-match-api-cert"
       labels:
         app: "${APP_NAME}-${JOB_NAME}"
       name: "${APP_NAME}-${JOB_NAME}"
