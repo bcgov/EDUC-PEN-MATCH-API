@@ -166,6 +166,7 @@ public class PenMatchServiceTest {
 	public void testMatchStudent_WhenPayloadIsValidTwin_ShouldReturnMatchResult() throws JsonProcessingException {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setLocalID("285262");
+		student.setGivenName("CLAYTON");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
