@@ -50,25 +50,26 @@ public class PenMatchServiceTest {
 
 	@Before
 	public void setup() throws Exception {
-		if (!dataLoaded) {
-			service = new PenMatchService(lookupManager);
-
-			final File file = new File("src/test/resources/mock_pen_demog.json");
-			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
-			});
-			penDemogRepository.saveAll(penDemogEntities);
-
-			final File fileNick = new File("src/test/resources/mock_nicknames.json");
-			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
-			});
-			nicknamesRepository.saveAll(nicknameEntities);
-
-			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
-			});
-			surnameFreqRepository.saveAll(surnameFreqEntities);
-			dataLoaded = true;
-		}
+		service = new PenMatchService(lookupManager);
+//		if (!dataLoaded) {
+//			service = new PenMatchService(lookupManager);
+//
+//			final File file = new File("src/test/resources/mock_pen_demog.json");
+//			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+//			});
+//			penDemogRepository.saveAll(penDemogEntities);
+//
+//			final File fileNick = new File("src/test/resources/mock_nicknames.json");
+//			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+//			});
+//			nicknamesRepository.saveAll(nicknameEntities);
+//
+//			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
+//			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+//			});
+//			surnameFreqRepository.saveAll(surnameFreqEntities);
+//			dataLoaded = true;
+//		}
 	}
 
 	@Test

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.util.List;
 
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,20 +56,20 @@ public class PenMatchControllerTest {
 		if (!dataLoaded) {
 			MockitoAnnotations.initMocks(this);
 			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
-			final File file = new File("src/test/resources/mock_pen_demog.json");
-			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
-			});
-			penDemogRepository.saveAll(penDemogEntities);
-
-			final File fileNick = new File("src/test/resources/mock_nicknames.json");
-			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
-			});
-			nicknamesRepository.saveAll(nicknameEntities);
-
-			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
-			});
-			surnameFreqRepository.saveAll(surnameFreqEntities);
+//			final File file = new File("src/test/resources/mock_pen_demog.json");
+//			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+//			});
+//			penDemogRepository.saveAll(penDemogEntities);
+//
+//			final File fileNick = new File("src/test/resources/mock_nicknames.json");
+//			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+//			});
+//			nicknamesRepository.saveAll(nicknameEntities);
+//
+//			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
+//			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+//			});
+//			surnameFreqRepository.saveAll(surnameFreqEntities);
 			dataLoaded = true;
 		}
 	}
@@ -82,17 +83,14 @@ public class PenMatchControllerTest {
 
 	private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
-		student.setPen("108999400");
-		student.setSurname("VANDERLEEK");
-		student.setGivenName("JAKE");
-		student.setMiddleName("WILLIAM");
-		student.setUsualSurname("VANDERLEEK");
-		student.setUsualGivenName("JAKE");
-		student.setUsualMiddleName("WILLIAM");
-		student.setPostal(null);
-		student.setDob("19791018");
+		student.setPen("122740046");
+		student.setSurname("LORD");
+		student.setGivenName("CLAYTON");
+		student.setMiddleName("LUKE");
+		student.setDob("19991201");
 		student.setLocalID("285261");
-		student.setSex("M");
+		student.setSex("F");
+		student.setMincode("00501007");
 
 		return student;
 	}
