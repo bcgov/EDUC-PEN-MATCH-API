@@ -1,9 +1,5 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +15,8 @@ import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -63,7 +61,7 @@ public class ScoringUtilsTest {
 		student.setDob(null);
 		master.setDob(null);
 
-		assertNull(ScoringUtils.matchBirthday(student, master));
+		assertEquals(ScoringUtils.matchBirthday(student, master), 0);
 	}
 
 	@Test

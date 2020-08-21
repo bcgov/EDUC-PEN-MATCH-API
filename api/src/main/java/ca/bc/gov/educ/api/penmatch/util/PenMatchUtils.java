@@ -16,7 +16,6 @@ import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
 public class PenMatchUtils {
 
     private PenMatchUtils() {
-
     }
 
     /**
@@ -232,13 +231,13 @@ public class PenMatchUtils {
 
         int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
 
-        String fullEvenValueString = "";
+        StringBuilder fullEvenStringBuilder = new StringBuilder();
         for (int i: evens) {
-            fullEvenValueString += i;
+            fullEvenStringBuilder.append(i);
         }
 
         ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
-        String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenValueString) * 2);
+        String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenStringBuilder.toString()) * 2);
         for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
             listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
         }
@@ -249,11 +248,7 @@ public class PenMatchUtils {
 
         String penCheckDigit = pen.substring(8, 9);
 
-        if ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit))) {
-            return true;
-        }
-
-        return false;
+        return ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
     }
 
 }

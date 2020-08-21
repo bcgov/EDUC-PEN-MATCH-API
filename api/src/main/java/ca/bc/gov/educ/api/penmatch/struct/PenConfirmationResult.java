@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class PenConfirmationResult {
 	public static final String PEN_CONFIRMED = "PEN_CONFIRMED";
 	public static final String PEN_ON_FILE = "PEN_ON_FILE";
+	public static final String NO_RESULT = "NO_RESULT";
 
 	private String mergedPEN;
 	private boolean deceased;
