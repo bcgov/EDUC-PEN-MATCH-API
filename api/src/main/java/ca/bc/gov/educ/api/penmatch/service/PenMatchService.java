@@ -1,8 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
-import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
-import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
+import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
+import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.*;
