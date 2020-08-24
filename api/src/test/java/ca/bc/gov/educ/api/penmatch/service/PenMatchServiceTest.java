@@ -3,7 +3,7 @@ package ca.bc.gov.educ.api.penmatch.service;
 import java.io.File;
 import java.util.List;
 
-import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
+import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

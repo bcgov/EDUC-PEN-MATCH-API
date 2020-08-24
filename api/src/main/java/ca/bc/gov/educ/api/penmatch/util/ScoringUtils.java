@@ -83,13 +83,13 @@ public class ScoringUtils {
         String masterMincode = master.getMincode();
         String masterLocalID = master.getLocalId();
 
-        if (mincode != null && masterMincode != null && mincode.equals(masterMincode) && ((localID != null && localID.equals(masterLocalID)) || (student.getAlternateLocalID() != null && student.getAlternateLocalID().equals(master.getAlternateLocalId())))
+        if (mincode != null && mincode.equals(masterMincode) && ((localID != null && localID.equals(masterLocalID)) || (student.getAlternateLocalID() != null && student.getAlternateLocalID().equals(master.getAlternateLocalId())))
                 && (localID != null && localID.trim().length() > 1)) {
             localIDPoints = 20;
         }
 
         // Same School
-        if (localIDPoints == 0 && mincode != null && masterMincode != null && mincode.equals(masterMincode)) {
+        if (localIDPoints == 0 && mincode != null && mincode.equals(masterMincode)) {
             localIDPoints = 10;
         }
 
@@ -99,7 +99,7 @@ public class ScoringUtils {
         }
 
         // Prepare to negate any local_id_points if the local ids actually conflict
-        if (localIDPoints > 0 && mincode != null && masterMincode != null && mincode.equals(masterMincode)) {
+        if (localIDPoints > 0 && mincode.equals(masterMincode)) {
             if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null) || (localID != null && !localID.equals(masterLocalID))) {
                 if ((student.getAlternateLocalID() != null && master.getAlternateLocalId() != null && !student.getAlternateLocalID().equals(master.getAlternateLocalId())) || (student.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
                     matchResult.setIdDemerits(localIDPoints);
@@ -121,9 +121,9 @@ public class ScoringUtils {
         String postal = student.getPostal();
         String masterPostal = master.getPostal();
 
-        if (postal != null && masterPostal != null && postal.equals(masterPostal) && !masterPostal.substring(0, 2).equals("V0")) {
+        if (postal != null  && postal.equals(masterPostal) && !masterPostal.substring(0, 2).equals("V0")) {
             addressPoints = 10;
-        } else if (postal != null && masterPostal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
+        } else if (postal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
             addressPoints = 1;
         }
         log.info(" output :: addressPoints={}", addressPoints);
@@ -155,18 +155,18 @@ public class ScoringUtils {
             usualSurnameNoBlanks = student.getUsualSurname().replace(" ", "");
         }
 
-        if (studentSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null && studentSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
+        if (studentSurnameNoBlanks != null && studentSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
             // Verify if legal surname matches master legal surname
             surnamePoints = 20;
             legalSurnameUsed = true;
-        } else if (usualSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
+        } else if (usualSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
             // Verify is usual surname matches master usual surname
             surnamePoints = 20;
-        } else if (studentSurnameNoBlanks != null && masterUsualSurnameNoBlanks != null && studentSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
+        } else if (studentSurnameNoBlanks != null && studentSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) {
             // Verify if legal surname matches master usual surname
             surnamePoints = 20;
             legalSurnameUsed = true;
-        } else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
+        } else if (usualSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks)) {
             // Verify if usual surname matches master legal surname
             surnamePoints = 20;
         } else if (studentSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null && studentSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4 && studentSurnameNoBlanks.substring(0, 4).equals(masterLegalSurnameNoBlanks.substring(0, 4))) {
@@ -181,23 +181,23 @@ public class ScoringUtils {
         } else if (usualSurnameNoBlanks != null && masterLegalSurnameNoBlanks != null && usualSurnameNoBlanks.length() >= 4 && masterLegalSurnameNoBlanks.length() >= 4 && usualSurnameNoBlanks.substring(0, 4).equals(masterLegalSurnameNoBlanks.substring(0, 4))) {
             // Do a 4 character match with usual surname and master legal surname
             surnamePoints = 10;
-        } else if (surnamePoints == 0) {
+        } else {
             String masterSoundexLegalSurname = runSoundex(masterLegalSurnameNoBlanks);
             String masterSoundexUsualSurname = runSoundex(masterUsualSurnameNoBlanks);
 
             String soundexLegalSurname = runSoundex(studentSurnameNoBlanks);
             String soundexUsualSurname = runSoundex(usualSurnameNoBlanks);
 
-            if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && masterSoundexLegalSurname != null && !soundexLegalSurname.substring(0, 1).equals(" ") && soundexLegalSurname.equals(masterSoundexLegalSurname)) {
+            if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && soundexLegalSurname.equals(masterSoundexLegalSurname)) {
                 // Check if the legal surname soundex matches the master legal surname soundex
                 surnamePoints = 10;
-            } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && masterSoundexLegalSurname != null && !soundexUsualSurname.substring(0, 1).equals(" ") && soundexUsualSurname.equals(masterSoundexLegalSurname)) {
+            } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && soundexUsualSurname.equals(masterSoundexLegalSurname)) {
                 // Check if the usual surname soundex matches the master legal surname soundex
                 surnamePoints = 10;
-            } else if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && masterSoundexUsualSurname != null && !soundexLegalSurname.substring(0, 1).equals(" ") && soundexLegalSurname.equals(masterSoundexUsualSurname)) {
+            } else if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && soundexLegalSurname.equals(masterSoundexUsualSurname)) {
                 // Check if the legal surname soundex matches the master usual surname soundex
                 surnamePoints = 10;
-            } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && masterSoundexUsualSurname != null && !soundexUsualSurname.substring(0, 1).equals(" ") && soundexUsualSurname.equals(masterSoundexUsualSurname)) {
+            } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && soundexUsualSurname.equals(masterSoundexUsualSurname)) {
                 // Check if the usual surname soundex matches the master usual surname soundex
                 surnamePoints = 10;
             }
@@ -334,7 +334,7 @@ public class ScoringUtils {
             StringBuilder soundexStringBuilder = new StringBuilder();
             soundexStringBuilder.append(soundexString);
             for (int i = 1; i < tempString.length(); i++) {
-                currentCharSoundex = Integer.valueOf(tempString.substring(i, i + 1));
+                currentCharSoundex = Integer.parseInt(tempString.substring(i, i + 1));
 
                 if (currentCharSoundex >= 1 && currentCharSoundex <= 7) {
                     // If the second "soundexable" character is not the same as the first raw
@@ -355,7 +355,7 @@ public class ScoringUtils {
                 }
             }
 
-            soundexString = (soundexStringBuilder.append("00000000")).toString().substring(0, 8);
+            soundexString = (soundexStringBuilder.append("00000000")).substring(0, 8);
         } else {
             return null;
         }
