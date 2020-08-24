@@ -1,10 +1,9 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
 import java.util.List;
 
+import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +25,8 @@ import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,30 +51,28 @@ public class PenMatchServiceTest {
 
 	@Before
 	public void setup() throws Exception {
-		service = new PenMatchService(lookupManager);
-//		if (!dataLoaded) {
-//			service = new PenMatchService(lookupManager);
-//
-//			final File file = new File("src/test/resources/mock_pen_demog.json");
-//			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
-//			});
-//			penDemogRepository.saveAll(penDemogEntities);
-//
-//			final File fileNick = new File("src/test/resources/mock_nicknames.json");
-//			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
-//			});
-//			nicknamesRepository.saveAll(nicknameEntities);
-//
-//			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-//			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
-//			});
-//			surnameFreqRepository.saveAll(surnameFreqEntities);
-//			dataLoaded = true;
-//		}
+		if (!dataLoaded) {
+			service = new PenMatchService(lookupManager);
+			final File file = new File("src/test/resources/mock_pen_demog.json");
+			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+			});
+			penDemogRepository.saveAll(penDemogEntities);
+
+			final File fileNick = new File("src/test/resources/mock_nicknames.json");
+			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+			});
+			nicknamesRepository.saveAll(nicknameEntities);
+
+			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
+			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+			});
+			surnameFreqRepository.saveAll(surnameFreqEntities);
+			dataLoaded = true;
+		}
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidAlg30_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudent_Alg30_ShouldReturnStatusD1Match()  {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
@@ -83,14 +82,12 @@ public class PenMatchServiceTest {
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidAlg40_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudent_Alg40_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
@@ -99,14 +96,12 @@ public class PenMatchServiceTest {
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidAlg50_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudent_Alg50_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName(null);
@@ -115,14 +110,12 @@ public class PenMatchServiceTest {
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidAlg51_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudent_WhenPayloadIsValidAlg51_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen(null);
 		student.setGivenName("CLA");
@@ -133,90 +126,75 @@ public class PenMatchServiceTest {
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudent_ShouldReturnAAMatch() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.AA.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidForCoreCheck_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentForCoreCheck_ShouldReturnC0() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailForCoreCheck();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertEquals(result.getPenStatus(), PenStatus.C0.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidTwin_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentValidTwin_ShouldReturnAA() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setLocalID("285262");
 		student.setGivenName("CLAYTON");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.AA.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsInValidPEN_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentInValidPEN_ShouldReturnC1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen("123456888");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.C1.toString());
 	}
 
 	@Test
-	public void testMatchStudent_WhenPayloadIsValidWithInvalidPEN_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithInvalidPEN_ShouldReturnC1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		student.setPen("109508853");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.C1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithoutPEN_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithoutPEN_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithoutPEN();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentNoMatches_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentNoMatches_ShouldReturnD0() {
 		PenMatchStudentDetail student = new PenMatchStudentDetail();
 		student.setPen(null);
 		student.setSurname("PASCAL");
@@ -232,353 +210,302 @@ public class PenMatchServiceTest {
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertEquals(result.getPenStatus(), PenStatus.D0.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithoutPENNoLocalID_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithoutPENNoLocalID_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithoutPEN();
 		student.setLocalID(null);
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithFull_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithFull_ShouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithFullNoSex_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithFullNoSex_ShouldReturnAAMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSex(null);
 		student.setDob("19991201");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.AA.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithFullSplitGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithFullSplitGiven_ShouldReturnF1() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setGivenName("LUKE JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithFullSplitGivenDash_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithFullSplitGivenDash_ShouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setGivenName("LUKE-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithUsualSplitGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithUsualSplitGiven_shouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("LUKE JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithUsualSmallSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithUsualSmallSurname_ShouldReturnF1() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSurname("LOR");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithFullSplitMiddleDash_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithFullSplitMiddleDash_ShouldReturnF1andPossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("luke-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithMergedRecord_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithMergedRecord_ShouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setUsualGivenName("luke-JACK");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithNoSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithNoSurname_ShouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchFullStudent();
 		student.setSurname(null);
 		student.setUsualSurname(null);
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithMergedDeceased_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithMergedDeceased_ShouldReturnC0() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailMergedDeceased();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertEquals(result.getPenStatus(), PenStatus.C0.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithMergedValid_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithMergedValid_ShouldReturnF1PossibleMatch() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailMergedValid();
 
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertTrue(result.getMatchingRecords().size() > 0);
+		assertEquals(result.getPenStatus(), PenStatus.F1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithMergedValidComplete_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithMergedValidComplete_ShouldReturnB1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailMergedValidComplete();
 
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.B1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareName_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareName_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
 		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameMiddleFlip_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameMiddleFlip_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setMiddleName("VICTORIA");
 		student.setGivenName("WILLIAM");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeS_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeS_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setMincode("00501007");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWrongGiven_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWrongGiven_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setGivenName("PETE");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWrongMiddle_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWrongMiddle_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setMiddleName("YARN");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWrongLocalID_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWrongLocalID_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setLocalID("239661");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSurname_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSurname_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setSurname("JAKE");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSex_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWrongSex_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setSex("F");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongPostal_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongPostal_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setPostal("V0B1R2");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongDob_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWithWrongDob_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setDob("19920223");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSValid_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSValid_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
 		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeSWithPostal_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeSWithPostal_ShouldReturnD1Match() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailWithRareName();
 		student.setUpdateCode("S");
 		student.setPostal("V0B1R0");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertNotNull(result.getPen());
+		assertEquals(result.getPenStatus(), PenStatus.D1.toString());
 	}
 
 	@Test
-	public void testMatchStudentWithRareNameWithUpdateCodeY_WhenPayloadIsValid_ShouldReturnMatchResult() throws JsonProcessingException {
+	public void testMatchStudentWithRareNameWithUpdateCodeY_ShouldReturnC0() {
 		PenMatchStudentDetail student = createPenMatchStudentDetailMergedDeceased();
 		student.setUpdateCode("Y");
 		PenMatchResult result = service.matchStudent(student);
 		assertNotNull(result);
 		assertNotNull(result.getPenStatus());
-		ObjectMapper mapper = new ObjectMapper();
-
-		log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result));
-
+		assertEquals(result.getPenStatus(), PenStatus.C0.toString());
 	}
 
 	private PenMatchStudentDetail createPenMatchStudentDetail() {

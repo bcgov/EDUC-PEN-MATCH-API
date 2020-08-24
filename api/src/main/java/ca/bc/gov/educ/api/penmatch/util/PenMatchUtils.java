@@ -1,18 +1,19 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import java.util.ArrayList;
-
-import ca.bc.gov.educ.api.penmatch.aspects.LogExecutionTime;
-import ca.bc.gov.educ.api.penmatch.aspects.PenMatchLog;
-import org.apache.commons.lang3.StringUtils;
-
 import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+
+@Slf4j
 public class PenMatchUtils {
 
     private PenMatchUtils() {
@@ -21,9 +22,8 @@ public class PenMatchUtils {
     /**
      * Utility method which sets the penMatchTransactionNames
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
+        log.info(" input :: PenMatchNames={} nextNickname={}", PenMatchUtils.getJSONFormatObject(penMatchTransactionNames), nextNickname);
         if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
             penMatchTransactionNames.setNickname1(nextNickname);
         } else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
@@ -38,9 +38,8 @@ public class PenMatchUtils {
     /**
      * Utility function to uppercase all incoming student data
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static void upperCaseInputStudent(PenMatchStudent student) {
+        log.info(" input :: PenMatchStudent={}", PenMatchUtils.getJSONFormatObject(student));
         if (student.getSurname() != null) {
             student.setSurname(student.getSurname().trim().toUpperCase());
         }
@@ -86,9 +85,8 @@ public class PenMatchUtils {
     /**
      * Converts PEN Demog record to a PEN Master record
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static PenMasterRecord convertPenDemogToPenMasterRecord(PenDemographicsEntity entity) {
+        log.info(" input :: PenDemographicsEntity={}", PenMatchUtils.getJSONFormatObject(entity));
         PenMasterRecord masterRecord = new PenMasterRecord();
 
         masterRecord.setStudentNumber(checkForValidValue(entity.getStudNo()));
@@ -107,6 +105,7 @@ public class PenMatchUtils {
         masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
         masterRecord.setTrueNumber(checkForValidValue(entity.getTrueNumber()));
 
+        log.info(" output :: PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(masterRecord));
         return masterRecord;
     }
 
@@ -123,9 +122,8 @@ public class PenMatchUtils {
     /**
      * Check that the core data is there for a pen master add
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
+        log.info(" input :: PenMatchStudent={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session));
         if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
             session.setPenStatus(PenStatus.G0.getValue());
         }
@@ -135,9 +133,8 @@ public class PenMatchUtils {
      * Strip off leading zeros , leading blanks and trailing blanks from the
      * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
+        log.info(" input :: PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(master));
         master.setAlternateLocalId("MMM");
         if (master.getLocalId() != null) {
             master.setAlternateLocalId(StringUtils.stripStart(master.getLocalId(), "0").replace(" ", ""));
@@ -148,9 +145,8 @@ public class PenMatchUtils {
      * This function stores all names in an object It includes some split logic for
      * given/middle names
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
+        log.info(" input :: PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(master));
         String given = master.getGiven();
         String usualGiven = master.getUsualGivenName();
 
@@ -187,14 +183,13 @@ public class PenMatchUtils {
                 penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
             }
         }
+        log.info(" output :: PenMatchNames={}", PenMatchUtils.getJSONFormatObject(penMatchMasterNames));
         return penMatchMasterNames;
     }
 
     /**
      * Small utility method for storing names to keep things clean
      */
-    @LogExecutionTime
-    @PenMatchLog
     private static String storeNameIfNotNull(String name) {
         if (name != null && !name.isEmpty()) {
             return name.trim();
@@ -211,9 +206,8 @@ public class PenMatchUtils {
      * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
      * 50 B) Subtract S3 from this: 50 - 44 = 6
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean penCheckDigit(String pen) {
+        log.info(" input :: pen={}", pen);
         if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
             return false;
         }
@@ -232,7 +226,7 @@ public class PenMatchUtils {
         int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
 
         StringBuilder fullEvenStringBuilder = new StringBuilder();
-        for (int i: evens) {
+        for (int i : evens) {
             fullEvenStringBuilder.append(i);
         }
 
@@ -248,7 +242,21 @@ public class PenMatchUtils {
 
         String penCheckDigit = pen.substring(8, 9);
 
-        return ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
+
+        boolean result = ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
+        log.info(" output :: booleanResult={}", result);
+        return result;
     }
 
+    /**
+     * Small utility method to get an object in JSON format.
+     */
+    public static String getJSONFormatObject(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            return "";
+        }
+    }
 }

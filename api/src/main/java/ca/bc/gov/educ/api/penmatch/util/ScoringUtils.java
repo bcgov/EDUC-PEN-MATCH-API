@@ -1,18 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import ca.bc.gov.educ.api.penmatch.aspects.LogExecutionTime;
-import ca.bc.gov.educ.api.penmatch.aspects.PenMatchLog;
+import ca.bc.gov.educ.api.penmatch.struct.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.language.Soundex;
 
-import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
-import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
-
+@Slf4j
 public class ScoringUtils {
 
     private ScoringUtils() {
@@ -21,9 +13,8 @@ public class ScoringUtils {
     /**
      * Calculate points for Birthday match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static int matchBirthday(PenMatchStudentDetail student, PenMasterRecord master) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master));
         int birthdayPoints = 0;
         int birthdayMatches = 0;
         String dob = student.getDob();
@@ -74,6 +65,7 @@ public class ScoringUtils {
             }
         }
 
+        log.info(" output :: birthdayPoints={}", birthdayPoints);
         return birthdayPoints;
     }
 
@@ -82,9 +74,8 @@ public class ScoringUtils {
      * the local ID field with a bogus 1 character local ID unfortunately this will
      * jeopardize the checking for legit 1 character local IDs
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static LocalIDMatchResult matchLocalID(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master), PenMatchUtils.getJSONFormatObject(session));
         LocalIDMatchResult matchResult = new LocalIDMatchResult();
         int localIDPoints = 0;
         String mincode = student.getMincode();
@@ -117,16 +108,15 @@ public class ScoringUtils {
         }
 
         matchResult.setLocalIDPoints(localIDPoints);
-
+        log.info(" output :: LocalIDMatchResult={}", PenMatchUtils.getJSONFormatObject(matchResult));
         return matchResult;
     }
 
     /**
      * Calculate points for address match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static int matchAddress(PenMatchStudentDetail student, PenMasterRecord master) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master));
         int addressPoints = 0;
         String postal = student.getPostal();
         String masterPostal = master.getPostal();
@@ -136,16 +126,15 @@ public class ScoringUtils {
         } else if (postal != null && masterPostal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
             addressPoints = 1;
         }
-
+        log.info(" output :: addressPoints={}", addressPoints);
         return addressPoints;
     }
 
     /**
      * Calculate points for surname match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static SurnameMatchResult matchSurname(PenMatchStudentDetail student, PenMasterRecord master) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master));
         int surnamePoints = 0;
         boolean legalSurnameUsed = false;
         String masterLegalSurnameNoBlanks = null;
@@ -217,15 +206,15 @@ public class ScoringUtils {
         SurnameMatchResult result = new SurnameMatchResult();
         result.setLegalSurnameUsed(legalSurnameUsed);
         result.setSurnamePoints(surnamePoints);
+        log.info(" output :: SurnameMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
     /**
      * Calculate points for given name match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static GivenNameMatchResult matchGivenName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
+        log.info(" input :: penMatchTransactionNames={} penMatchMasterNames={}", PenMatchUtils.getJSONFormatObject(penMatchTransactionNames), PenMatchUtils.getJSONFormatObject(penMatchMasterNames));
         int givenNamePoints = 0;
         boolean givenFlip = false;
 
@@ -272,15 +261,15 @@ public class ScoringUtils {
         GivenNameMatchResult result = new GivenNameMatchResult();
         result.setGivenNamePoints(givenNamePoints);
         result.setGivenNameFlip(givenFlip);
+        log.info(" output :: GivenNameMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
     /**
      * Calculate points for middle name match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static MiddleNameMatchResult matchMiddleName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
+        log.info(" input :: penMatchTransactionNames={} penMatchMasterNames={}", PenMatchUtils.getJSONFormatObject(penMatchTransactionNames), PenMatchUtils.getJSONFormatObject(penMatchMasterNames));
         int middleNamePoints = 0;
         boolean middleFlip = false;
 
@@ -317,15 +306,15 @@ public class ScoringUtils {
         MiddleNameMatchResult result = new MiddleNameMatchResult();
         result.setMiddleNamePoints(middleNamePoints);
         result.setMiddleNameFlip(middleFlip);
+        log.info(" output :: MiddleNameMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
     /**
      * Soundex calculation
      */
-    @LogExecutionTime
-    @PenMatchLog
     private static String runSoundex(String inputString) {
+        log.info(" input :: soundexInputString={}", inputString);
 
         String previousCharRaw;
         int previousCharSoundex;
@@ -370,15 +359,13 @@ public class ScoringUtils {
         } else {
             return null;
         }
-
+        log.info(" output :: soundexString={}", soundexString);
         return soundexString;
     }
 
     /**
      * Utility function to check for subset given name matches
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasGivenNameSubsetMatch(String givenName, PenMatchNames penMatchMasterNames) {
         if (givenName != null && givenName.length() >= 1) {
             if ((penMatchMasterNames.getLegalGiven() != null && (penMatchMasterNames.getLegalGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getLegalGiven())))
@@ -394,8 +381,6 @@ public class ScoringUtils {
     /**
      * Utility function for subset match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasGivenNameFullCharMatch(String givenName, PenMatchNames penMatchMasterNames) {
         if (givenName != null) {
             if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().equals(givenName)) || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().equals(givenName))
@@ -409,8 +394,6 @@ public class ScoringUtils {
     /**
      * Utility function for subset match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasGivenNameSubsetCharMatch(String givenName, int numOfChars, PenMatchNames penMatchMasterNames) {
         if (givenName != null && givenName.length() >= numOfChars) {
             if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
@@ -426,8 +409,6 @@ public class ScoringUtils {
     /**
      * Utility function to check for subset given name matches to given names
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasGivenNameSubsetToMiddleNameMatch(String givenName, PenMatchNames penMatchMasterNames) {
         int numOfChars = 4;
         if (givenName != null && givenName.length() >= numOfChars) {
@@ -444,8 +425,6 @@ public class ScoringUtils {
     /**
      * Utility function to check for subset middle name matches
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasMiddleNameSubsetMatch(String middleName, PenMatchNames penMatchMasterNames) {
         if (middleName != null && middleName.length() > 1) {
             if ((penMatchMasterNames.getLegalMiddle() != null && (penMatchMasterNames.getLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getLegalMiddle())))
@@ -461,8 +440,6 @@ public class ScoringUtils {
     /**
      * Utility function for subset match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasMiddleNameFullCharMatch(String middleName, PenMatchNames penMatchMasterNames) {
         if (middleName != null) {
             if ((penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().equals(middleName)) || (penMatchMasterNames.getUsualMiddle() != null && penMatchMasterNames.getUsualMiddle().equals(middleName))
@@ -476,8 +453,6 @@ public class ScoringUtils {
     /**
      * Utility function for subset match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasMiddleNameSubsetCharMatch(String middleName, int numOfChars, PenMatchNames penMatchMasterNames) {
         if (middleName != null && middleName.length() >= numOfChars) {
             if ((penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().length() >= numOfChars && penMatchMasterNames.getLegalMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
@@ -493,8 +468,6 @@ public class ScoringUtils {
     /**
      * Utility function to check for subset middle name matches to given names
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static boolean hasMiddleNameSubsetToGivenNameMatch(String middleName, PenMatchNames penMatchMasterNames) {
         int numOfChars = 4;
         if (middleName != null && middleName.length() >= numOfChars) {
@@ -511,13 +484,13 @@ public class ScoringUtils {
     /**
      * Calculate points for Sex match
      */
-    @LogExecutionTime
-    @PenMatchLog
     public static int matchSex(PenMatchStudentDetail student, PenMasterRecord master) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master));
         int sexPoints = 0;
         if (student.getSex() != null && master.getSex() != null && student.getSex().equals(master.getSex().trim())) {
             sexPoints = 5;
         }
+        log.info(" output :: sexPoints={}", sexPoints);
         return sexPoints;
     }
 }

@@ -1,7 +1,5 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
-import ca.bc.gov.educ.api.penmatch.aspects.LogExecutionTime;
-import ca.bc.gov.educ.api.penmatch.aspects.PenMatchLog;
 import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.enumeration.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
@@ -27,19 +25,17 @@ public class PenMatchService {
     public static final int VERY_RARE = 5;
 
     @Autowired
-    private final PenMatchLookupManager lookupManager;
+    private PenMatchLookupManager lookupManager;
 
-    @Autowired
-    public PenMatchService(final PenMatchLookupManager lookupManager) {
+    public PenMatchService(PenMatchLookupManager lookupManager) {
         this.lookupManager = lookupManager;
     }
 
     /**
      * This is the main method to match a student
      */
-    @LogExecutionTime
-    @PenMatchLog
     public PenMatchResult matchStudent(PenMatchStudentDetail student) {
+        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
         PenMatchSession session = initialize(student);
 
         PenConfirmationResult confirmationResult = new PenConfirmationResult();
@@ -112,16 +108,16 @@ public class PenMatchService {
             session.setPenStatus(PenStatus.C0.getValue());
             session.setStudentNumber(null);
         }
-
-        return new PenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
+        PenMatchResult result = new PenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
+        log.info(" output :: PenMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
+        return result;
     }
 
     /**
      * Initialize the student record and variables (will be refactored)
      */
-    @LogExecutionTime
-    @PenMatchLog
     private PenMatchSession initialize(PenMatchStudentDetail student) {
+        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
         PenMatchSession session = new PenMatchSession();
         session.setPenStatusMessage(null);
         session.setMatchingRecords(new PriorityQueue<>(new PenMatchComparator()));
@@ -164,10 +160,9 @@ public class PenMatchService {
         // Lookup surname frequency
         // It could generate extra points later if
         // there is a perfect match on surname
-        int fullSurnameFrequency = 0;
         int partialSurnameFrequency = 0;
         String fullStudentSurname = student.getSurname();
-        fullSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
+        int fullSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
 
         if (fullSurnameFrequency > VERY_FREQUENT) {
             partialSurnameFrequency = fullSurnameFrequency;
@@ -179,6 +174,7 @@ public class PenMatchService {
         student.setFullSurnameFrequency(fullSurnameFrequency);
         student.setPartialSurnameFrequency(partialSurnameFrequency);
 
+        log.info(" output :: PenMatchSession={}", PenMatchUtils.getJSONFormatObject(session));
         return session;
     }
 
@@ -186,9 +182,8 @@ public class PenMatchService {
      * This function stores all names in an object It includes some split logic for
      * given/middle names
      */
-    @LogExecutionTime
-    @PenMatchLog
     private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
+        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
         String given = student.getGivenName();
         String usualGiven = student.getUsualGivenName();
         PenMatchNames penMatchTransactionNames;
@@ -226,6 +221,7 @@ public class PenMatchService {
         }
 
         lookupManager.lookupNicknames(penMatchTransactionNames, given);
+        log.info(" output :: PenMatchNames={}", PenMatchUtils.getJSONFormatObject(penMatchTransactionNames));
         return penMatchTransactionNames;
     }
 
@@ -234,9 +230,8 @@ public class PenMatchService {
      * match on school and local ID and one or more of surname, given name or
      * birthday
      */
-    @LogExecutionTime
-    @PenMatchLog
     private CheckForMatchResult simpleCheckForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master), PenMatchUtils.getJSONFormatObject(session));
         boolean matchFound = false;
         PenAlgorithm algorithmUsed = null;
 
@@ -262,15 +257,15 @@ public class PenMatchService {
         result.setType5F1(false);
         result.setAlgorithmUsed(algorithmUsed);
 
+        log.info(" output :: CheckForMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
     /**
      * Confirm that the PEN on transaction is correct.
      */
-    @LogExecutionTime
-    @PenMatchLog
     private PenConfirmationResult confirmPEN(PenMatchStudentDetail student, PenMatchSession session) {
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session));
         PenConfirmationResult result = new PenConfirmationResult();
         result.setPenConfirmationResultCode(PenConfirmationResult.NO_RESULT);
 
@@ -309,6 +304,7 @@ public class PenMatchService {
         result.setLocalStudentNumber(localStudentNumber);
         result.setMasterRecord(masterRecord);
 
+        log.info(" output :: PenConfirmationResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
@@ -319,9 +315,8 @@ public class PenMatchService {
      * long use the given initial in the lookup unless 1st 4 characters of surname
      * is quite rare
      */
-    @LogExecutionTime
-    @PenMatchLog
     private void findMatchesOnPenDemog(PenMatchStudentDetail student, boolean penFoundOnMaster, PenMatchSession session, String localStudentNumber) {
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} penFoundOnMaster={} localStudentNumber={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), penFoundOnMaster, localStudentNumber);
         boolean useGivenInitial = true;
         boolean type5F1 = false;
 
@@ -410,9 +405,8 @@ public class PenMatchService {
      * Merge new match into the list Assign points for algorithm and score for sort
      * use
      */
-    @LogExecutionTime
-    @PenMatchLog
     private void mergeNewMatchIntoList(PenMatchStudentDetail student, String matchingPEN, PenMatchSession session, PenAlgorithm algorithmUsed, int totalPoints) {
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} matchingPEN={} PenAlgorithm={} totalPoints={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), matchingPEN, algorithmUsed, totalPoints);
         int matchingAlgorithmResult;
         int matchingScore;
 
@@ -438,7 +432,7 @@ public class PenMatchService {
             case ALG_40:
             case ALG_50:
             case ALG_51:
-                matchingAlgorithmResult = Integer.valueOf(algorithmUsed.getValue()) * 10;
+                matchingAlgorithmResult = Integer.parseInt(algorithmUsed.getValue()) * 10;
                 matchingScore = totalPoints;
                 break;
             default:
@@ -451,8 +445,7 @@ public class PenMatchService {
         if (session.getNumberOfMatches() < 20) {
             // Add new slot in the array
             session.setNumberOfMatches(session.getNumberOfMatches() + 1);
-            PenMatchRecord record = new PenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN);
-            session.getMatchingRecords().add(record);
+            session.getMatchingRecords().add(new PenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN));
         }
 
     }
@@ -460,9 +453,8 @@ public class PenMatchService {
     /**
      * Check for Matching demographic data on Master
      */
-    @LogExecutionTime
-    @PenMatchLog
     private CheckForMatchResult checkForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), PenMatchUtils.getJSONFormatObject(master));
         boolean matchFound = false;
         boolean type5F1 = false;
         boolean type5Match = false;
@@ -472,7 +464,7 @@ public class PenMatchService {
         PenMatchNames penMatchMasterNames = PenMatchUtils.storeNamesFromMaster(master);
 
         int totalPoints = 0;
-        int bonusPoints = 0;
+        int bonusPoints;
 
         int sexPoints = ScoringUtils.matchSex(student, master); // 5 points
         int birthdayPoints = ScoringUtils.matchBirthday(student, master); // 5, 10, 15 or 20 points
@@ -622,7 +614,7 @@ public class PenMatchService {
 
             // Identify a pretty good match - needs to be better than the Questionable Match
             // but not a full 60 points as above
-            if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15 && birthdayPoints >= 15 && sexPoints == 5) {
+            if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15 && birthdayPoints >= 15) {
                 session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
                 totalPoints = 55;
             }
@@ -640,7 +632,7 @@ public class PenMatchService {
         result.setType5Match(type5Match);
         result.setAlgorithmUsed(algorithmUsed);
         result.setTotalPoints(totalPoints);
-
+        log.info(" output :: CheckForMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
         return result;
     }
 
@@ -656,9 +648,8 @@ public class PenMatchService {
     /**
      * Utility method for checking and merging lookups
      */
-    @LogExecutionTime
-    @PenMatchLog
     private void performCheckForMatchAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
+        log.info(" input :: penDemogList={} PenMatchStudentDetail={} PenMatchSession={} localStudentNumber={}", PenMatchUtils.getJSONFormatObject(penDemogList), PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), localStudentNumber);
         if (penDemogList != null) {
             for (PenDemographicsEntity entity : penDemogList) {
                 if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().trim().equals(localStudentNumber))) {
@@ -666,7 +657,7 @@ public class PenMatchService {
                     CheckForMatchResult result = checkForMatch(student, masterRecord, session);
 
                     if (result.isMatchFound()) {
-                        String matchingPEN = null;
+                        String matchingPEN;
                         if (result.isType5Match()) {
                             matchingPEN = masterRecord.getStudentNumber().trim() + "?";
                         } else {
