@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
+import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;

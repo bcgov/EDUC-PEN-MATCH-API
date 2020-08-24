@@ -1,6 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
-import ca.bc.gov.educ.api.penmatch.enumeration.PenStatus;
+import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
