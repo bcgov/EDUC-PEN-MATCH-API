@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,9 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
@@ -28,8 +25,8 @@ import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

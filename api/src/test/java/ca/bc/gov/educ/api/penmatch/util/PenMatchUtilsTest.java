@@ -13,10 +13,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
-import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

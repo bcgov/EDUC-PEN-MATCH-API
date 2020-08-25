@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.util.List;
 
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
+import ca.bc.gov.educ.api.penmatch.controller.v1.PenMatchController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
 
 @RunWith(SpringRunner.class)
@@ -59,17 +59,17 @@ public class PenMatchControllerTest {
 			MockitoAnnotations.initMocks(this);
 			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
 			final File file = new File("src/test/resources/mock_pen_demog.json");
-			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
+			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<>() {
 			});
 			penDemogRepository.saveAll(penDemogEntities);
 
 			final File fileNick = new File("src/test/resources/mock_nicknames.json");
-			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
 			});
 			nicknamesRepository.saveAll(nicknameEntities);
 
 			final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+			List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<>() {
 			});
 			surnameFreqRepository.saveAll(surnameFreqEntities);
 			dataLoaded = true;
@@ -80,7 +80,7 @@ public class PenMatchControllerTest {
 	@WithMockOAuth2Scope(scope = "READ_PEN_MATCH")
 	public void testCreateStudent_GivenValidPayload_ShouldReturnStatusCreated() throws Exception {
 		PenMatchStudent entity = createPenMatchStudent();
-		this.mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity))).andDo(print()).andExpect(status().isOk());
+		this.mockMvc.perform(post("/api/v1/pen-match").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity))).andDo(print()).andExpect(status().isOk());
 	}
 
 	private PenMatchStudent createPenMatchStudent() {

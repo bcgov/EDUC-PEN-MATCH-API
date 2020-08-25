@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.penmatch.struct;
+package ca.bc.gov.educ.api.penmatch.struct.v1;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import lombok.Data;
