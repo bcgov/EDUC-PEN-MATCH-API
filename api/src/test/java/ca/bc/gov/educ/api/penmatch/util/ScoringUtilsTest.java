@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
@@ -20,6 +21,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class ScoringUtilsTest {
 
 	@Before
@@ -31,7 +33,7 @@ public class ScoringUtilsTest {
 		PenMatchStudentDetail student = createPenMatchStudentDetail();
 		PenMasterRecord master = createPenMasterRecord();
 
-		assertTrue(ScoringUtils.matchAddress(student, master) == 0);
+		assertEquals(0, ScoringUtils.matchAddress(student, master));
 	}
 
 	@Test
@@ -41,7 +43,7 @@ public class ScoringUtilsTest {
 		student.setPostal("V0R3W5");
 		master.setPostal("V0R3W5");
 
-		assertTrue(ScoringUtils.matchAddress(student, master) == 1);
+		assertEquals(1, ScoringUtils.matchAddress(student, master));
 	}
 
 	@Test
@@ -51,7 +53,7 @@ public class ScoringUtilsTest {
 		student.setPostal("V1R3W5");
 		master.setPostal("V1R3W5");
 
-		assertTrue(ScoringUtils.matchAddress(student, master) == 10);
+		assertEquals(10, ScoringUtils.matchAddress(student, master));
 	}
 
 	@Test
@@ -71,7 +73,7 @@ public class ScoringUtilsTest {
 		student.setDob("19800518");
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 20);
+		assertEquals(20, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -81,7 +83,7 @@ public class ScoringUtilsTest {
 		student.setDob("19801805");
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 15);
+		assertEquals(15, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -91,7 +93,7 @@ public class ScoringUtilsTest {
 		student.setDob("20100518");
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 15);
+		assertEquals(15, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -101,7 +103,7 @@ public class ScoringUtilsTest {
 		student.setDob("19800510"); 
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 10);
+		assertEquals(10, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -111,7 +113,7 @@ public class ScoringUtilsTest {
 		student.setDob("19801018");
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 10);
+		assertEquals(10, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -121,7 +123,7 @@ public class ScoringUtilsTest {
 		student.setDob("20010518");
 		master.setDob("19800518");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 5);
+		assertEquals(5, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -131,7 +133,7 @@ public class ScoringUtilsTest {
 		student.setDob("19801018");
 		master.setDob("19800519");
 
-		assertTrue(ScoringUtils.matchBirthday(student, master) == 5);
+		assertEquals(5, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test
@@ -146,7 +148,7 @@ public class ScoringUtilsTest {
 		PenMatchSession session = new PenMatchSession();
 		student.setAlternateLocalID("123456789");
 
-		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 20);
+		assertEquals(20, ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints());
 	}
 
 	@Test
@@ -162,7 +164,7 @@ public class ScoringUtilsTest {
 		PenMatchSession session = new PenMatchSession();
 		student.setAlternateLocalID("123456789");
 
-		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 20);
+		assertEquals(20, ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints());
 	}
 
 	@Test
@@ -176,7 +178,7 @@ public class ScoringUtilsTest {
 
 		PenMatchSession session = new PenMatchSession();
 
-		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 10);
+		assertEquals(10, ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints());
 	}
 
 	@Test
@@ -190,7 +192,7 @@ public class ScoringUtilsTest {
 
 		PenMatchSession session = new PenMatchSession();
 
-		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 5);
+		assertEquals(5, ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints());
 	}
 
 	@Test
@@ -204,7 +206,7 @@ public class ScoringUtilsTest {
 
 		PenMatchSession session = new PenMatchSession();
 
-		assertTrue(ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints() == 0);
+		assertEquals(0, ScoringUtils.matchLocalID(student, master, session).getLocalIDPoints());
 	}
 
 	@Test
@@ -219,8 +221,8 @@ public class ScoringUtilsTest {
 		PenMatchSession session = new PenMatchSession();
 
 		LocalIDMatchResult result = ScoringUtils.matchLocalID(student, master, session);
-		assertTrue(result.getIdDemerits() == 10);
-		assertTrue(result.getLocalIDPoints() == 10);
+		assertEquals(10, result.getIdDemerits());
+		assertEquals(10, result.getLocalIDPoints());
 	}
 
 	@Test
@@ -236,8 +238,8 @@ public class ScoringUtilsTest {
 		student.setAlternateLocalID("123456789");
 
 		LocalIDMatchResult result = ScoringUtils.matchLocalID(student, master, session);
-		assertTrue(result.getIdDemerits() == 10);
-		assertTrue(result.getLocalIDPoints() == 10);
+		assertEquals(10, result.getIdDemerits());
+		assertEquals(10, result.getLocalIDPoints());
 	}
 
 	@Test
@@ -247,7 +249,7 @@ public class ScoringUtilsTest {
 		student.setSex("M");
 		master.setSex("M");
 
-		assertTrue(ScoringUtils.matchSex(student, master) == 5);
+		assertEquals(5, ScoringUtils.matchSex(student, master));
 	}
 
 	@Test
@@ -257,7 +259,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("MichealsJ");
 		penMatchMasterNames.setLegalGiven("MichealsJ");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -268,7 +270,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("MichealsJ");
 		penMatchMasterNames.setUsualGiven("MichealsJ");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -279,7 +281,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("MichealsJ");
 		penMatchMasterNames.setAlternateLegalGiven("MichealsJ");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -290,7 +292,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("MichealsJ");
 		penMatchMasterNames.setAlternateUsualGiven("MichealsJ");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -301,7 +303,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("Michs");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -313,7 +315,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("Michs");
 		penMatchMasterNames.setUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -324,7 +326,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("Michs");
 		penMatchMasterNames.setAlternateUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -335,7 +337,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michs");
 		penMatchMasterNames.setAlternateLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -346,7 +348,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("Marcs");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 5);
+		assertEquals(5, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -358,7 +360,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("Marcs");
 		penMatchMasterNames.setUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 5);
+		assertEquals(5, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -369,7 +371,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("Marcs");
 		penMatchMasterNames.setAlternateUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 5);
+		assertEquals(5, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -380,7 +382,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Marcs");
 		penMatchMasterNames.setAlternateLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 5);
+		assertEquals(5, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -391,7 +393,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("Michealalas");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -403,7 +405,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("Michealalas");
 		penMatchMasterNames.setUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -415,7 +417,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("Michealalas");
 		penMatchMasterNames.setAlternateUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -426,7 +428,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michealalas");
 		penMatchMasterNames.setAlternateLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 20);
+		assertEquals(20, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -437,7 +439,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("alalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -448,7 +450,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("alalad");
 		penMatchMasterNames.setUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -459,7 +461,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("alalad");
 		penMatchMasterNames.setAlternateUsualGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -470,7 +472,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("alalad");
 		penMatchMasterNames.setAlternateLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 15);
+		assertEquals(15, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -481,7 +483,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalGiven("Michealalad");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -493,7 +495,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualGiven("Michealalad");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -504,7 +506,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualGiven("Michealalad");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -515,7 +517,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michealalad");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -526,7 +528,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michealalad");
 		penMatchMasterNames.setUsualMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -538,7 +540,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michealalad");
 		penMatchMasterNames.setAlternateLegalMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -549,7 +551,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalGiven("Michealalad");
 		penMatchMasterNames.setAlternateUsualMiddle("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertTrue(result.isGivenNameFlip());
 	}
 
@@ -560,7 +562,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setNickname1("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -571,7 +573,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setNickname2("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -582,7 +584,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setNickname3("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -593,7 +595,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setNickname4("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		GivenNameMatchResult result = ScoringUtils.matchGivenName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getGivenNamePoints() == 10);
+		assertEquals(10, (int) result.getGivenNamePoints());
 		assertFalse(result.isGivenNameFlip());
 	}
 
@@ -604,7 +606,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("MichealsJ");
 		penMatchMasterNames.setLegalMiddle("MichealsJ");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -615,7 +617,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("MichealsJ");
 		penMatchMasterNames.setUsualMiddle("MichealsJ");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -626,7 +628,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("MichealsJ");
 		penMatchMasterNames.setAlternateLegalMiddle("MichealsJ");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -638,7 +640,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("MichealsJ");
 		penMatchMasterNames.setAlternateUsualMiddle("MichealsJ");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -650,7 +652,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("Michs");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -661,7 +663,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("Michs");
 		penMatchMasterNames.setUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -672,7 +674,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("Michs");
 		penMatchMasterNames.setAlternateUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -683,7 +685,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michs");
 		penMatchMasterNames.setAlternateLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -695,7 +697,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("Marcs");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 5);
+		assertEquals(5, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -706,7 +708,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("Marcs");
 		penMatchMasterNames.setUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 5);
+		assertEquals(5, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -717,7 +719,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("Marcs");
 		penMatchMasterNames.setAlternateUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 5);
+		assertEquals(5, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -728,7 +730,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Marcs");
 		penMatchMasterNames.setAlternateLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 5);
+		assertEquals(5, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -740,7 +742,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("Michealalas");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -751,7 +753,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("Michealalas");
 		penMatchMasterNames.setUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -762,7 +764,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("Michealalas");
 		penMatchMasterNames.setAlternateUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -773,7 +775,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michealalas");
 		penMatchMasterNames.setAlternateLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 20);
+		assertEquals(20, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -784,7 +786,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("alalad");
 		penMatchMasterNames.setLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -795,7 +797,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("alalad");
 		penMatchMasterNames.setUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -807,7 +809,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("alalad");
 		penMatchMasterNames.setAlternateUsualMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -819,7 +821,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("alalad");
 		penMatchMasterNames.setAlternateLegalMiddle("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 15);
+		assertEquals(15, (int) result.getMiddleNamePoints());
 		assertFalse(result.isMiddleNameFlip());
 	}
 
@@ -830,7 +832,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setLegalMiddle("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -841,7 +843,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setUsualMiddle("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -852,7 +854,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateUsualMiddle("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -864,7 +866,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michealalad");
 		penMatchMasterNames.setLegalGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -875,7 +877,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michealalad");
 		penMatchMasterNames.setUsualGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -886,7 +888,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michealalad");
 		penMatchMasterNames.setAlternateLegalGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -897,7 +899,7 @@ public class ScoringUtilsTest {
 		penMatchTransactionNames.setAlternateLegalMiddle("Michealalad");
 		penMatchMasterNames.setAlternateUsualGiven("Michealalad");
 		MiddleNameMatchResult result = ScoringUtils.matchMiddleName(penMatchTransactionNames, penMatchMasterNames);
-		assertTrue(result.getMiddleNamePoints() == 10);
+		assertEquals(10, (int) result.getMiddleNamePoints());
 		assertTrue(result.isMiddleNameFlip());
 	}
 
@@ -908,7 +910,7 @@ public class ScoringUtilsTest {
 		student.setSurname("Micheals");
 		master.setSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 20);
+		assertEquals(20, (int) result.getSurnamePoints());
 		assertTrue(result.isLegalSurnameUsed());
 	}
 
@@ -921,7 +923,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname("Micheals");
 		master.setUsualSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 20);
+		assertEquals(20, (int) result.getSurnamePoints());
 		assertFalse(result.isLegalSurnameUsed());
 	}
 
@@ -934,7 +936,7 @@ public class ScoringUtilsTest {
 		master.setSurname(null);
 		master.setUsualSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 20);
+		assertEquals(20, (int) result.getSurnamePoints());
 		assertTrue(result.isLegalSurnameUsed());
 	}
 
@@ -947,7 +949,7 @@ public class ScoringUtilsTest {
 		master.setSurname("Micheals");
 		master.setUsualSurname(null);
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 20);
+		assertEquals(20, (int) result.getSurnamePoints());
 		assertFalse(result.isLegalSurnameUsed());
 	}
 
@@ -959,7 +961,7 @@ public class ScoringUtilsTest {
 		student.setSurname("Michells");
 		master.setSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -972,7 +974,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname(null);
 		master.setUsualSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -984,7 +986,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname("Micheals");
 		master.setUsualSurname(null);
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -996,7 +998,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname("Michichy");
 		master.setUsualSurname("Michells");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -1007,7 +1009,7 @@ public class ScoringUtilsTest {
 		student.setSurname("Micheals");
 		master.setSurname("Micells");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -1019,7 +1021,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname("Micells");
 		master.setUsualSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -1031,7 +1033,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname(null);
 		master.setUsualSurname("Micheals");
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -1043,7 +1045,7 @@ public class ScoringUtilsTest {
 		student.setUsualSurname("Micheals");
 		master.setUsualSurname(null);
 		SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
-		assertTrue(result.getSurnamePoints() == 10);
+		assertEquals(10, (int) result.getSurnamePoints());
 	}
 
 	@Test
@@ -1053,7 +1055,7 @@ public class ScoringUtilsTest {
 		student.setSex("M");
 		master.setSex("F");
 
-		assertTrue(ScoringUtils.matchSex(student, master) == 0);
+		assertEquals(0, ScoringUtils.matchSex(student, master));
 	}
 
 	public PenMasterRecord createPenMasterRecord() {
