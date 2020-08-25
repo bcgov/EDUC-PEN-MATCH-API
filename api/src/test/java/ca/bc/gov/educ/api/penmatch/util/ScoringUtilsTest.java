@@ -8,14 +8,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.struct.GivenNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.LocalIDMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.MiddleNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
-import ca.bc.gov.educ.api.penmatch.struct.SurnameMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.GivenNameMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.LocalIDMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.MiddleNameMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
+import ca.bc.gov.educ.api.penmatch.struct.v1.SurnameMatchResult;
 
 import static org.junit.Assert.*;
 

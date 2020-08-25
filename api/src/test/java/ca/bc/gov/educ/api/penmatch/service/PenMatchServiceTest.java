@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,8 +22,8 @@ import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudentDetail;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.Assert.*;

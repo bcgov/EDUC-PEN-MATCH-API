@@ -5,7 +5,7 @@ import ca.bc.gov.educ.api.penmatch.mappers.PenMatchStudentMapper;
 import ca.bc.gov.educ.api.penmatch.model.PENMatchEvent;
 import ca.bc.gov.educ.api.penmatch.repository.PENMatchEventRepository;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;

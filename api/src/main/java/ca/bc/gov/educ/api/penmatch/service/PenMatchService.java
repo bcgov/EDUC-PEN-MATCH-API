@@ -5,7 +5,8 @@ import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
-import ca.bc.gov.educ.api.penmatch.struct.*;
+import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import ca.bc.gov.educ.api.penmatch.util.ScoringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,9 @@ public class PenMatchService {
     public static final int NOT_VERY_FREQUENT = 50;
     public static final int VERY_RARE = 5;
 
-    @Autowired
-    private PenMatchLookupManager lookupManager;
+    private final PenMatchLookupManager lookupManager;
 
+    @Autowired
     public PenMatchService(PenMatchLookupManager lookupManager) {
         this.lookupManager = lookupManager;
     }
@@ -35,7 +36,7 @@ public class PenMatchService {
      * This is the main method to match a student
      */
     public PenMatchResult matchStudent(PenMatchStudentDetail student) {
-        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
+        log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         PenMatchSession session = initialize(student);
 
         PenConfirmationResult confirmationResult = new PenConfirmationResult();
@@ -109,7 +110,7 @@ public class PenMatchService {
             session.setStudentNumber(null);
         }
         PenMatchResult result = new PenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
-        log.info(" output :: PenMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
+        log.info(" output :: PenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -117,7 +118,7 @@ public class PenMatchService {
      * Initialize the student record and variables (will be refactored)
      */
     private PenMatchSession initialize(PenMatchStudentDetail student) {
-        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
+        log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         PenMatchSession session = new PenMatchSession();
         session.setPenStatusMessage(null);
         session.setMatchingRecords(new PriorityQueue<>(new PenMatchComparator()));
@@ -174,7 +175,7 @@ public class PenMatchService {
         student.setFullSurnameFrequency(fullSurnameFrequency);
         student.setPartialSurnameFrequency(partialSurnameFrequency);
 
-        log.info(" output :: PenMatchSession={}", PenMatchUtils.getJSONFormatObject(session));
+        log.info(" output :: PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
         return session;
     }
 
@@ -183,7 +184,7 @@ public class PenMatchService {
      * given/middle names
      */
     private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
-        log.info(" input :: PenMatchStudentDetail={}", PenMatchUtils.getJSONFormatObject(student));
+        log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         String given = student.getGivenName();
         String usualGiven = student.getUsualGivenName();
         PenMatchNames penMatchTransactionNames;
@@ -221,7 +222,7 @@ public class PenMatchService {
         }
 
         lookupManager.lookupNicknames(penMatchTransactionNames, given);
-        log.info(" output :: PenMatchNames={}", PenMatchUtils.getJSONFormatObject(penMatchTransactionNames));
+        log.info(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames));
         return penMatchTransactionNames;
     }
 
@@ -231,7 +232,7 @@ public class PenMatchService {
      * birthday
      */
     private CheckForMatchResult simpleCheckForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(master), PenMatchUtils.getJSONFormatObject(session));
+        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master), JsonUtil.getJsonPrettyStringFromObject(session));
         boolean matchFound = false;
         PenAlgorithm algorithmUsed = null;
 
@@ -257,7 +258,7 @@ public class PenMatchService {
         result.setType5F1(false);
         result.setAlgorithmUsed(algorithmUsed);
 
-        log.info(" output :: CheckForMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
+        log.info(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -265,7 +266,7 @@ public class PenMatchService {
      * Confirm that the PEN on transaction is correct.
      */
     private PenConfirmationResult confirmPEN(PenMatchStudentDetail student, PenMatchSession session) {
-        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session));
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         PenConfirmationResult result = new PenConfirmationResult();
         result.setPenConfirmationResultCode(PenConfirmationResult.NO_RESULT);
 
@@ -304,7 +305,7 @@ public class PenMatchService {
         result.setLocalStudentNumber(localStudentNumber);
         result.setMasterRecord(masterRecord);
 
-        log.info(" output :: PenConfirmationResult={}", PenMatchUtils.getJSONFormatObject(result));
+        log.info(" output :: PenConfirmationResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -316,7 +317,7 @@ public class PenMatchService {
      * is quite rare
      */
     private void findMatchesOnPenDemog(PenMatchStudentDetail student, boolean penFoundOnMaster, PenMatchSession session, String localStudentNumber) {
-        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} penFoundOnMaster={} localStudentNumber={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), penFoundOnMaster, localStudentNumber);
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} penFoundOnMaster={} localStudentNumber={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), penFoundOnMaster, localStudentNumber);
         boolean useGivenInitial = true;
         boolean type5F1 = false;
 
@@ -406,7 +407,7 @@ public class PenMatchService {
      * use
      */
     private void mergeNewMatchIntoList(PenMatchStudentDetail student, String matchingPEN, PenMatchSession session, PenAlgorithm algorithmUsed, int totalPoints) {
-        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} matchingPEN={} PenAlgorithm={} totalPoints={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), matchingPEN, algorithmUsed, totalPoints);
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} matchingPEN={} PenAlgorithm={} totalPoints={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), matchingPEN, algorithmUsed, totalPoints);
         int matchingAlgorithmResult;
         int matchingScore;
 
@@ -454,7 +455,7 @@ public class PenMatchService {
      * Check for Matching demographic data on Master
      */
     private CheckForMatchResult checkForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
-        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), PenMatchUtils.getJSONFormatObject(master));
+        log.info(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), JsonUtil.getJsonPrettyStringFromObject(master));
         boolean matchFound = false;
         boolean type5F1 = false;
         boolean type5Match = false;
@@ -632,7 +633,7 @@ public class PenMatchService {
         result.setType5Match(type5Match);
         result.setAlgorithmUsed(algorithmUsed);
         result.setTotalPoints(totalPoints);
-        log.info(" output :: CheckForMatchResult={}", PenMatchUtils.getJSONFormatObject(result));
+        log.info(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -649,7 +650,7 @@ public class PenMatchService {
      * Utility method for checking and merging lookups
      */
     private void performCheckForMatchAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
-        log.info(" input :: penDemogList={} PenMatchStudentDetail={} PenMatchSession={} localStudentNumber={}", PenMatchUtils.getJSONFormatObject(penDemogList), PenMatchUtils.getJSONFormatObject(student), PenMatchUtils.getJSONFormatObject(session), localStudentNumber);
+        log.info(" input :: penDemogList={} PenMatchStudentDetail={} PenMatchSession={} localStudentNumber={}", JsonUtil.getJsonPrettyStringFromObject(penDemogList), JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), localStudentNumber);
         if (penDemogList != null) {
             for (PenDemographicsEntity entity : penDemogList) {
                 if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().trim().equals(localStudentNumber))) {

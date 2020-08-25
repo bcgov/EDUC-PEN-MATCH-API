@@ -13,4 +13,12 @@ public class JsonUtil {
   public static <T> T getJsonObjectFromString(Class<T> clazz,  String payload) throws JsonProcessingException {
     return new ObjectMapper().readValue(payload,clazz);
   }
+
+  public static String getJsonPrettyStringFromObject(Object payload) {
+    try {
+      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(payload);
+    } catch (JsonProcessingException e) {
+      return "";
+    }
+  }
 }

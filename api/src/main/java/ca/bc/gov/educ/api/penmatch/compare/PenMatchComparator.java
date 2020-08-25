@@ -2,7 +2,7 @@ package ca.bc.gov.educ.api.penmatch.compare;
 
 import java.util.Comparator;
 
-import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchRecord;
 
 public class PenMatchComparator implements Comparator<PenMatchRecord> {
     @Override
