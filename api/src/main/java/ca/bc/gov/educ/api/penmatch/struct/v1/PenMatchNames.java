@@ -18,4 +18,6 @@ public class PenMatchNames {
 	private String nickname2;
 	private String nickname3;
 	private String nickname4;
+	private String legalSurname;
+	private String usualSurname;
 }

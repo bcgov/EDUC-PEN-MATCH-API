@@ -161,13 +161,13 @@ public class PenMatchService {
         // Lookup surname frequency
         // It could generate extra points later if
         // there is a perfect match on surname
-        int partialSurnameFrequency = 0;
+        int partialSurnameFrequency;
         String fullStudentSurname = student.getSurname();
         int fullSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
 
         if (fullSurnameFrequency > VERY_FREQUENT) {
             partialSurnameFrequency = fullSurnameFrequency;
-        } else if (fullStudentSurname != null) {
+        } else  {
             fullStudentSurname = student.getSurname().substring(0, student.getMinSurnameSearchSize());
             partialSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
         }
@@ -185,11 +185,15 @@ public class PenMatchService {
      */
     private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
         log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        String surname = student.getSurname();
+        String usualSurname = student.getUsualSurname();
         String given = student.getGivenName();
         String usualGiven = student.getUsualGivenName();
         PenMatchNames penMatchTransactionNames;
 
         penMatchTransactionNames = new PenMatchNames();
+        penMatchTransactionNames.setLegalSurname(surname);
+        penMatchTransactionNames.setUsualSurname(usualSurname);
         penMatchTransactionNames.setLegalGiven(given);
         penMatchTransactionNames.setLegalMiddle(student.getMiddleName());
         penMatchTransactionNames.setUsualGiven(usualGiven);

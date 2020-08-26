@@ -246,4 +246,23 @@ public class PenMatchUtils {
         return result;
     }
 
+    /**
+     * Utility method which will drop spaces, dashes & apostrophes
+     */
+    public static String dropNonLetters(String name) {
+        if(name != null){
+            return name.replace(" ", "").replace("-", "").replace("'","");
+        }
+        return null;
+    }
+
+    /**
+     * Replaces hyphens with spaces
+     */
+    public static String replaceHyphensWithBlank(String name) {
+        if(name != null){
+            return name.replace("-", " ");
+        }
+        return null;
+    }
 }
