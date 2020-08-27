@@ -24,6 +24,7 @@ public class NewPenMatchService {
     public static final int VERY_FREQUENT = 500;
     public static final int NOT_VERY_FREQUENT = 50;
     public static final int VERY_RARE = 5;
+    private boolean reOrganizedNames = false;
 
     @Autowired
     private PenMatchLookupManager lookupManager;
@@ -219,8 +220,18 @@ public class NewPenMatchService {
         }
 
         if (result.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
-            PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
-            determineMatchCode();
+            String matchCode = determineMatchCode(student, masterRecord);
+
+            String matchResult = lookupManager.lookupMatchResult(matchCode);
+
+            if(matchResult == null){
+                matchResult = "F";
+            }
+
+            if(matchResult.equals("P")){
+                result.setPenConfirmationResultCode(PenConfirmationResult.PEN_CONFIRMED);
+
+            }
         }
 
         result.setLocalStudentNumber(localStudentNumber);
@@ -235,7 +246,9 @@ public class NewPenMatchService {
      * Determine match code based on legal names, birth date and gender
      * ---------------------------------------------------------------------------
      */
-    private void determineMatchCode(NewPenMatchStudentDetail student, PenMatchNames masterNames) {
+    private String determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
+        PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
+
         // ! Match surname
         // ! -------------
         // !
@@ -243,7 +256,7 @@ public class NewPenMatchService {
         // !       1       Identical, Matches usual or partial (plus overrides to value 2)
         // !       2       Different
 
-        int surnameMatchCode = 0;
+        String surnameMatchCode;
         String legalSurname = student.getSurname();
         String usualSurnameNoBlanks = student.getPenMatchTransactionNames().getUsualSurname();
         String legalSurnameNoBlanks = student.getPenMatchTransactionNames().getLegalSurname();
@@ -253,27 +266,27 @@ public class NewPenMatchService {
         String masterLegalSurnameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalSurname());
 
         // !   submitted legal surname missing (shouldn't happen)
-        if (legalSurname != null) {
-            surnameMatchCode = 2;
+        if (legalSurname == null) {
+            surnameMatchCode = "2";
         } else if (masterLegalSurnameNoBlanks != null && masterLegalSurnameNoBlanks.equals(legalSurnameNoBlanks)) {
             // !   submitted legal surname equals master legal surname
-            surnameMatchCode = 1;
+            surnameMatchCode = "1";
         } else {
             // !   submitted legal surname is part of master legal surname or vice verse
             String transactionName = " " + legalSurnameHyphenToSpace + " ";
             String masterName = " " + masterLegalSurnameHyphenToSpace + " ";
             if (checkForPartialName(transactionName, masterName)) {
-                surnameMatchCode = 1;
+                surnameMatchCode = "1";
             } else {
-                surnameMatchCode = 2;
+                surnameMatchCode = "2";
             }
         }
 
         //!   Overrides: above resulted in match code 2 and
         //!   (submitted legal surname equals master usual surname or
         //!    submitted usual surname equals master legal surname)
-        if (surnameMatchCode == 2 && (legalSurnameNoBlanks != null && legalSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) || (usualSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks))) {
-            surnameMatchCode = 1;
+        if (surnameMatchCode.equals("2") && (legalSurnameNoBlanks != null && legalSurnameNoBlanks.equals(masterUsualSurnameNoBlanks)) || (usualSurnameNoBlanks != null && usualSurnameNoBlanks.equals(masterLegalSurnameNoBlanks))) {
+            surnameMatchCode = "1";
         }
 
         // ! Match given name
@@ -285,21 +298,198 @@ public class NewPenMatchService {
         //!       3       Same initial
         //
         //!   submitted legal given name missing (shouldn't happen)
-        int givenNameMatchCode = 0;
+        String givenNameMatchCode;
         String legalGiven = student.getGivenName();
         String legalGivenNoBlanks = student.getPenMatchTransactionNames().getLegalGiven();
+        String usualGivenNoBlanks = student.getPenMatchTransactionNames().getUsualGiven();
+        String legalGivenHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(student.getPenMatchTransactionNames().getLegalGiven());
+        String masterLegalGivenName = masterRecord.getGiven().trim();
         String masterLegalGivenNameNoBlanks = masterNames.getLegalGiven();
+        String masterUsualGivenNameNoBlanks = masterNames.getUsualGiven();
+        String masterLegalGivenNameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalGiven());
 
-        if (legalGiven != null) {
-            givenNameMatchCode = 2;
+        if (legalGiven == null) {
+            givenNameMatchCode = "2";
         } else if (masterLegalGivenNameNoBlanks != null && masterLegalGivenNameNoBlanks.equals(legalGivenNoBlanks)) {
             // !   submitted legal given name equals master legal given name
-            givenNameMatchCode = 1;
-        } else if () {
+            givenNameMatchCode = "1";
+        } else if ((legalGiven != null && legalGiven.length() >= 1 && masterLegalGivenName != null && masterLegalGivenName.length() >= 1 && legalGiven.substring(0, 1).equals(masterLegalGivenName.substring(0, 1))) && (masterLegalGivenName.length() == 1 || legalGiven.length() == 1)) {
             // !   submitted legal given name starts with the same letter as master legal given
             // !   name and one of the names has only an initial
+            givenNameMatchCode = "3";
+        } else {
+            // !   submitted legal given name is part of master legal given name or vice verse
+            String transactionName = " " + legalGivenHyphenToSpace + " ";
+            String masterName = " " + masterLegalGivenNameHyphenToSpace + " ";
+            if (checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
+                givenNameMatchCode = "1";
+            } else {
+                // !   submitted legal given name is a nickname of master legal given name or vice
+                // !   verse
+                transactionName = legalGivenHyphenToSpace;
+                masterName = masterLegalGivenNameHyphenToSpace;
+
+                lookupManager.lookupNicknames(student.getPenMatchTransactionNames(), transactionName);
+
+                if (student.getPenMatchTransactionNames().getNickname1() != null) {
+                    givenNameMatchCode = "1";
+                } else {
+                    givenNameMatchCode = "2";
+                }
+            }
         }
 
+        // !  Overrides: above resulted in surname match code 1 and given name match code 2
+        // !  and (submitted legal given name equals master usual given name or
+        // !       submitted usual given name equals master legal given name)
+        if (surnameMatchCode.equals("1") && givenNameMatchCode.equals("2")) {
+            if ((legalGivenNoBlanks != null && legalGivenNoBlanks.equals(masterUsualGivenNameNoBlanks)) || (usualGivenNoBlanks != null && usualGivenNoBlanks.equals(masterLegalGivenNameNoBlanks))) {
+                givenNameMatchCode = "1";
+            }
+        }
+
+        //! Match middle name
+        //! -----------------
+        //!
+        //! Possible Values for MIDDLE_MATCH_CODE:
+        //!       1       Identical, nickname or partial
+        //!       2       Different
+        //!       3       Same initial, one letter typo or one missing
+        //!       4       Both missing
+        String middleNameMatchCode;
+        String legalMiddle = student.getMiddleName();
+        String legalMiddleNoBlanks = student.getPenMatchTransactionNames().getLegalMiddle();
+        String usualMiddleNoBlanks = student.getPenMatchTransactionNames().getUsualMiddle();
+        String legalMiddleHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(student.getPenMatchTransactionNames().getLegalMiddle());
+        String masterLegalMiddleName = masterRecord.getMiddle().trim();
+        String masterLegalMiddleNameNoBlanks = masterNames.getLegalMiddle();
+        String masterUsualMiddleNameNoBlanks = masterNames.getUsualMiddle();
+        String masterLegalMiddleNameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalMiddle());
+
+        // !   submitted legal middle name and master legal middle name are both blank
+        if (legalMiddle == null && masterRecord.getMiddle() == null) {
+            middleNameMatchCode = "4";
+        } else if (legalMiddle == null || masterRecord.getMiddle() == null) {
+            // !   submitted legal middle name or master legal middle is blank (not both)
+            middleNameMatchCode = "3";
+        } else if (legalMiddleNoBlanks != null && legalMiddleNoBlanks.equals(masterLegalMiddleNameNoBlanks)) {
+            // !   submitted legal middle name equals master legal middle name
+            middleNameMatchCode = "1";
+        } else if ((legalMiddle != null && legalMiddle.length() >= 1 && masterLegalMiddleName != null && masterLegalMiddleName.length() >= 1 && legalMiddle.substring(0, 1).equals(masterLegalMiddleName.substring(0, 1))) && (masterLegalMiddleName.length() == 1 || legalMiddle.length() == 1)) {
+            //!   submitted legal middle name starts with the same letter as master legal
+            //!   middle name and one of the names has only an initial
+            middleNameMatchCode = "3";
+        } else {
+            // !   submitted legal Middle name is part of master legal Middle name or vice verse
+            String transactionName = " " + legalMiddleHyphenToSpace + " ";
+            String masterName = " " + masterLegalMiddleNameHyphenToSpace + " ";
+            if (checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
+                middleNameMatchCode = "1";
+            } else {
+                // !   submitted legal Middle name is a nickname of master legal Middle name or vice
+                // !   verse
+                transactionName = legalMiddleHyphenToSpace;
+                masterName = masterLegalMiddleNameHyphenToSpace;
+
+                lookupManager.lookupNicknames(student.getPenMatchTransactionNames(), transactionName);
+
+                if (student.getPenMatchTransactionNames().getNickname1() != null) {
+                    middleNameMatchCode = "1";
+                } else {
+                    middleNameMatchCode = "2";
+                }
+            }
+        }
+
+        //! Match birth date
+        //! ----------------
+        //!
+        //! Possible Values for YEAR_MATCH_CODE, MONTH_MATCH_CODE or DAY_MATCH_CODE:
+        //!       1       Identical (plus overrides to value 2)
+        //!       2       Different
+        //
+        //!   submitted birth date matches master
+        String studentDob = student.getDob();
+        String masterDob = masterRecord.getDob();
+        String yearMatchCode = null;
+        String monthMatchCode = null;
+        String dayMatchCode = null;
+
+        if (studentDob != null && studentDob.equals(masterDob)) {
+            // !   submitted birth date matches master
+            yearMatchCode = "1";
+            monthMatchCode = "1";
+            dayMatchCode = "1";
+        } else if (studentDob != null && studentDob.length() >= 4 && studentDob.substring(0, 4).equals(masterDob.substring(0, 1))) {
+            // !   submitted year matches master
+            yearMatchCode = "1";
+        } else {
+            yearMatchCode = "2";
+        }
+
+        // !   submitted month matches master
+        if (studentDob != null && studentDob.length() >= 6 && studentDob.substring(4, 6).equals(masterDob.substring(4, 6))) {
+            monthMatchCode = "1";
+        }else{
+            monthMatchCode = "2";
+        }
+
+        // !   submitted day matches master
+        if(studentDob != null && studentDob.length() >= 8 && studentDob.substring(6, 8).equals(masterDob.substring(6, 8))) {
+            dayMatchCode = "1";
+        }else{
+            dayMatchCode = "2";
+        }
+
+        String birthdayMatchCode = yearMatchCode + monthMatchCode + dayMatchCode;
+
+        //!   Override:
+        //!   only submitted year didn't match master but the last 2 digits are transposed
+        if(birthdayMatchCode.equals("211")){
+            String tempDobYear = studentDob.substring(3,4) + studentDob.substring(2,3);
+            if(tempDobYear.equals(masterDob.substring(2,4))){
+                yearMatchCode = "1";
+            }
+        }else if(birthdayMatchCode.equals("121")){
+            // !   Override:
+            // !   only submitted month didn't match master but the last 2 digits are transposed
+            String tempDobMonth = studentDob.substring(5,6) + studentDob.substring(4,5);
+            if(tempDobMonth.equals(masterDob.substring(4,6))){
+                monthMatchCode = "1";
+            }
+        }else if(birthdayMatchCode.equals("112")){
+            // !   Override:
+            // !   only submitted day didn't match master but the last 2 digits are transposed
+            String tempDobDay = studentDob.substring(7,8) + studentDob.substring(6,7);
+            if(tempDobDay.equals(masterDob.substring(6,8))){
+                dayMatchCode = "1";
+            }
+        }else if(birthdayMatchCode.equals("122") && studentDob.substring(4,6).equals(masterDob.substring(6,8)) && studentDob.substring(6,8).equals(masterDob.substring(4,6))){
+            // !   Override:
+            // !   Year matched master but month and day did not and they are transposed
+            monthMatchCode = "1";
+            dayMatchCode = "1";
+        }
+
+        // ! Match gender
+        // ! ------------
+        // !
+        // ! Possible Values for GENDER_MATCH_CODE:
+        // !       1       Identical
+        // !       2       Different
+        String genderMatchCode;
+        String studentSex = student.getSex();
+        String masterSex = masterRecord.getSex();
+
+        if(studentSex != null && studentSex.equals(masterSex)){
+            genderMatchCode = "1";
+        }else{
+            genderMatchCode = "2";
+        }
+
+        String matchCode = surnameMatchCode + givenNameMatchCode + middleNameMatchCode + yearMatchCode + monthMatchCode + dayMatchCode + genderMatchCode;
+
+        return matchCode;
     }
 
     /**
