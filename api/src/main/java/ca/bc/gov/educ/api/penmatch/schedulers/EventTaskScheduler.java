@@ -24,21 +24,43 @@ import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.DB_COMMITTED;
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_API_TOPIC;
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * The type Event task scheduler.
+ */
 @Component
 @Slf4j
 public class EventTaskScheduler {
 
+  /**
+   * The Message pub sub.
+   */
   @Getter(PRIVATE)
   private final MessagePublisher messagePubSub;
+  /**
+   * The Pen match event repository.
+   */
   @Getter(PRIVATE)
   private final PENMatchEventRepository penMatchEventRepository;
 
+  /**
+   * Instantiates a new Event task scheduler.
+   *
+   * @param messagePubSub           the message pub sub
+   * @param penMatchEventRepository the pen match event repository
+   */
   @Autowired
   public EventTaskScheduler(MessagePublisher messagePubSub, PENMatchEventRepository penMatchEventRepository) {
     this.messagePubSub = messagePubSub;
     this.penMatchEventRepository = penMatchEventRepository;
   }
 
+  /**
+   * Poll event table and publish.
+   *
+   * @throws InterruptedException the interrupted exception
+   * @throws IOException          the io exception
+   * @throws TimeoutException     the timeout exception
+   */
   @Scheduled(cron = "0/5 * * * * *")
   @SchedulerLock(name = "EventTablePoller",
           lockAtLeastFor = "4s", lockAtMostFor = "4s")
@@ -61,6 +83,13 @@ public class EventTaskScheduler {
     }
   }
 
+  /**
+   * Pen match event processed byte [ ].
+   *
+   * @param penMatchEvent the pen match event
+   * @return the byte [ ]
+   * @throws JsonProcessingException the json processing exception
+   */
   private byte[] penMatchEventProcessed(PENMatchEvent penMatchEvent) throws JsonProcessingException {
     Event event = Event.builder()
             .sagaId(penMatchEvent.getSagaId())
@@ -70,6 +99,13 @@ public class EventTaskScheduler {
     return JsonUtil.getJsonStringFromObject(event).getBytes();
   }
 
+  /**
+   * Create outbox event byte [ ].
+   *
+   * @param penMatchEvent the pen match event
+   * @return the byte [ ]
+   * @throws JsonProcessingException the json processing exception
+   */
   private byte[] createOutboxEvent(PENMatchEvent penMatchEvent) throws JsonProcessingException {
     Event event = Event.builder().eventType(EventType.PEN_MATCH_EVENT_OUTBOX_PROCESSED).eventPayload(penMatchEvent.getEventId().toString()).build();
     return JsonUtil.getJsonStringFromObject(event).getBytes();
