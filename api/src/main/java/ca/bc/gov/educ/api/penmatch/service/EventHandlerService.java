@@ -25,29 +25,64 @@ import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.DB_COMMITTED;
 import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.MESSAGE_PUBLISHED;
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * The type Event handler service.
+ */
 @Service
 @Slf4j
 public class EventHandlerService {
 
-  public static final String NO_RECORD_SAGA_ID_EVENT_TYPE = "no record found for the saga id and event type combination, processing.";
-  public static final String RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE = "record found for the saga id and event type combination, might be a duplicate or replay," +
+  /**
+   * The constant NO_RECORD_SAGA_ID_EVENT_TYPE.
+   */
+  public static final String NO_RECORD_SAGA_ID_EVENT_TYPE = "no record found for the saga id and event type combination, processing. {} {}";
+  /**
+   * The constant RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE.
+   */
+  public static final String RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE = "record found for the saga id and event type combination, might be a duplicate or replay, {} {}" +
     " just updating the db status so that it will be polled and sent back again.";
+  /**
+   * The constant EVENT_LOG.
+   */
   public static final String EVENT_LOG = "event is :: {}";
+  /**
+   * The constant PAYLOAD_LOG.
+   */
   public static final String PAYLOAD_LOG = "Payload is :: ";
+  /**
+   * The constant penMatchStudentMapper.
+   */
   @Getter(PRIVATE)
   private static final PenMatchStudentMapper penMatchStudentMapper = PenMatchStudentMapper.mapper;
+  /**
+   * The Pen match event repository.
+   */
   @Getter(PRIVATE)
   private final PENMatchEventRepository penMatchEventRepository;
 
+  /**
+   * The Pen match service.
+   */
   @Getter(PRIVATE)
   private final PenMatchService penMatchService;
 
+  /**
+   * Instantiates a new Event handler service.
+   *
+   * @param penMatchEventRepository the pen match event repository
+   * @param penMatchService         the pen match service
+   */
   @Autowired
   public EventHandlerService(PENMatchEventRepository penMatchEventRepository, PenMatchService penMatchService) {
     this.penMatchEventRepository = penMatchEventRepository;
     this.penMatchService = penMatchService;
   }
 
+  /**
+   * Handle event.
+   *
+   * @param event the event
+   */
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handleEvent(Event event) {
     try {
@@ -71,15 +106,22 @@ public class EventHandlerService {
     }
   }
 
+  /**
+   * Handle process pen match event.
+   *
+   * @param event the event
+   * @throws JsonProcessingException the json processing exception
+   */
   private void handleProcessPenMatchEvent(@NonNull Event event) throws JsonProcessingException {
     var eventOptional = getPenMatchEventRepository().findBySagaIdAndEventType(event.getSagaId(), event.getEventType().toString()); //mandatory fields, should not be null.
     if (eventOptional.isEmpty()) {
-      var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class,event.getEventPayload())));
+      log.info(NO_RECORD_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
+      var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())));
       event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
       event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
       eventOptional = Optional.of(createEventRecord(event));
     } else {
-      log.info(RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE);
+      log.info(RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
       log.trace(EVENT_LOG, event);
       var penMatchEvent = eventOptional.get();
       penMatchEvent.setEventStatus(DB_COMMITTED.toString()); // changing the status so that it will be polled and published again.
@@ -88,6 +130,11 @@ public class EventHandlerService {
   }
 
 
+  /**
+   * Handle pen match event outbox processed event.
+   *
+   * @param eventId the event id
+   */
   private void handlePenMatchEventOutboxProcessedEvent(String eventId) {
     val eventOptional = getPenMatchEventRepository().findById(UUID.fromString(eventId));
     if (eventOptional.isPresent()) {
@@ -98,6 +145,12 @@ public class EventHandlerService {
   }
 
 
+  /**
+   * Create event record pen match event.
+   *
+   * @param event the event
+   * @return the pen match event
+   */
   private PENMatchEvent createEventRecord(Event event) {
     return PENMatchEvent.builder()
       .createDate(LocalDateTime.now())
