@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
@@ -230,12 +231,10 @@ public class NewPenMatchService {
 
             if(matchResult.equals("P")){
                 result.setPenConfirmationResultCode(PenConfirmationResult.PEN_CONFIRMED);
-
+                session.setNumberOfMatches(1);
+                session.getMatchingRecords().add(new NewPenMatchRecord(matchResult, matchCode, masterRecord.getStudentNumber().trim()));
             }
         }
-
-        result.setLocalStudentNumber(localStudentNumber);
-        result.setMasterRecord(masterRecord);
 
         log.info(" output :: PenConfirmationResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
