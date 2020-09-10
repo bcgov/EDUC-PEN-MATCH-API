@@ -40,6 +40,8 @@ import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 @SuppressWarnings("unchecked")
 public class PenMatchLookupManager {
 
+    DateTimeFormatter DOB_FORMATTER_FROM = DateTimeFormatter.ofPattern("yyyyMMdd");
+    DateTimeFormatter DOB_FORMATTER_TO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String PARAMETERS_ATTRIBUTE = "parameters";
     public static final String CHECK_DIGIT_ERROR_CODE_000 = "000";
     public static final String CHECK_DIGIT_ERROR_CODE_001 = "001";
@@ -86,12 +88,9 @@ public class PenMatchLookupManager {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
 
-            DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("yyyyMMdd");
-            DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate dobDate = LocalDate.parse(dob, formatterFrom);
-
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(formatterTo.format(dobDate)).valueType(ValueType.DATE).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -143,7 +142,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -194,7 +195,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -239,7 +242,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
