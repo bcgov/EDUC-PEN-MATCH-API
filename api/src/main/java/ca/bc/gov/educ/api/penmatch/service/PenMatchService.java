@@ -4,7 +4,7 @@ import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
+import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
@@ -49,7 +49,7 @@ public class PenMatchService {
                 if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
                     if (confirmationResult.getMergedPEN() == null) {
                         session.setPenStatus(PenStatus.AA.getValue());
-                        session.setStudentNumber(confirmationResult.getMasterRecord().getStudentNumber().trim());
+                        session.setStudentNumber(confirmationResult.getMasterRecord().getPen().trim());
                     } else {
                         session.setPenStatus(PenStatus.B1.getValue());
                         session.setStudentNumber(confirmationResult.getMergedPEN());
@@ -58,7 +58,7 @@ public class PenMatchService {
                     }
                 } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
                     session.setPenStatus(PenStatus.B.getValue());
-                    if (confirmationResult.getMasterRecord().getStudentNumber() != null) {
+                    if (confirmationResult.getMasterRecord().getPen() != null) {
                         findMatchesOnPenDemog(student, true, session, confirmationResult.getLocalStudentNumber());
                     }
                 } else {
@@ -161,13 +161,13 @@ public class PenMatchService {
         // Lookup surname frequency
         // It could generate extra points later if
         // there is a perfect match on surname
-        int partialSurnameFrequency = 0;
+        int partialSurnameFrequency;
         String fullStudentSurname = student.getSurname();
         int fullSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
 
         if (fullSurnameFrequency > VERY_FREQUENT) {
             partialSurnameFrequency = fullSurnameFrequency;
-        } else if (fullStudentSurname != null) {
+        } else  {
             fullStudentSurname = student.getSurname().substring(0, student.getMinSurnameSearchSize());
             partialSurnameFrequency = lookupManager.lookupSurnameFrequency(fullStudentSurname);
         }
@@ -185,11 +185,15 @@ public class PenMatchService {
      */
     private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
         log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        String surname = student.getSurname();
+        String usualSurname = student.getUsualSurname();
         String given = student.getGivenName();
         String usualGiven = student.getUsualGivenName();
         PenMatchNames penMatchTransactionNames;
 
         penMatchTransactionNames = new PenMatchNames();
+        penMatchTransactionNames.setLegalSurname(surname);
+        penMatchTransactionNames.setUsualSurname(usualSurname);
         penMatchTransactionNames.setLegalGiven(given);
         penMatchTransactionNames.setLegalMiddle(student.getMiddleName());
         penMatchTransactionNames.setUsualGiven(usualGiven);
@@ -277,13 +281,20 @@ public class PenMatchService {
 
         boolean matchFound = false;
 
-        if (masterRecord != null && masterRecord.getStudentNumber().trim().equals(localStudentNumber)) {
+        if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
             result.setPenConfirmationResultCode(PenConfirmationResult.PEN_ON_FILE);
-            if (masterRecord.getStatus() != null && masterRecord.getStatus().equals("M") && masterRecord.getTrueNumber() != null) {
-                localStudentNumber = masterRecord.getTrueNumber().trim();
-                result.setMergedPEN(masterRecord.getTrueNumber().trim());
+
+            String studentTrueNumber = null;
+
+            if(masterRecord.getStatus() != null && masterRecord.getStatus().equals("M")){
+                studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecord.getStudentID());
+            }
+
+            if (masterRecord.getStatus() != null && masterRecord.getStatus().equals("M") && studentTrueNumber != null) {
+                localStudentNumber = studentTrueNumber.trim();
+                result.setMergedPEN(studentTrueNumber.trim());
                 masterRecord = lookupManager.lookupStudentByPEN(localStudentNumber);
-                if (masterRecord != null && masterRecord.getStudentNumber().trim().equals(localStudentNumber)) {
+                if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
                     matchFound = simpleCheckForMatch(student, masterRecord, session).isMatchFound();
                     if (masterRecord.getStatus().equals("D")) {
                         localStudentNumber = null;
@@ -344,7 +355,7 @@ public class PenMatchService {
             }
         }
 
-        List<PenDemographicsEntity> penDemogList;
+        List<StudentEntity> penDemogList;
         if (student.getLocalID() == null) {
             if (useGivenInitial) {
                 penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
@@ -548,7 +559,7 @@ public class PenMatchService {
             if (sexPoints >= 5 && birthdayPoints >= 20 && surnameMatchResult.getSurnamePoints() >= 20 && bonusPoints >= 25) {
                 matchFound = true;
                 session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
-                session.setReallyGoodPEN(master.getStudentNumber().trim());
+                session.setReallyGoodPEN(master.getPen().trim());
                 totalPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints;
                 algorithmUsed = PenAlgorithm.ALG_20;
             }
@@ -561,7 +572,7 @@ public class PenMatchService {
             if (bonusPoints >= 25) {
                 matchFound = true;
                 session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
-                session.setReallyGoodPEN(master.getStudentNumber().trim());
+                session.setReallyGoodPEN(master.getPen().trim());
                 totalPoints = localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints() + bonusPoints;
                 algorithmUsed = PenAlgorithm.ALG_30;
             }
@@ -574,7 +585,7 @@ public class PenMatchService {
             if (bonusPoints >= 20) {
                 matchFound = true;
                 session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
-                session.setReallyGoodPEN(master.getStudentNumber().trim());
+                session.setReallyGoodPEN(master.getPen().trim());
                 totalPoints = localIDMatchResult.getLocalIDPoints() + sexPoints + birthdayPoints + bonusPoints;
                 algorithmUsed = PenAlgorithm.ALG_40;
             }
@@ -597,7 +608,7 @@ public class PenMatchService {
                 totalPoints = bonusPoints;
                 if (bonusPoints >= 70) {
                     session.setReallyGoodMatches(session.getReallyGoodMatches() + 1);
-                    session.setReallyGoodPEN(master.getStudentNumber().trim());
+                    session.setReallyGoodPEN(master.getPen().trim());
                 } else if (bonusPoints >= 60 || localIDMatchResult.getLocalIDPoints() >= 20) {
                     session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
                 }
@@ -649,20 +660,20 @@ public class PenMatchService {
     /**
      * Utility method for checking and merging lookups
      */
-    private void performCheckForMatchAndMerge(List<PenDemographicsEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
+    private void performCheckForMatchAndMerge(List<StudentEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
         log.info(" input :: penDemogList={} PenMatchStudentDetail={} PenMatchSession={} localStudentNumber={}", JsonUtil.getJsonPrettyStringFromObject(penDemogList), JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), localStudentNumber);
         if (penDemogList != null) {
-            for (PenDemographicsEntity entity : penDemogList) {
-                if (entity.getStudStatus() != null && !entity.getStudStatus().equals(PenStatus.M.getValue()) && !entity.getStudStatus().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getStudNo().trim().equals(localStudentNumber))) {
-                    PenMasterRecord masterRecord = PenMatchUtils.convertPenDemogToPenMasterRecord(entity);
+            for (StudentEntity entity : penDemogList) {
+                if (entity.getStatusCode() != null && !entity.getStatusCode().equals(PenStatus.M.getValue()) && !entity.getStatusCode().equals(PenStatus.D.getValue()) && (localStudentNumber == null || !entity.getPen().trim().equals(localStudentNumber))) {
+                    PenMasterRecord masterRecord = PenMatchUtils.convertStudentEntityToPenMasterRecord(entity);
                     CheckForMatchResult result = checkForMatch(student, masterRecord, session);
 
                     if (result.isMatchFound()) {
                         String matchingPEN;
                         if (result.isType5Match()) {
-                            matchingPEN = masterRecord.getStudentNumber().trim() + "?";
+                            matchingPEN = masterRecord.getPen().trim() + "?";
                         } else {
-                            matchingPEN = masterRecord.getStudentNumber().trim();
+                            matchingPEN = masterRecord.getPen().trim();
                         }
                         mergeNewMatchIntoList(student, matchingPEN, session, result.getAlgorithmUsed(), result.getTotalPoints());
                     }

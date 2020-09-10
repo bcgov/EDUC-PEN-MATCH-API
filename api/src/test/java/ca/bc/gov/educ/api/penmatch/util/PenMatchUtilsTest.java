@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
@@ -126,23 +126,23 @@ public class PenMatchUtilsTest {
 	@Test
 	public void testConvertToPenMasterRecord_ShouldAssertOk() {
 
-		PenDemographicsEntity entity = new PenDemographicsEntity();
-		entity.setStudNo("123456789");
-		entity.setStudBirth("19800115");
-		entity.setStudSurname("JACKSON");
-		entity.setStudGiven("PETER");
-		entity.setStudMiddle("AXLE");
-		entity.setUsualSurname("JACKSON");
-		entity.setUsualGiven("PETE");
-		entity.setUsualMiddle("AXE");
+		StudentEntity entity = new StudentEntity();
+		entity.setPen("123456789");
+		entity.setDob("19800115");
+		entity.setLegalLastName("JACKSON");
+		entity.setLegalFirstName("PETER");
+		entity.setLegalMiddleNames("AXLE");
+		entity.setUsualLastName("JACKSON");
+		entity.setUsualFirstName("PETE");
+		entity.setUsualMiddleNames("AXE");
 		entity.setPostalCode("V2R3W4");
-		entity.setStudSex("M");
-		entity.setStudStatus("B0");
+		entity.setSexCode("M");
+		entity.setStatusCode("B0");
 		entity.setMincode("12345678");
 		entity.setLocalID("9876575");
 
-		PenMasterRecord masterRecord = PenMatchUtils.convertPenDemogToPenMasterRecord(entity);
-		assertNotNull(masterRecord.getStudentNumber());
+		PenMasterRecord masterRecord = PenMatchUtils.convertStudentEntityToPenMasterRecord(entity);
+		assertNotNull(masterRecord.getPen());
 		assertNotNull(masterRecord.getDob());
 		assertNotNull(masterRecord.getSurname());
 		assertNotNull(masterRecord.getGiven());
@@ -160,7 +160,7 @@ public class PenMatchUtilsTest {
 	public PenMasterRecord createPenMasterRecord() {
 		PenMasterRecord masterRecord = new PenMasterRecord();
 
-		masterRecord.setStudentNumber("12345647");
+		masterRecord.setPen("12345647");
 		masterRecord.setDob("19800518");
 		masterRecord.setSurname("JACKSON");
 		masterRecord.setGiven("PETER");

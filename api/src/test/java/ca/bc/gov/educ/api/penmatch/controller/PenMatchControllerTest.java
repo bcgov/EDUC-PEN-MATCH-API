@@ -24,10 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
@@ -43,9 +41,6 @@ public class PenMatchControllerTest {
 	NicknamesRepository nicknamesRepository;
 
 	@Autowired
-	PenDemographicsRepository penDemogRepository;
-
-	@Autowired
 	SurnameFrequencyRepository surnameFreqRepository;
 
 	@Autowired
@@ -59,9 +54,6 @@ public class PenMatchControllerTest {
 			MockitoAnnotations.initMocks(this);
 			mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
 			final File file = new File("src/test/resources/mock_pen_demog.json");
-			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<>() {
-			});
-			penDemogRepository.saveAll(penDemogEntities);
 
 			final File fileNick = new File("src/test/resources/mock_nicknames.json");
 			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
