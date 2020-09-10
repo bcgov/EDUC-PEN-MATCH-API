@@ -115,7 +115,7 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
             DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
             defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
@@ -167,7 +167,7 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
             DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
             defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
@@ -214,7 +214,7 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
             DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
             defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
@@ -258,7 +258,7 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
             DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
             defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
