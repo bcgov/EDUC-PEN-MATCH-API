@@ -1,44 +1,36 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.model.*;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestPageImpl;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.struct.Search;
 import ca.bc.gov.educ.api.penmatch.struct.SearchCriteria;
 import ca.bc.gov.educ.api.penmatch.struct.ValueType;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
-
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
