@@ -3,11 +3,14 @@ package ca.bc.gov.educ.api.penmatch.struct.v1;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 public class PenMasterRecord {
+	private UUID studentID;
 	private String archiveFlag;
-	private String studentNumber;
+	private String pen;
 	private String surname;
 	private String given;
 	private String middle;
@@ -21,7 +24,6 @@ public class PenMasterRecord {
 	private String sex;
 	private String grade;
 	private String citizenship;
-	private String trueNumber;
 	private String status;
 	private String homeLanguage;
 	private String aboriginalIndicator;

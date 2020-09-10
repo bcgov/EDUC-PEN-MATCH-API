@@ -1,22 +1,17 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
-import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchStudentDetail;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
-import ca.bc.gov.educ.api.penmatch.util.ScoringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -37,7 +32,7 @@ public class NewPenMatchService {
     /**
      * This is the main method to match a student
      */
-    public PenMatchResult matchStudent(NewPenMatchStudentDetail student) {
+    public NewPenMatchResult matchStudent(NewPenMatchStudentDetail student) {
         log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         NewPenMatchSession session = initialize(student);
 
@@ -49,10 +44,10 @@ public class NewPenMatchService {
             if (validCheckDigit) {
                 confirmationResult = confirmPEN(student, session);
                 if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
-                    storeMatches();
+                    //storeMatches();
                     if (confirmationResult.getMergedPEN() == null) {
                         session.setPenStatus(PenStatus.AA.getValue());
-                        session.setStudentNumber(confirmationResult.getMasterRecord().getStudentNumber().trim());
+                        session.setStudentNumber(confirmationResult.getMasterRecord().getPen().trim());
                     } else {
                         session.setPenStatus(PenStatus.B1.getValue());
                         session.setStudentNumber(confirmationResult.getMergedPEN());
@@ -61,21 +56,21 @@ public class NewPenMatchService {
                     }
                 } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
                     session.setPenStatus(PenStatus.B.getValue());
-                    if (confirmationResult.getMasterRecord().getStudentNumber() != null) {
-                        findMatchesOnPenDemog(student, true, session, confirmationResult.getLocalStudentNumber());
+                    if (confirmationResult.getMasterRecord().getPen() != null) {
+                        //findMatchesOnPenDemog(student, true, session, confirmationResult.getLocalStudentNumber());
                     }
                 } else {
                     session.setPenStatus(PenStatus.C.getValue());
-                    findMatchesOnPenDemog(student, false, session, null);
+                    //findMatchesOnPenDemog(student, false, session, null);
                 }
 
             } else {
                 session.setPenStatus(PenStatus.C.getValue());
-                findMatchesOnPenDemog(student, false, session, null);
+                //findMatchesOnPenDemog(student, false, session, null);
             }
         } else {
             session.setPenStatus(PenStatus.D.getValue());
-            findMatchesOnPenDemog(student, false, session, null);
+            //findMatchesOnPenDemog(student, false, session, null);
         }
 
         /*
@@ -112,8 +107,8 @@ public class NewPenMatchService {
             session.setPenStatus(PenStatus.C0.getValue());
             session.setStudentNumber(null);
         }
-        PenMatchResult result = new PenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
-        log.info(" output :: PenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        NewPenMatchResult result = new NewPenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
+        log.info(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -207,12 +202,18 @@ public class NewPenMatchService {
 
         boolean matchFound = false;
 
-        if (masterRecord != null && masterRecord.getStudentNumber().trim().equals(localStudentNumber)) {
-            if (masterRecord.getStatus() != null && masterRecord.getStatus().equals("M") && masterRecord.getTrueNumber() != null) {
-                localStudentNumber = masterRecord.getTrueNumber().trim();
-                result.setMergedPEN(masterRecord.getTrueNumber().trim());
+        String studentTrueNumber = null;
+
+        if(masterRecord.getStatus() != null && masterRecord.getStatus().equals("M")){
+            studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecord.getStudentID());
+        }
+
+        if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
+            if (masterRecord.getStatus() != null && masterRecord.getStatus().equals("M") && studentTrueNumber != null) {
+                localStudentNumber = studentTrueNumber.trim();
+                result.setMergedPEN(studentTrueNumber.trim());
                 masterRecord = lookupManager.lookupStudentByPEN(localStudentNumber);
-                if (masterRecord != null && masterRecord.getStudentNumber().trim().equals(localStudentNumber)) {
+                if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
                     result.setPenConfirmationResultCode(PenConfirmationResult.PEN_ON_FILE);
                 }
             } else {
@@ -232,7 +233,7 @@ public class NewPenMatchService {
             if(matchResult.equals("P")){
                 result.setPenConfirmationResultCode(PenConfirmationResult.PEN_CONFIRMED);
                 session.setNumberOfMatches(1);
-                session.getMatchingRecords().add(new NewPenMatchRecord(matchResult, matchCode, masterRecord.getStudentNumber().trim()));
+                session.getMatchingRecords().add(new NewPenMatchRecord(matchResult, matchCode, masterRecord.getPen().trim()));
             }
         }
 

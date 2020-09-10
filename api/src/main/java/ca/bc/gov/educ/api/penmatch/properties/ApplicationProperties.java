@@ -14,13 +14,25 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class ApplicationProperties {
-  public static final String API_NAME = "PEN_MATCH_API";
+    public static final String API_NAME = "PEN_MATCH_API";
 
-  @Value("${nats.streaming.server.url}")
-  @Getter
-  private String natsUrl;
+    @Value("${nats.streaming.server.url}")
+    @Getter
+    private String natsUrl;
 
-  @Value("${nats.streaming.server.clusterId}")
-  @Getter
-  private String natsClusterId;
+    @Value("${nats.streaming.server.clusterId}")
+    @Getter
+    private String natsClusterId;
+
+    @Value("${client.id}")
+    private String clientID;
+
+    @Value("${client.secret}")
+    private String clientSecret;
+
+    @Value("${token.url}")
+    private String tokenURL;
+
+    @Value("${student.api.url}")
+    private String studentApiURL;
 }

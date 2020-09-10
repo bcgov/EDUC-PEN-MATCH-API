@@ -1061,7 +1061,7 @@ public class ScoringUtilsTest {
 	public PenMasterRecord createPenMasterRecord() {
 		PenMasterRecord masterRecord = new PenMasterRecord();
 
-		masterRecord.setStudentNumber("12345647");
+		masterRecord.setPen("12345647");
 		masterRecord.setDob("19800518");
 		masterRecord.setSurname("JACKSON");
 		masterRecord.setGiven("PETER");

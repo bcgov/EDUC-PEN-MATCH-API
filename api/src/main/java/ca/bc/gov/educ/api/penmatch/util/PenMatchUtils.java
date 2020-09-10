@@ -1,11 +1,12 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
+import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -83,25 +84,25 @@ public class PenMatchUtils {
     /**
      * Converts PEN Demog record to a PEN Master record
      */
-    public static PenMasterRecord convertPenDemogToPenMasterRecord(PenDemographicsEntity entity) {
+    public static PenMasterRecord convertStudentEntityToPenMasterRecord(StudentEntity entity) {
         log.info(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
         PenMasterRecord masterRecord = new PenMasterRecord();
 
-        masterRecord.setStudentNumber(checkForValidValue(entity.getStudNo()));
-        masterRecord.setDob(checkForValidValue(entity.getStudBirth()));
-        masterRecord.setSurname(checkForValidValue(entity.getStudSurname()));
-        masterRecord.setGiven(checkForValidValue(entity.getStudGiven()));
-        masterRecord.setMiddle(checkForValidValue(entity.getStudMiddle()));
-        masterRecord.setUsualSurname(checkForValidValue(entity.getUsualSurname()));
-        masterRecord.setUsualGivenName(checkForValidValue(entity.getUsualGiven()));
-        masterRecord.setUsualMiddleName(checkForValidValue(entity.getUsualMiddle()));
+        masterRecord.setStudentID(entity.getStudentID());
+        masterRecord.setPen(checkForValidValue(entity.getPen()));
+        masterRecord.setDob(checkForValidValue(entity.getDob()));
+        masterRecord.setSurname(checkForValidValue(entity.getLegalLastName()));
+        masterRecord.setGiven(checkForValidValue(entity.getLegalFirstName()));
+        masterRecord.setMiddle(checkForValidValue(entity.getLegalMiddleNames()));
+        masterRecord.setUsualSurname(checkForValidValue(entity.getUsualLastName()));
+        masterRecord.setUsualGivenName(checkForValidValue(entity.getUsualFirstName()));
+        masterRecord.setUsualMiddleName(checkForValidValue(entity.getUsualMiddleNames()));
         masterRecord.setPostal(checkForValidValue(entity.getPostalCode()));
-        masterRecord.setSex(checkForValidValue(entity.getStudSex()));
-        masterRecord.setGrade(checkForValidValue(entity.getGrade()));
-        masterRecord.setStatus(checkForValidValue(entity.getStudStatus()));
+        masterRecord.setSex(checkForValidValue(entity.getSexCode()));
+        masterRecord.setGrade(checkForValidValue(entity.getGradeCode()));
+        masterRecord.setStatus(checkForValidValue(entity.getStatusCode()));
         masterRecord.setMincode(checkForValidValue(entity.getMincode()));
         masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
-        masterRecord.setTrueNumber(checkForValidValue(entity.getTrueNumber()));
 
         log.info(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
         return masterRecord;
@@ -122,6 +123,16 @@ public class PenMatchUtils {
      */
     public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
         log.info(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+        if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+            session.setPenStatus(PenStatus.G0.getValue());
+        }
+    }
+
+    /**
+     * Check that the core data is there for a pen master add
+     */
+    public static void checkForCoreData(PenMatchStudent student, NewPenMatchSession session) {
+        log.info(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
             session.setPenStatus(PenStatus.G0.getValue());
         }

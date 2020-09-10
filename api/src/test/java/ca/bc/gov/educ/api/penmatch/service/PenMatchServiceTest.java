@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -17,10 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.PenDemographicsEntity;
 import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.PenDemographicsRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
@@ -40,12 +39,9 @@ public class PenMatchServiceTest {
 	NicknamesRepository nicknamesRepository;
 
 	@Autowired
-	PenDemographicsRepository penDemogRepository;
-
-	@Autowired
 	SurnameFrequencyRepository surnameFreqRepository;
 
-	@Autowired
+	@MockBean
 	PenMatchLookupManager lookupManager;
 
 	private static boolean dataLoaded = false;
@@ -54,10 +50,6 @@ public class PenMatchServiceTest {
 	public void setup() throws Exception {
 		if (!dataLoaded) {
 			service = new PenMatchService(lookupManager);
-			final File file = new File("src/test/resources/mock_pen_demog.json");
-			List<PenDemographicsEntity> penDemogEntities = new ObjectMapper().readValue(file, new TypeReference<List<PenDemographicsEntity>>() {
-			});
-			penDemogRepository.saveAll(penDemogEntities);
 
 			final File fileNick = new File("src/test/resources/mock_nicknames.json");
 			List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
