@@ -1,5 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
+import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.model.*;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
+import ca.bc.gov.educ.api.penmatch.rest.RestPageImpl;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.struct.Search;
 import ca.bc.gov.educ.api.penmatch.struct.SearchCriteria;
@@ -19,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,8 @@ import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
@@ -84,11 +91,15 @@ public class PenMatchLookupManager {
     public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
-            ResponseEntity<Object> studentResponse;
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.STRING).build();
+
+            DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("yyyyMMdd");
+            DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dobDate = LocalDate.parse(dob, formatterFrom);
+
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(formatterTo.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -100,7 +111,7 @@ public class PenMatchLookupManager {
             criteriaListSurnameGiven.add(criteriaGiven);
 
             SearchCriteria criteriaMincode = SearchCriteria.builder().key("mincode").operation(FilterOperation.EQUAL).value(mincode).valueType(ValueType.STRING).build();
-            SearchCriteria criteriaLocalID = SearchCriteria.builder().key("localId").condition(AND).operation(FilterOperation.EQUAL).value(localID).valueType(ValueType.STRING).build();
+            SearchCriteria criteriaLocalID = SearchCriteria.builder().key("localID").condition(AND).operation(FilterOperation.EQUAL).value(localID).valueType(ValueType.STRING).build();
             List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
             criteriaListMincodeLocalID.add(criteriaMincode);
             criteriaListMincodeLocalID.add(criteriaLocalID);
@@ -113,16 +124,20 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            log.info("Crit: " + criteriaJSON);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
+            DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+            defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+            restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
 
-            log.info("Builder: " + builder.toUriString());
+            ParameterizedTypeReference<RestPageImpl<StudentEntity>> responseType = new ParameterizedTypeReference<RestPageImpl<StudentEntity>>() { };
 
-            studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), Object.class);
+            ResponseEntity<RestPageImpl<StudentEntity>> studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
 
-            //return studentResponse.getBody();
-            return null;
+            if(studentResponse.hasBody()) {
+                return studentResponse.getBody().getContent();
+            }
+            return new ArrayList<StudentEntity>();
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
             return new ArrayList<StudentEntity>();
@@ -135,11 +150,8 @@ public class PenMatchLookupManager {
     public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID) {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
-            ResponseEntity<List<StudentEntity>> studentResponse;
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.STRING).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -149,7 +161,7 @@ public class PenMatchLookupManager {
             criteriaListSurname.add(criteriaSurname);
 
             SearchCriteria criteriaMincode = SearchCriteria.builder().key("mincode").operation(FilterOperation.EQUAL).value(mincode).valueType(ValueType.STRING).build();
-            SearchCriteria criteriaLocalID = SearchCriteria.builder().key("localId").condition(AND).operation(FilterOperation.EQUAL).value(localID).valueType(ValueType.STRING).build();
+            SearchCriteria criteriaLocalID = SearchCriteria.builder().key("localID").condition(AND).operation(FilterOperation.EQUAL).value(localID).valueType(ValueType.STRING).build();
             List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
             criteriaListMincodeLocalID.add(criteriaMincode);
             criteriaListMincodeLocalID.add(criteriaLocalID);
@@ -162,12 +174,21 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteria", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
-            studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), new ParameterizedTypeReference<List<StudentEntity>>() {
-            });
+            DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+            defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+            restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
 
-            return studentResponse.getBody();
+            ParameterizedTypeReference<RestPageImpl<StudentEntity>> responseType = new ParameterizedTypeReference<RestPageImpl<StudentEntity>>() { };
+
+            ResponseEntity<RestPageImpl<StudentEntity>> studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
+
+            if(studentResponse.hasBody()) {
+                return studentResponse.getBody().getContent();
+            }
+            return new ArrayList<StudentEntity>();
+
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
             return new ArrayList<StudentEntity>();
@@ -180,11 +201,8 @@ public class PenMatchLookupManager {
     public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName) {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
-            ResponseEntity<List<StudentEntity>> studentResponse;
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.STRING).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -201,12 +219,21 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteria", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
-            studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), new ParameterizedTypeReference<List<StudentEntity>>() {
-            });
+            DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+            defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+            restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
 
-            return studentResponse.getBody();
+            ParameterizedTypeReference<RestPageImpl<StudentEntity>> responseType = new ParameterizedTypeReference<RestPageImpl<StudentEntity>>() { };
+
+            ResponseEntity<RestPageImpl<StudentEntity>> studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
+
+            if(studentResponse.hasBody()) {
+                return studentResponse.getBody().getContent();
+            }
+            return new ArrayList<StudentEntity>();
+
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
             return new ArrayList<StudentEntity>();
@@ -219,11 +246,8 @@ public class PenMatchLookupManager {
     public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname) {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
-            ResponseEntity<List<StudentEntity>> studentResponse;
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.STRING).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(dob).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -237,12 +261,20 @@ public class PenMatchLookupManager {
             ObjectMapper objectMapper = new ObjectMapper();
             String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "/paginated").queryParam("searchCriteria", criteriaJSON).queryParam("pageSize", 100000);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + "paginated").queryParam("searchCriteriaList", criteriaJSON).queryParam("pageSize", 100000);
 
-            studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), new ParameterizedTypeReference<List<StudentEntity>>() {
-            });
+            DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+            defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+            restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
 
-            return studentResponse.getBody();
+            ParameterizedTypeReference<RestPageImpl<StudentEntity>> responseType = new ParameterizedTypeReference<RestPageImpl<StudentEntity>>() { };
+
+            ResponseEntity<RestPageImpl<StudentEntity>> studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
+
+            if(studentResponse.hasBody()) {
+                return studentResponse.getBody().getContent();
+            }
+            return new ArrayList<StudentEntity>();
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
             return new ArrayList<StudentEntity>();
