@@ -19,5 +19,6 @@ public class NewPenMatchSession {
     private String penStatusMessage;
     private String pen1;
     private Integer numberOfMatches;
+    private String applicationCode;
     private boolean isPSI;
 }

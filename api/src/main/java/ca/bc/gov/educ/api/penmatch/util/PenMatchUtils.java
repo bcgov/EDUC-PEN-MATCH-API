@@ -276,4 +276,18 @@ public class PenMatchUtils {
         }
         return null;
     }
+
+    /**
+     * Small utility method to check for partial name
+     *
+     * @return
+     */
+    public static boolean checkForPartialName(String transactionName, String masterName) {
+        boolean partialName = false;
+        if (transactionName.contains(masterName) || masterName.contains(transactionName)) {
+            return true;
+        }
+
+        return false;
+    }
 }

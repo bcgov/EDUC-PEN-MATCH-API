@@ -20,4 +20,5 @@ public class NewPenMatchStudentDetail extends PenMatchStudentDetail {
     private String partialStudentGiven;
     private Integer fullSurnameFrequency;
     private Integer partialSurnameFrequency;
+    private String studentTrueNumber;
 }
