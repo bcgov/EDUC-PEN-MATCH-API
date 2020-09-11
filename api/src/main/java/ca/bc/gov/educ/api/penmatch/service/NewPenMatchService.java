@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
+import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchResult;
@@ -12,6 +13,8 @@ import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -147,9 +150,49 @@ public class NewPenMatchService {
     //!---------------------------------------------------------------------------
     //! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
     //!---------------------------------------------------------------------------
-    private void lookupByDobSurnameGiven() {
+    private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
+        for (StudentEntity entity : penDemogList) {
+            determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
+        }
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Determine if the match is a Pass or Fail
+    //!---------------------------------------------------------------------------
+    private void determineIfMatch(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, NewPenMatchSession session) {
+        String matchCode = determineMatchCode(student, masterRecord);
+
+        //Lookup Result
+        String matchResult = lookupManager.lookupMatchResult(matchCode);
+
+        if (matchResult == null) {
+            matchResult = "F";
+        }
+
+        //Apply overrides to Questionable Match
+        if (matchResult.equals("Q") && session.getApplicationCode().equals("SLD")) {
+            matchOverrides();
+        }
+
+        //Store PEN, match code and result in table (except if Fail)
+        if (!matchResult.equals("F") && session.getNumberOfMatches() < 20) {
+            if (!masterRecord.getStatus().equals("D")) {
+                session.setNumberOfMatches(session.getNumberOfMatches() + 1);
+                session.getMatchingRecords().add(new NewPenMatchRecord(masterRecord.getPen(), matchCode, matchResult));
+            } else {
+                session.setPenStatus(PenStatus.C0.getValue());
+            }
+        }
 
     }
+
+    //!---------------------------------------------------------------------------
+    //! Overrides that apply immediately after a Match Code is calculated.
+    //!---------------------------------------------------------------------------
+    private void matchOverrides() {
+    }
+
 
     //!---------------------------------------------------------------------------
     //! Read Pen master by BIRTH DATE or (SURNAME AND GIVEN NAME)
