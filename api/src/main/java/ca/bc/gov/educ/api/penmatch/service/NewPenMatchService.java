@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -26,12 +28,60 @@ public class NewPenMatchService {
     public static final int MAX_SURNAME_SEARCH_SIZE = 6;
     public static final int MIN_SURNAME_COMPARE_SIZE = 5;
     private boolean reOrganizedNames = false;
+    private HashSet<String> oneMatchOverrideMainCodes;
+    private HashSet<String> oneMatchOverrideSecondaryCodes;
 
     @Autowired
     private PenMatchLookupManager lookupManager;
 
     public NewPenMatchService(PenMatchLookupManager lookupManager) {
         this.lookupManager = lookupManager;
+        oneMatchOverrideMainCodes = new HashSet<String>();
+        oneMatchOverrideMainCodes.add("1111122");
+        oneMatchOverrideMainCodes.add("1111212");
+        oneMatchOverrideMainCodes.add("1111221");
+        oneMatchOverrideMainCodes.add("1112112");
+        oneMatchOverrideMainCodes.add("1112211");
+        oneMatchOverrideMainCodes.add("1121112");
+        oneMatchOverrideMainCodes.add("1122111");
+        oneMatchOverrideMainCodes.add("1131121");
+        oneMatchOverrideMainCodes.add("1131122");
+        oneMatchOverrideMainCodes.add("1131221");
+        oneMatchOverrideMainCodes.add("1132111");
+        oneMatchOverrideMainCodes.add("1132112");
+        oneMatchOverrideMainCodes.add("1141122");
+        oneMatchOverrideMainCodes.add("1141212");
+        oneMatchOverrideMainCodes.add("1141221");
+        oneMatchOverrideMainCodes.add("1211111");
+        oneMatchOverrideMainCodes.add("1211112");
+        oneMatchOverrideMainCodes.add("1231111");
+        oneMatchOverrideMainCodes.add("1231211");
+        oneMatchOverrideMainCodes.add("1241111");
+        oneMatchOverrideMainCodes.add("1241112");
+        oneMatchOverrideMainCodes.add("1241211");
+        oneMatchOverrideMainCodes.add("1321111");
+        oneMatchOverrideMainCodes.add("2111111");
+        oneMatchOverrideMainCodes.add("2111112");
+        oneMatchOverrideMainCodes.add("2111121");
+        oneMatchOverrideMainCodes.add("2111211");
+        oneMatchOverrideMainCodes.add("2112111");
+        oneMatchOverrideMainCodes.add("2131111");
+        oneMatchOverrideMainCodes.add("2131121");
+        oneMatchOverrideMainCodes.add("2131211");
+        oneMatchOverrideMainCodes.add("2132111");
+        oneMatchOverrideMainCodes.add("2141111");
+        oneMatchOverrideMainCodes.add("2141112");
+        oneMatchOverrideMainCodes.add("2141211");
+        oneMatchOverrideMainCodes.add("2142111");
+
+        oneMatchOverrideSecondaryCodes = new HashSet<String>();
+        oneMatchOverrideSecondaryCodes.add("1131221");
+        oneMatchOverrideSecondaryCodes.add("1211111");
+        oneMatchOverrideSecondaryCodes.add("1211112");
+        oneMatchOverrideSecondaryCodes.add("1231111");
+        oneMatchOverrideSecondaryCodes.add("1321111");
+        oneMatchOverrideSecondaryCodes.add("2131111");
+        oneMatchOverrideSecondaryCodes.add("2132111");
     }
 
     /**
@@ -136,36 +186,6 @@ public class NewPenMatchService {
     }
 
     /**
-     * !---------------------------------------------------------------------------
-     * ! Determine the 'Best Match' when there are multiple matched.
-     * !
-     * ! The rules for determining the 'Best Match" are:
-     * ! Sum the 7 positions of Match Code. The 'Best Match' has the lowest value.
-     * ! If there are ties:
-     * ! The Match Code with the most ones is the 'Best Match'.
-     * ! If there are ties:
-     * ! The 'Match Code' with the most twos is the 'Best Match.
-     * ! If there are ties:
-     * ! The 'Match Code' with the most threes is the 'Best Match.
-     * ! If there are ties:
-     * ! The lowest Match Code value is the 'Best Match'.
-     * !
-     * ! The easiest way to select the 'Best Match' is to put the result of all of
-     * ! the above calculations into one comparable value. To do this we need to
-     * ! convert the number of ones, twos and threes into their inverted values by
-     * ! by subtracting each from 7 (the maximum). Now the 'Best Match' will
-     * ! have the lowest value from all of the above calculations allowing us to
-     * ! concatenate the results and select the Match Code with the lowest concatenated
-     * ! value. This allows us to loop through all found Match Codes calculating the
-     * ! concatenated value and saving it and the applicable Match Code/PEN whenever
-     * ! the concatenated value is less than the previously saved value.
-     * !---------------------------------------------------------------------------
-     */
-    private void determineBestMatch() {
-
-    }
-
-    /**
      * Find all possible students on master who could match the transaction.
      * If the first four characters of surname are uncommon then only use 4
      * characters in lookup.  Otherwise use 6 characters, or 5 if surname is
@@ -194,14 +214,14 @@ public class NewPenMatchService {
 
         //Post-match overrides
         if (session.getNumberOfMatches() == 1 && session.getApplicationCode().equals("SLD")) {
-            oneMatchOverrides();
+            oneMatchOverrides(student, session);
         }
 
         if (session.getNumberOfMatches() > 0 && session.getApplicationCode().equals("SLD")) {
             changeResultFromQtoF();
         }
 
-        appendOldF1();
+        appendOldF1(student, session);
     }
 
     //!---------------------------------------------------------------------------
@@ -246,14 +266,6 @@ public class NewPenMatchService {
     }
 
     //!---------------------------------------------------------------------------
-    //! Overrides that apply immediately after a Match Code is calculated.
-    //!---------------------------------------------------------------------------
-    private void matchOverrides() {
-        //TODO
-    }
-
-
-    //!---------------------------------------------------------------------------
     //! Read Pen master by BIRTH DATE or (SURNAME AND GIVEN NAME)
     //!                               or (MINCODE and LOCAL ID)
     //!---------------------------------------------------------------------------
@@ -268,26 +280,22 @@ public class NewPenMatchService {
     //! Override: Change result if there is one match and it meets specific
     //! criteria for specific match codes
     //!---------------------------------------------------------------------------
-    private void oneMatchOverrides() {
-        //TODO
-    }
-
-    //!---------------------------------------------------------------------------
-    //! Override: Change result from Q to F for specific match codes if the
-    //! transaction meets specific criteria and drop the fails from the list (array)
-    //!---------------------------------------------------------------------------
-    private void changeResultFromQtoF() {
-        //TODO
-    }
-
-    //!---------------------------------------------------------------------------
-    //! Override: Check the list of matches for the F1 PEN from the Old PEN Match
-    //! and add it to the list if it is not already there. Replace the last match
-    //! in the list with the F1 PEN if the list is full (20 matches). Set the
-    //! result of the added match to 'Questionable'.
-    //!---------------------------------------------------------------------------
-    private void appendOldF1() {
-        //TODO
+    private void oneMatchOverrides(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        //! 1 match and matched PEN is F1 PEN from the Old PEN Match
+        NewPenMatchRecord matchRecord = session.getMatchingRecords().peek();
+        if (matchRecord.getMatchResult().equals("Q")) {
+            if (student.getOldMatchF1PEN() != null && matchRecord.getMatchingPEN().equals(student.getOldMatchF1PEN())) {
+                if (oneMatchOverrideMainCodes.contains(matchRecord.getMatchCode())) {
+                    matchRecord.setMatchResult("P");
+                }
+                if (matchRecord.getMatchCode().equals("1221111") && !session.isPSI()) {
+                    matchRecord.setMatchResult("P");
+                }
+            } else if (matchRecord.getMatchingPEN().equals(student.getPen()) && oneMatchOverrideSecondaryCodes.contains(matchRecord.getMatchCode())) {
+                //! 1 match and matched PEN is the School supplied PEN
+                matchRecord.setMatchCode("P");
+            }
+        }
     }
 
     /**
@@ -672,4 +680,69 @@ public class NewPenMatchService {
     }
 
 
+    //!---------------------------------------------------------------------------
+    //! Overrides that apply immediately after a Match Code is calculated.
+    //!---------------------------------------------------------------------------
+    private void matchOverrides() {
+        //TODO
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Override: Change result from Q to F for specific match codes if the
+    //! transaction meets specific criteria and drop the fails from the list (array)
+    //!---------------------------------------------------------------------------
+    private void changeResultFromQtoF() {
+        //TODO
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Override: Check the list of matches for the F1 PEN from the Old PEN Match
+    //! and add it to the list if it is not already there. Replace the last match
+    //! in the list with the F1 PEN if the list is full (20 matches). Set the
+    //! result of the added match to 'Questionable'.
+    //!---------------------------------------------------------------------------
+    private void appendOldF1(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        boolean penF1Found;
+        if(student.getOldMatchF1PEN() != null){
+            penF1Found = false;
+            if(session.getNumberOfMatches() > 0){
+                NewPenMatchRecord [] matchRecords = session.getMatchingRecords().toArray(new NewPenMatchRecord[session.getMatchingRecords().size()]);
+                for(NewPenMatchRecord record: matchRecords){
+                    if(record.getMatchingPEN().equals(student.getOldMatchF1PEN())){
+                        penF1Found = true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * !---------------------------------------------------------------------------
+     * ! Determine the 'Best Match' when there are multiple matched.
+     * !
+     * ! The rules for determining the 'Best Match" are:
+     * ! Sum the 7 positions of Match Code. The 'Best Match' has the lowest value.
+     * ! If there are ties:
+     * ! The Match Code with the most ones is the 'Best Match'.
+     * ! If there are ties:
+     * ! The 'Match Code' with the most twos is the 'Best Match.
+     * ! If there are ties:
+     * ! The 'Match Code' with the most threes is the 'Best Match.
+     * ! If there are ties:
+     * ! The lowest Match Code value is the 'Best Match'.
+     * !
+     * ! The easiest way to select the 'Best Match' is to put the result of all of
+     * ! the above calculations into one comparable value. To do this we need to
+     * ! convert the number of ones, twos and threes into their inverted values by
+     * ! by subtracting each from 7 (the maximum). Now the 'Best Match' will
+     * ! have the lowest value from all of the above calculations allowing us to
+     * ! concatenate the results and select the Match Code with the lowest concatenated
+     * ! value. This allows us to loop through all found Match Codes calculating the
+     * ! concatenated value and saving it and the applicable Match Code/PEN whenever
+     * ! the concatenated value is less than the previously saved value.
+     * !---------------------------------------------------------------------------
+     */
+    private void determineBestMatch() {
+
+    }
 }
