@@ -1,12 +1,11 @@
 package ca.bc.gov.educ.api.penmatch.config;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import lombok.AccessLevel;
-import lombok.Getter;
 
 @Configuration
 public class PenMatchMVCConfig implements WebMvcConfigurer {

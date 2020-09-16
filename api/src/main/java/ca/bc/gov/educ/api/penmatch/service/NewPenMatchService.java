@@ -3,7 +3,9 @@ package ca.bc.gov.educ.api.penmatch.service;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenConfirmationResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
@@ -14,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class NewPenMatchService {
 
     public NewPenMatchService(PenMatchLookupManager lookupManager) {
         this.lookupManager = lookupManager;
-        oneMatchOverrideMainCodes = new HashSet<String>();
+        oneMatchOverrideMainCodes = new HashSet<>();
         oneMatchOverrideMainCodes.add("1111122");
         oneMatchOverrideMainCodes.add("1111212");
         oneMatchOverrideMainCodes.add("1111221");
@@ -74,7 +75,7 @@ public class NewPenMatchService {
         oneMatchOverrideMainCodes.add("2141211");
         oneMatchOverrideMainCodes.add("2142111");
 
-        oneMatchOverrideSecondaryCodes = new HashSet<String>();
+        oneMatchOverrideSecondaryCodes = new HashSet<>();
         oneMatchOverrideSecondaryCodes.add("1131221");
         oneMatchOverrideSecondaryCodes.add("1211111");
         oneMatchOverrideSecondaryCodes.add("1211112");
@@ -89,7 +90,7 @@ public class NewPenMatchService {
      */
     //Complete
     public NewPenMatchResult matchStudent(NewPenMatchStudentDetail student) {
-        log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         NewPenMatchSession session = initialize(student);
 
         PenConfirmationResult confirmationResult = new PenConfirmationResult();
@@ -181,7 +182,7 @@ public class NewPenMatchService {
         }
 
         NewPenMatchResult result = new NewPenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
-        log.info(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -303,7 +304,7 @@ public class NewPenMatchService {
      */
     //Complete
     private NewPenMatchSession initialize(NewPenMatchStudentDetail student) {
-        log.info(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         NewPenMatchSession session = new NewPenMatchSession();
 
         if (student.getMincode() != null && student.getMincode().length() >= 3 && student.getMincode().startsWith("102")) {
@@ -329,7 +330,7 @@ public class NewPenMatchService {
         student.setFullSurnameFrequency(fullSurnameFrequency);
         student.setPartialSurnameFrequency(partialSurnameFrequency);
 
-        log.info(" output :: NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" output :: NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
         return session;
     }
 
@@ -338,7 +339,7 @@ public class NewPenMatchService {
      */
     //Complete
     private PenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
-        log.info(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         String surname = student.getSurname();
         String usualSurname = student.getUsualSurname();
         String given = student.getGivenName();
@@ -360,7 +361,7 @@ public class NewPenMatchService {
      */
     //Complete
     public static PenMatchNames formatNamesFromMaster(PenMasterRecord master) {
-        log.info(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
         String surname = master.getSurname();
         String usualSurname = master.getUsualSurname();
         String given = master.getGiven();
@@ -381,7 +382,7 @@ public class NewPenMatchService {
      */
     //Complete
     private PenConfirmationResult confirmPEN(NewPenMatchStudentDetail student, NewPenMatchSession session) {
-        log.info(" input :: NewPenMatchStudentDetail={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" input :: NewPenMatchStudentDetail={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         PenConfirmationResult result = new PenConfirmationResult();
         result.setPenConfirmationResultCode(PenConfirmationResult.NO_RESULT);
 
@@ -425,7 +426,7 @@ public class NewPenMatchService {
             }
         }
 
-        log.info(" output :: PenConfirmationResult={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(result), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" output :: PenConfirmationResult={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(result), JsonUtil.getJsonPrettyStringFromObject(session));
         return result;
     }
 

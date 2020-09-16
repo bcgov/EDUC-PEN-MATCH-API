@@ -1,11 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.mappers;
 
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 
 @Mapper
 public interface PenMatchStudentMapper {

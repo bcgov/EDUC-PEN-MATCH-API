@@ -14,7 +14,7 @@ public class ScoringUtils {
      * Calculate points for Birthday match
      */
     public static int matchBirthday(PenMatchStudentDetail student, PenMasterRecord master) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
         int birthdayPoints = 0;
         int birthdayMatches = 0;
         String dob = student.getDob();
@@ -65,7 +65,7 @@ public class ScoringUtils {
             }
         }
 
-        log.info(" output :: birthdayPoints={}", birthdayPoints);
+        log.debug(" output :: birthdayPoints={}", birthdayPoints);
         return birthdayPoints;
     }
 
@@ -75,7 +75,7 @@ public class ScoringUtils {
      * jeopardize the checking for legit 1 character local IDs
      */
     public static LocalIDMatchResult matchLocalID(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master), JsonUtil.getJsonPrettyStringFromObject(session));
         LocalIDMatchResult matchResult = new LocalIDMatchResult();
         int localIDPoints = 0;
         String mincode = student.getMincode();
@@ -108,7 +108,7 @@ public class ScoringUtils {
         }
 
         matchResult.setLocalIDPoints(localIDPoints);
-        log.info(" output :: LocalIDMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(matchResult));
+        log.debug(" output :: LocalIDMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(matchResult));
         return matchResult;
     }
 
@@ -116,7 +116,7 @@ public class ScoringUtils {
      * Calculate points for address match
      */
     public static int matchAddress(PenMatchStudentDetail student, PenMasterRecord master) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
         int addressPoints = 0;
         String postal = student.getPostal();
         String masterPostal = master.getPostal();
@@ -126,7 +126,7 @@ public class ScoringUtils {
         } else if (postal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
             addressPoints = 1;
         }
-        log.info(" output :: addressPoints={}", addressPoints);
+        log.debug(" output :: addressPoints={}", addressPoints);
         return addressPoints;
     }
 
@@ -134,7 +134,7 @@ public class ScoringUtils {
      * Calculate points for surname match
      */
     public static SurnameMatchResult matchSurname(PenMatchStudentDetail student, PenMasterRecord master) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
         int surnamePoints = 0;
         boolean legalSurnameUsed = false;
         String masterLegalSurnameNoBlanks = null;
@@ -206,7 +206,7 @@ public class ScoringUtils {
         SurnameMatchResult result = new SurnameMatchResult();
         result.setLegalSurnameUsed(legalSurnameUsed);
         result.setSurnamePoints(surnamePoints);
-        log.info(" output :: SurnameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: SurnameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -214,7 +214,7 @@ public class ScoringUtils {
      * Calculate points for given name match
      */
     public static GivenNameMatchResult matchGivenName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
-        log.info(" input :: penMatchTransactionNames={} penMatchMasterNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
+        log.debug(" input :: penMatchTransactionNames={} penMatchMasterNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
         int givenNamePoints = 0;
         boolean givenFlip = false;
 
@@ -261,7 +261,7 @@ public class ScoringUtils {
         GivenNameMatchResult result = new GivenNameMatchResult();
         result.setGivenNamePoints(givenNamePoints);
         result.setGivenNameFlip(givenFlip);
-        log.info(" output :: GivenNameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: GivenNameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -269,7 +269,7 @@ public class ScoringUtils {
      * Calculate points for middle name match
      */
     public static MiddleNameMatchResult matchMiddleName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
-        log.info(" input :: penMatchTransactionNames={} penMatchMasterNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
+        log.debug(" input :: penMatchTransactionNames={} penMatchMasterNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
         int middleNamePoints = 0;
         boolean middleFlip = false;
 
@@ -306,7 +306,7 @@ public class ScoringUtils {
         MiddleNameMatchResult result = new MiddleNameMatchResult();
         result.setMiddleNamePoints(middleNamePoints);
         result.setMiddleNameFlip(middleFlip);
-        log.info(" output :: MiddleNameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: MiddleNameMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
     }
 
@@ -314,7 +314,7 @@ public class ScoringUtils {
      * Soundex calculation
      */
     private static String runSoundex(String inputString) {
-        log.info(" input :: soundexInputString={}", inputString);
+        log.debug(" input :: soundexInputString={}", inputString);
 
         String previousCharRaw;
         int previousCharSoundex;
@@ -359,7 +359,7 @@ public class ScoringUtils {
         } else {
             return null;
         }
-        log.info(" output :: soundexString={}", soundexString);
+        log.debug(" output :: soundexString={}", soundexString);
         return soundexString;
     }
 
@@ -485,12 +485,12 @@ public class ScoringUtils {
      * Calculate points for Sex match
      */
     public static int matchSex(PenMatchStudentDetail student, PenMasterRecord master) {
-        log.info(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master));
         int sexPoints = 0;
         if (student.getSex() != null && master.getSex() != null && student.getSex().equals(master.getSex().trim())) {
             sexPoints = 5;
         }
-        log.info(" output :: sexPoints={}", sexPoints);
+        log.debug(" output :: sexPoints={}", sexPoints);
         return sexPoints;
     }
 }

@@ -1,17 +1,11 @@
 package ca.bc.gov.educ.api.penmatch.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Immutable;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data

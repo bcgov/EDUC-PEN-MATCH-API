@@ -10,10 +10,14 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @Slf4j
 public class PenMatchUtils {
+    private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private PenMatchUtils() {
     }
@@ -22,7 +26,7 @@ public class PenMatchUtils {
      * Utility method which sets the penMatchTransactionNames
      */
     public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
-        log.info(" input :: PenMatchNames={} nextNickname={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), nextNickname);
+        log.debug(" input :: PenMatchNames={} nextNickname={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), nextNickname);
         if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
             penMatchTransactionNames.setNickname1(nextNickname);
         } else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
@@ -38,7 +42,7 @@ public class PenMatchUtils {
      * Utility function to uppercase all incoming student data
      */
     public static void upperCaseInputStudent(PenMatchStudent student) {
-        log.info(" input :: PenMatchStudent={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: PenMatchStudent={}", JsonUtil.getJsonPrettyStringFromObject(student));
         if (student.getSurname() != null) {
             student.setSurname(student.getSurname().trim().toUpperCase());
         }
@@ -85,12 +89,13 @@ public class PenMatchUtils {
      * Converts PEN Demog record to a PEN Master record
      */
     public static PenMasterRecord convertStudentEntityToPenMasterRecord(StudentEntity entity) {
-        log.info(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
+        log.debug(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
         PenMasterRecord masterRecord = new PenMasterRecord();
 
-        masterRecord.setStudentID(entity.getStudentID());
+        masterRecord.setStudentID(entity.getStudentID().toString());
         masterRecord.setPen(checkForValidValue(entity.getPen()));
-        masterRecord.setDob(checkForValidValue(entity.getDob()));
+        LocalDate dobDate = LocalDate.parse(entity.getDob(), DOB_FORMATTER_LONG);
+        masterRecord.setDob(DOB_FORMATTER_SHORT.format(dobDate));
         masterRecord.setSurname(checkForValidValue(entity.getLegalLastName()));
         masterRecord.setGiven(checkForValidValue(entity.getLegalFirstName()));
         masterRecord.setMiddle(checkForValidValue(entity.getLegalMiddleNames()));
@@ -104,7 +109,7 @@ public class PenMatchUtils {
         masterRecord.setMincode(checkForValidValue(entity.getMincode()));
         masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
 
-        log.info(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
+        log.debug(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
         return masterRecord;
     }
 
@@ -122,7 +127,7 @@ public class PenMatchUtils {
      * Check that the core data is there for a pen master add
      */
     public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
-        log.info(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
             session.setPenStatus(PenStatus.G0.getValue());
         }
@@ -132,7 +137,7 @@ public class PenMatchUtils {
      * Check that the core data is there for a pen master add
      */
     public static void checkForCoreData(PenMatchStudent student, NewPenMatchSession session) {
-        log.info(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
             session.setPenStatus(PenStatus.G0.getValue());
         }
@@ -143,7 +148,7 @@ public class PenMatchUtils {
      * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
      */
     public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
-        log.info(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
         master.setAlternateLocalId("MMM");
         if (master.getLocalId() != null) {
             master.setAlternateLocalId(StringUtils.stripStart(master.getLocalId(), "0").replace(" ", ""));
@@ -155,7 +160,7 @@ public class PenMatchUtils {
      * given/middle names
      */
     public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
-        log.info(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
         String given = master.getGiven();
         String usualGiven = master.getUsualGivenName();
 
@@ -192,7 +197,7 @@ public class PenMatchUtils {
                 penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
             }
         }
-        log.info(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
+        log.debug(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
         return penMatchMasterNames;
     }
 
@@ -216,7 +221,7 @@ public class PenMatchUtils {
      * 50 B) Subtract S3 from this: 50 - 44 = 6
      */
     public static boolean penCheckDigit(String pen) {
-        log.info(" input :: pen={}", pen);
+        log.debug(" input :: pen={}", pen);
         if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
             return false;
         }
@@ -253,7 +258,7 @@ public class PenMatchUtils {
 
 
         boolean result = ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
-        log.info(" output :: booleanResult={}", result);
+        log.debug(" output :: booleanResult={}", result);
         return result;
     }
 
@@ -261,8 +266,8 @@ public class PenMatchUtils {
      * Utility method which will drop spaces, dashes & apostrophes
      */
     public static String dropNonLetters(String name) {
-        if(name != null){
-            return name.replace(" ", "").replace("-", "").replace("'","");
+        if (name != null) {
+            return name.replace(" ", "").replace("-", "").replace("'", "");
         }
         return null;
     }
@@ -271,7 +276,7 @@ public class PenMatchUtils {
      * Replaces hyphens with spaces
      */
     public static String replaceHyphensWithBlank(String name) {
-        if(name != null){
+        if (name != null) {
             return name.replace("-", " ");
         }
         return null;
@@ -279,11 +284,8 @@ public class PenMatchUtils {
 
     /**
      * Small utility method to check for partial name
-     *
-     * @return
      */
     public static boolean checkForPartialName(String transactionName, String masterName) {
-        boolean partialName = false;
         if (transactionName.contains(masterName) || masterName.contains(transactionName)) {
             return true;
         }

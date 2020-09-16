@@ -1,8 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.exception;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class EntityNotFoundException extends RuntimeException {
 

@@ -1,21 +1,13 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
+import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
+import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.struct.v1.GivenNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.v1.LocalIDMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.v1.MiddleNameMatchResult;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
-import ca.bc.gov.educ.api.penmatch.struct.v1.SurnameMatchResult;
 
 import static org.junit.Assert.*;
 
@@ -63,7 +55,7 @@ public class ScoringUtilsTest {
 		student.setDob(null);
 		master.setDob(null);
 
-		assertEquals(ScoringUtils.matchBirthday(student, master), 0);
+		assertEquals(0, ScoringUtils.matchBirthday(student, master));
 	}
 
 	@Test

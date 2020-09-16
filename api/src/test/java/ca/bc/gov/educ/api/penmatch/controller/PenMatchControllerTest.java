@@ -1,12 +1,15 @@
 package ca.bc.gov.educ.api.penmatch.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import java.io.File;
-import java.util.List;
-
 import ca.bc.gov.educ.api.penmatch.controller.v1.PenMatchController;
+import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
+import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,16 +22,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.util.List;
 
-import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
-import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
