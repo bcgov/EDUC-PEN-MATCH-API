@@ -22,6 +22,7 @@ public class NewPenMatchSession {
     private String applicationCode;
     private String bestMatchPEN;
     private String bestMatchCode;
+    private String bestMatchValue;
     private boolean assignNewPEN;
     private boolean isPSI;
 }
