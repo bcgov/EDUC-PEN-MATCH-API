@@ -2,7 +2,10 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenConfirmationResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
@@ -13,27 +16,81 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+
 @Service
 @Slf4j
 public class NewPenMatchService {
 
-    public static final int VERY_FREQUENT = 500;
     public static final int NOT_VERY_FREQUENT = 50;
-    public static final int VERY_RARE = 5;
+    public static final int VERY_FREQUENT = 500;
+    public static final int MIN_SURNAME_SEARCH_SIZE = 4;
+    public static final int MAX_SURNAME_SEARCH_SIZE = 6;
+    public static final int MIN_SURNAME_COMPARE_SIZE = 5;
     private boolean reOrganizedNames = false;
+    private HashSet<String> oneMatchOverrideMainCodes;
+    private HashSet<String> oneMatchOverrideSecondaryCodes;
 
     @Autowired
     private PenMatchLookupManager lookupManager;
 
     public NewPenMatchService(PenMatchLookupManager lookupManager) {
         this.lookupManager = lookupManager;
+        oneMatchOverrideMainCodes = new HashSet<>();
+        oneMatchOverrideMainCodes.add("1111122");
+        oneMatchOverrideMainCodes.add("1111212");
+        oneMatchOverrideMainCodes.add("1111221");
+        oneMatchOverrideMainCodes.add("1112112");
+        oneMatchOverrideMainCodes.add("1112211");
+        oneMatchOverrideMainCodes.add("1121112");
+        oneMatchOverrideMainCodes.add("1122111");
+        oneMatchOverrideMainCodes.add("1131121");
+        oneMatchOverrideMainCodes.add("1131122");
+        oneMatchOverrideMainCodes.add("1131221");
+        oneMatchOverrideMainCodes.add("1132111");
+        oneMatchOverrideMainCodes.add("1132112");
+        oneMatchOverrideMainCodes.add("1141122");
+        oneMatchOverrideMainCodes.add("1141212");
+        oneMatchOverrideMainCodes.add("1141221");
+        oneMatchOverrideMainCodes.add("1211111");
+        oneMatchOverrideMainCodes.add("1211112");
+        oneMatchOverrideMainCodes.add("1231111");
+        oneMatchOverrideMainCodes.add("1231211");
+        oneMatchOverrideMainCodes.add("1241111");
+        oneMatchOverrideMainCodes.add("1241112");
+        oneMatchOverrideMainCodes.add("1241211");
+        oneMatchOverrideMainCodes.add("1321111");
+        oneMatchOverrideMainCodes.add("2111111");
+        oneMatchOverrideMainCodes.add("2111112");
+        oneMatchOverrideMainCodes.add("2111121");
+        oneMatchOverrideMainCodes.add("2111211");
+        oneMatchOverrideMainCodes.add("2112111");
+        oneMatchOverrideMainCodes.add("2131111");
+        oneMatchOverrideMainCodes.add("2131121");
+        oneMatchOverrideMainCodes.add("2131211");
+        oneMatchOverrideMainCodes.add("2132111");
+        oneMatchOverrideMainCodes.add("2141111");
+        oneMatchOverrideMainCodes.add("2141112");
+        oneMatchOverrideMainCodes.add("2141211");
+        oneMatchOverrideMainCodes.add("2142111");
+
+        oneMatchOverrideSecondaryCodes = new HashSet<>();
+        oneMatchOverrideSecondaryCodes.add("1131221");
+        oneMatchOverrideSecondaryCodes.add("1211111");
+        oneMatchOverrideSecondaryCodes.add("1211112");
+        oneMatchOverrideSecondaryCodes.add("1231111");
+        oneMatchOverrideSecondaryCodes.add("1321111");
+        oneMatchOverrideSecondaryCodes.add("2131111");
+        oneMatchOverrideSecondaryCodes.add("2132111");
     }
 
     /**
      * This is the main method to match a student
      */
+    //Complete
     public NewPenMatchResult matchStudent(NewPenMatchStudentDetail student) {
-        log.info(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         NewPenMatchSession session = initialize(student);
 
         PenConfirmationResult confirmationResult = new PenConfirmationResult();
@@ -42,81 +99,212 @@ public class NewPenMatchService {
         if (student.getPen() != null) {
             boolean validCheckDigit = PenMatchUtils.penCheckDigit(student.getPen());
             if (validCheckDigit) {
+                // Attempt to confirm a supplied PEN
                 confirmationResult = confirmPEN(student, session);
                 if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
-                    //storeMatches();
-                    if (confirmationResult.getMergedPEN() == null) {
+                    if (student.getStudentTrueNumber() == null) {
                         session.setPenStatus(PenStatus.AA.getValue());
-                        session.setStudentNumber(confirmationResult.getMasterRecord().getPen().trim());
                     } else {
                         session.setPenStatus(PenStatus.B1.getValue());
-                        session.setStudentNumber(confirmationResult.getMergedPEN());
-                        session.setPen1(confirmationResult.getMergedPEN());
-                        session.setNumberOfMatches(1);
-                    }
-                } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
-                    session.setPenStatus(PenStatus.B.getValue());
-                    if (confirmationResult.getMasterRecord().getPen() != null) {
-                        //findMatchesOnPenDemog(student, true, session, confirmationResult.getLocalStudentNumber());
                     }
                 } else {
-                    session.setPenStatus(PenStatus.C.getValue());
-                    //findMatchesOnPenDemog(student, false, session, null);
+                    // Find match using demographics if
+                    // The supplied PEN was not confirmed or no PEN was supplied
+                    findMatchesByDemog(student, session);
+                    if (session.getNumberOfMatches() == 1) {
+                        NewPenMatchRecord matchRecord = session.getMatchingRecords().peek();
+                        if (matchRecord.getMatchResult().equals("P")) {
+                            if (student.getPen() != null && student.getPen().equals(matchRecord.getMatchingPEN())) {
+                                //PEN confirmed
+                                session.setPenStatus(PenStatus.AA.getValue());
+                            } else if (student.getPen() == null) {
+                                //No PEN Supplied
+                                session.setPenStatus(PenStatus.D1.getValue());
+                            } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+                                //Wrong PEN Supplied
+                                session.setPenStatus(PenStatus.B1.getValue());
+                            } else {
+                                //Invalid PEN Supplied
+                                session.setPenStatus(PenStatus.C1.getValue());
+                            }
+                        } else {
+                            if (matchRecord.getMatchResult() == null) {
+                                //Unknown match result
+                                session.setPenStatus(PenStatus.UR.getValue());
+                            } else {
+                                //Single questionable match
+                                session.setPenStatus(PenStatus.F1.getValue());
+                                if (matchRecord.getMatchingPEN().equals("Old F1")) {
+                                    session.setBestMatchPEN(null);
+                                    session.setBestMatchCode(null);
+                                } else {
+                                    session.setBestMatchPEN(matchRecord.getMatchingPEN());
+                                    session.setBestMatchCode(matchRecord.getMatchCode());
+                                }
+                            }
+                        }
+                    } else if (session.getNumberOfMatches() > 1) {
+                        if (student.getPen() == null) {
+                            //No PEN Supplied
+                            session.setPenStatus(PenStatus.DM.getValue());
+                        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+                            //Wrong PEN Supplied
+                            session.setPenStatus(PenStatus.BM.getValue());
+                        } else {
+                            //Invalid PEN Supplied
+                            session.setPenStatus(PenStatus.CM.getValue());
+                        }
+                        determineBestMatch();
+                    } else {
+                        //! Assign a new PEN if there were no matches and the flag was passed to assign
+                        //! new PENS (not just lookup mode) (NO LONGER DONE HERE - NEW PENS NOW ASSIGNED
+                        //! IN CALLING QUICK PROGRAM VIA ASSIGN_NEW_PEN.USE)
+                        if (student.getPen() == null) {
+                            //No PEN Supplied
+                            session.setPenStatus(PenStatus.D0.getValue());
+                        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+                            //Wrong PEN Supplied
+                            session.setPenStatus(PenStatus.B0.getValue());
+                        } else {
+                            //Invalid PEN Supplied
+                            session.setPenStatus(PenStatus.C0.getValue());
+                        }
+
+                        if (session.isAssignNewPEN() && session.getPenStatus().equals(PenStatus.B0.getValue())) {
+                            if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+                                session.setPenStatus(PenStatus.G0.getValue());
+                            }
+                        }
+                    }
                 }
-
-            } else {
-                session.setPenStatus(PenStatus.C.getValue());
-                //findMatchesOnPenDemog(student, false, session, null);
             }
-        } else {
-            session.setPenStatus(PenStatus.D.getValue());
-            //findMatchesOnPenDemog(student, false, session, null);
+
         }
 
-        /*
-         * Assign a new PEN for status C0 or D0 unless Special Match or Search
-         * t_update_code values: Y or R - Assign new PEN (NO LONGER DONE HERE - NOW
-         * ASSIGNED IN ASSIGN_NEW_PEN.USE) N - Match only, do not assign new PEN S -
-         * Search only, do not assign new PEN
-         *
-         * NOTE: Logic will need to be inserted to check to see if the new PEN exists
-         * once PEN 222222226 is reached. That PEN number as well as PENs starting with
-         * digits 3-9 have already been assigned in an earlier version of PEN.
-         */
-        if ((session.getPenStatus().equals(PenStatus.C0.getValue()) || session.getPenStatus().equals(PenStatus.D0.getValue())) && (student.getUpdateCode() != null && (student.getUpdateCode().equals("Y") || student.getUpdateCode().equals("R")))) {
-            PenMatchUtils.checkForCoreData(student, session);
-        }
-
-        if (session.getPenStatus().equals(PenStatus.AA.getValue()) || session.getPenStatus().equals(PenStatus.B1.getValue()) || session.getPenStatus().equals(PenStatus.C1.getValue()) || session.getPenStatus().equals(PenStatus.D1.getValue())) {
-            PenMasterRecord masterRecord = lookupManager.lookupStudentByPEN(student.getPen());
-            if (masterRecord != null && !masterRecord.getDob().equals(student.getDob())) {
-                session.setPenStatusMessage("Birthdays are suspect: " + masterRecord.getDob() + " vs " + student.getDob());
-                session.setPenStatus(PenStatus.F1.getValue());
-                session.setPen1(student.getPen());
-                session.setStudentNumber(null);
-            } else if (masterRecord != null && masterRecord.getSurname().equals(student.getSurname()) && !masterRecord.getGiven().equals(student.getGivenName()) && masterRecord.getDob().equals(student.getDob()) && masterRecord.getMincode().equals(student.getMincode()) && masterRecord.getLocalId() != null
-                    && student.getLocalID() != null && !masterRecord.getLocalId().trim().equals(student.getLocalID())) {
-                session.setPenStatusMessage("Possible twin: " + masterRecord.getGiven().trim() + " vs " + student.getGivenName().trim());
-                session.setPenStatus(PenStatus.F1.getValue());
-                session.setPen1(student.getPen());
-                session.setStudentNumber(null);
-            }
-        }
-
-        if (confirmationResult.isDeceased()) {
-            session.setPenStatus(PenStatus.C0.getValue());
-            session.setStudentNumber(null);
-        }
         NewPenMatchResult result = new NewPenMatchResult(session.getMatchingRecords(), session.getStudentNumber(), session.getPenStatus(), session.getPenStatusMessage());
-        log.info(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
         return result;
+    }
+
+    /**
+     * Find all possible students on master who could match the transaction.
+     * If the first four characters of surname are uncommon then only use 4
+     * characters in lookup.  Otherwise use 6 characters, or 5 if surname is
+     * only 5 characters long
+     * use the given initial in the lookup unless 1st 4 characters of surname is
+     * quite rare
+     */
+    private void findMatchesByDemog(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        boolean useGiven = true;
+
+        if (student.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
+            student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
+            useGiven = false;
+        } else if (student.getPartialSurnameFrequency() <= VERY_FREQUENT) {
+            student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
+            student.setPartialStudentGiven(student.getGivenName().substring(0, 1));
+        } else {
+            student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
+            student.setPartialStudentGiven(student.getGivenName().substring(0, 2));
+        }
+
+        if (useGiven) {
+            lookupByDobSurnameGiven(student, session);
+            lookupByDobSurname(student, session);
+        }
+
+        //Post-match overrides
+        if (session.getNumberOfMatches() == 1 && session.getApplicationCode().equals("SLD")) {
+            oneMatchOverrides(student, session);
+        }
+
+        if (session.getNumberOfMatches() > 0 && session.getApplicationCode().equals("SLD")) {
+            changeResultFromQtoF();
+        }
+
+        appendOldF1(student, session);
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
+    //!---------------------------------------------------------------------------
+    //Complete
+    private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
+        for (StudentEntity entity : penDemogList) {
+            determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
+        }
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Determine if the match is a Pass or Fail
+    //!---------------------------------------------------------------------------
+    //Complete
+    private void determineIfMatch(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, NewPenMatchSession session) {
+        String matchCode = determineMatchCode(student, masterRecord);
+
+        //Lookup Result
+        String matchResult = lookupManager.lookupMatchResult(matchCode);
+
+        if (matchResult == null) {
+            matchResult = "F";
+        }
+
+        //Apply overrides to Questionable Match
+        if (matchResult.equals("Q") && session.getApplicationCode().equals("SLD")) {
+            matchOverrides();
+        }
+
+        //Store PEN, match code and result in table (except if Fail)
+        if (!matchResult.equals("F") && session.getNumberOfMatches() < 20) {
+            if (!masterRecord.getStatus().equals("D")) {
+                session.setNumberOfMatches(session.getNumberOfMatches() + 1);
+                session.getMatchingRecords().add(new NewPenMatchRecord(masterRecord.getPen(), matchCode, matchResult));
+            } else {
+                session.setPenStatus(PenStatus.C0.getValue());
+            }
+        }
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Read Pen master by BIRTH DATE or (SURNAME AND GIVEN NAME)
+    //!                               or (MINCODE and LOCAL ID)
+    //!---------------------------------------------------------------------------
+    private void lookupByDobSurname(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        List<StudentEntity> penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname());
+        for (StudentEntity entity : penDemogList) {
+            determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
+        }
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Override: Change result if there is one match and it meets specific
+    //! criteria for specific match codes
+    //!---------------------------------------------------------------------------
+    private void oneMatchOverrides(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        //! 1 match and matched PEN is F1 PEN from the Old PEN Match
+        NewPenMatchRecord matchRecord = session.getMatchingRecords().peek();
+        if (matchRecord.getMatchResult().equals("Q")) {
+            if (student.getOldMatchF1PEN() != null && matchRecord.getMatchingPEN().equals(student.getOldMatchF1PEN())) {
+                if (oneMatchOverrideMainCodes.contains(matchRecord.getMatchCode())) {
+                    matchRecord.setMatchResult("P");
+                }
+                if (matchRecord.getMatchCode().equals("1221111") && !session.isPSI()) {
+                    matchRecord.setMatchResult("P");
+                }
+            } else if (matchRecord.getMatchingPEN().equals(student.getPen()) && oneMatchOverrideSecondaryCodes.contains(matchRecord.getMatchCode())) {
+                //! 1 match and matched PEN is the School supplied PEN
+                matchRecord.setMatchCode("P");
+            }
+        }
     }
 
     /**
      * Initialize the student record and variables (will be refactored)
      */
+    //Complete
     private NewPenMatchSession initialize(NewPenMatchStudentDetail student) {
-        log.info(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         NewPenMatchSession session = new NewPenMatchSession();
 
         if (student.getMincode() != null && student.getMincode().length() >= 3 && student.getMincode().startsWith("102")) {
@@ -142,15 +330,16 @@ public class NewPenMatchService {
         student.setFullSurnameFrequency(fullSurnameFrequency);
         student.setPartialSurnameFrequency(partialSurnameFrequency);
 
-        log.info(" output :: NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" output :: NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
         return session;
     }
 
     /**
      * This function stores all names in an object
      */
+    //Complete
     private PenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
-        log.info(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+        log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         String surname = student.getSurname();
         String usualSurname = student.getUsualSurname();
         String given = student.getGivenName();
@@ -170,8 +359,9 @@ public class NewPenMatchService {
      * This function stores all names in an object It includes some split logic for
      * given/middle names
      */
+    //Complete
     public static PenMatchNames formatNamesFromMaster(PenMasterRecord master) {
-        log.info(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
         String surname = master.getSurname();
         String usualSurname = master.getUsualSurname();
         String given = master.getGiven();
@@ -190,8 +380,9 @@ public class NewPenMatchService {
     /**
      * Confirm that the PEN on transaction is correct.
      */
+    //Complete
     private PenConfirmationResult confirmPEN(NewPenMatchStudentDetail student, NewPenMatchSession session) {
-        log.info(" input :: NewPenMatchStudentDetail={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+        log.debug(" input :: NewPenMatchStudentDetail={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
         PenConfirmationResult result = new PenConfirmationResult();
         result.setPenConfirmationResultCode(PenConfirmationResult.NO_RESULT);
 
@@ -200,20 +391,18 @@ public class NewPenMatchService {
 
         PenMasterRecord masterRecord = lookupManager.lookupStudentByPEN(localStudentNumber);
 
-        boolean matchFound = false;
-
         String studentTrueNumber = null;
 
-        if(masterRecord.getStatus() != null && masterRecord.getStatus().equals("M")){
+        if (masterRecord != null && masterRecord.getStatus() != null && masterRecord.getStatus().equals("M")) {
             studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecord.getStudentID());
         }
 
         if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
             if (masterRecord.getStatus() != null && masterRecord.getStatus().equals("M") && studentTrueNumber != null) {
-                localStudentNumber = studentTrueNumber.trim();
+                student.setStudentTrueNumber(studentTrueNumber.trim());
                 result.setMergedPEN(studentTrueNumber.trim());
-                masterRecord = lookupManager.lookupStudentByPEN(localStudentNumber);
-                if (masterRecord != null && masterRecord.getPen().trim().equals(localStudentNumber)) {
+                masterRecord = lookupManager.lookupStudentByPEN(studentTrueNumber);
+                if (masterRecord != null && masterRecord.getPen().trim().equals(studentTrueNumber)) {
                     result.setPenConfirmationResultCode(PenConfirmationResult.PEN_ON_FILE);
                 }
             } else {
@@ -226,18 +415,18 @@ public class NewPenMatchService {
 
             String matchResult = lookupManager.lookupMatchResult(matchCode);
 
-            if(matchResult == null){
+            if (matchResult == null) {
                 matchResult = "F";
             }
 
-            if(matchResult.equals("P")){
+            if (matchResult.equals("P")) {
                 result.setPenConfirmationResultCode(PenConfirmationResult.PEN_CONFIRMED);
                 session.setNumberOfMatches(1);
                 session.getMatchingRecords().add(new NewPenMatchRecord(matchResult, matchCode, masterRecord.getPen().trim()));
             }
         }
 
-        log.info(" output :: PenConfirmationResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.debug(" output :: PenConfirmationResult={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(result), JsonUtil.getJsonPrettyStringFromObject(session));
         return result;
     }
 
@@ -246,6 +435,7 @@ public class NewPenMatchService {
      * Determine match code based on legal names, birth date and gender
      * ---------------------------------------------------------------------------
      */
+    //Complete
     private String determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
         PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
 
@@ -275,7 +465,7 @@ public class NewPenMatchService {
             // !   submitted legal surname is part of master legal surname or vice verse
             String transactionName = " " + legalSurnameHyphenToSpace + " ";
             String masterName = " " + masterLegalSurnameHyphenToSpace + " ";
-            if (checkForPartialName(transactionName, masterName)) {
+            if (PenMatchUtils.checkForPartialName(transactionName, masterName)) {
                 surnameMatchCode = "1";
             } else {
                 surnameMatchCode = "2";
@@ -313,7 +503,7 @@ public class NewPenMatchService {
         } else if (masterLegalGivenNameNoBlanks != null && masterLegalGivenNameNoBlanks.equals(legalGivenNoBlanks)) {
             // !   submitted legal given name equals master legal given name
             givenNameMatchCode = "1";
-        } else if ((legalGiven != null && legalGiven.length() >= 1 && masterLegalGivenName != null && masterLegalGivenName.length() >= 1 && legalGiven.substring(0, 1).equals(masterLegalGivenName.substring(0, 1))) && (masterLegalGivenName.length() == 1 || legalGiven.length() == 1)) {
+        } else if ((legalGiven.length() >= 1 && masterLegalGivenName != null && masterLegalGivenName.length() >= 1 && legalGiven.substring(0, 1).equals(masterLegalGivenName.substring(0, 1))) && (masterLegalGivenName.length() == 1 || legalGiven.length() == 1)) {
             // !   submitted legal given name starts with the same letter as master legal given
             // !   name and one of the names has only an initial
             givenNameMatchCode = "3";
@@ -321,7 +511,7 @@ public class NewPenMatchService {
             // !   submitted legal given name is part of master legal given name or vice verse
             String transactionName = " " + legalGivenHyphenToSpace + " ";
             String masterName = " " + masterLegalGivenNameHyphenToSpace + " ";
-            if (checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
+            if (PenMatchUtils.checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
                 givenNameMatchCode = "1";
             } else {
                 // !   submitted legal given name is a nickname of master legal given name or vice
@@ -383,7 +573,7 @@ public class NewPenMatchService {
             // !   submitted legal Middle name is part of master legal Middle name or vice verse
             String transactionName = " " + legalMiddleHyphenToSpace + " ";
             String masterName = " " + masterLegalMiddleNameHyphenToSpace + " ";
-            if (checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
+            if (PenMatchUtils.checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
                 middleNameMatchCode = "1";
             } else {
                 // !   submitted legal Middle name is a nickname of master legal Middle name or vice
@@ -430,14 +620,14 @@ public class NewPenMatchService {
         // !   submitted month matches master
         if (studentDob != null && studentDob.length() >= 6 && studentDob.substring(4, 6).equals(masterDob.substring(4, 6))) {
             monthMatchCode = "1";
-        }else{
+        } else {
             monthMatchCode = "2";
         }
 
         // !   submitted day matches master
-        if(studentDob != null && studentDob.length() >= 8 && studentDob.substring(6, 8).equals(masterDob.substring(6, 8))) {
+        if (studentDob != null && studentDob.length() >= 8 && studentDob.substring(6, 8).equals(masterDob.substring(6, 8))) {
             dayMatchCode = "1";
-        }else{
+        } else {
             dayMatchCode = "2";
         }
 
@@ -445,26 +635,26 @@ public class NewPenMatchService {
 
         //!   Override:
         //!   only submitted year didn't match master but the last 2 digits are transposed
-        if(birthdayMatchCode.equals("211")){
-            String tempDobYear = studentDob.substring(3,4) + studentDob.substring(2,3);
-            if(tempDobYear.equals(masterDob.substring(2,4))){
+        if (birthdayMatchCode.equals("211")) {
+            String tempDobYear = studentDob.substring(3, 4) + studentDob.substring(2, 3);
+            if (tempDobYear.equals(masterDob.substring(2, 4))) {
                 yearMatchCode = "1";
             }
-        }else if(birthdayMatchCode.equals("121")){
+        } else if (birthdayMatchCode.equals("121")) {
             // !   Override:
             // !   only submitted month didn't match master but the last 2 digits are transposed
-            String tempDobMonth = studentDob.substring(5,6) + studentDob.substring(4,5);
-            if(tempDobMonth.equals(masterDob.substring(4,6))){
+            String tempDobMonth = studentDob.substring(5, 6) + studentDob.substring(4, 5);
+            if (tempDobMonth.equals(masterDob.substring(4, 6))) {
                 monthMatchCode = "1";
             }
-        }else if(birthdayMatchCode.equals("112")){
+        } else if (birthdayMatchCode.equals("112")) {
             // !   Override:
             // !   only submitted day didn't match master but the last 2 digits are transposed
-            String tempDobDay = studentDob.substring(7,8) + studentDob.substring(6,7);
-            if(tempDobDay.equals(masterDob.substring(6,8))){
+            String tempDobDay = studentDob.substring(7, 8) + studentDob.substring(6, 7);
+            if (tempDobDay.equals(masterDob.substring(6, 8))) {
                 dayMatchCode = "1";
             }
-        }else if(birthdayMatchCode.equals("122") && studentDob.substring(4,6).equals(masterDob.substring(6,8)) && studentDob.substring(6,8).equals(masterDob.substring(4,6))){
+        } else if (birthdayMatchCode.equals("122") && studentDob.substring(4, 6).equals(masterDob.substring(6, 8)) && studentDob.substring(6, 8).equals(masterDob.substring(4, 6))) {
             // !   Override:
             // !   Year matched master but month and day did not and they are transposed
             monthMatchCode = "1";
@@ -481,27 +671,79 @@ public class NewPenMatchService {
         String studentSex = student.getSex();
         String masterSex = masterRecord.getSex();
 
-        if(studentSex != null && studentSex.equals(masterSex)){
+        if (studentSex != null && studentSex.equals(masterSex)) {
             genderMatchCode = "1";
-        }else{
+        } else {
             genderMatchCode = "2";
         }
 
-        String matchCode = surnameMatchCode + givenNameMatchCode + middleNameMatchCode + yearMatchCode + monthMatchCode + dayMatchCode + genderMatchCode;
+        return surnameMatchCode + givenNameMatchCode + middleNameMatchCode + yearMatchCode + monthMatchCode + dayMatchCode + genderMatchCode;
+    }
 
-        return matchCode;
+
+    //!---------------------------------------------------------------------------
+    //! Overrides that apply immediately after a Match Code is calculated.
+    //!---------------------------------------------------------------------------
+    private void matchOverrides() {
+        //TODO
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Override: Change result from Q to F for specific match codes if the
+    //! transaction meets specific criteria and drop the fails from the list (array)
+    //!---------------------------------------------------------------------------
+    private void changeResultFromQtoF() {
+        //TODO
+    }
+
+    //!---------------------------------------------------------------------------
+    //! Override: Check the list of matches for the F1 PEN from the Old PEN Match
+    //! and add it to the list if it is not already there. Replace the last match
+    //! in the list with the F1 PEN if the list is full (20 matches). Set the
+    //! result of the added match to 'Questionable'.
+    //!---------------------------------------------------------------------------
+    private void appendOldF1(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+        boolean penF1Found;
+        if(student.getOldMatchF1PEN() != null){
+            penF1Found = false;
+            if(session.getNumberOfMatches() > 0){
+                NewPenMatchRecord [] matchRecords = session.getMatchingRecords().toArray(new NewPenMatchRecord[session.getMatchingRecords().size()]);
+                for(NewPenMatchRecord record: matchRecords){
+                    if(record.getMatchingPEN().equals(student.getOldMatchF1PEN())){
+                        penF1Found = true;
+                    }
+                }
+            }
+        }
     }
 
     /**
-     * @return
+     * !---------------------------------------------------------------------------
+     * ! Determine the 'Best Match' when there are multiple matched.
+     * !
+     * ! The rules for determining the 'Best Match" are:
+     * ! Sum the 7 positions of Match Code. The 'Best Match' has the lowest value.
+     * ! If there are ties:
+     * ! The Match Code with the most ones is the 'Best Match'.
+     * ! If there are ties:
+     * ! The 'Match Code' with the most twos is the 'Best Match.
+     * ! If there are ties:
+     * ! The 'Match Code' with the most threes is the 'Best Match.
+     * ! If there are ties:
+     * ! The lowest Match Code value is the 'Best Match'.
+     * !
+     * ! The easiest way to select the 'Best Match' is to put the result of all of
+     * ! the above calculations into one comparable value. To do this we need to
+     * ! convert the number of ones, twos and threes into their inverted values by
+     * ! by subtracting each from 7 (the maximum). Now the 'Best Match' will
+     * ! have the lowest value from all of the above calculations allowing us to
+     * ! concatenate the results and select the Match Code with the lowest concatenated
+     * ! value. This allows us to loop through all found Match Codes calculating the
+     * ! concatenated value and saving it and the applicable Match Code/PEN whenever
+     * ! the concatenated value is less than the previously saved value.
+     * !---------------------------------------------------------------------------
      */
-    private boolean checkForPartialName(String transactionName, String masterName) {
-        boolean partialName = false;
-        if (transactionName.contains(masterName) || masterName.contains(transactionName)) {
-            return true;
-        }
+    private void determineBestMatch() {
 
-        return false;
     }
-
 }

@@ -19,5 +19,9 @@ public class NewPenMatchSession {
     private String penStatusMessage;
     private String pen1;
     private Integer numberOfMatches;
+    private String applicationCode;
+    private String bestMatchPEN;
+    private String bestMatchCode;
+    private boolean assignNewPEN;
     private boolean isPSI;
 }

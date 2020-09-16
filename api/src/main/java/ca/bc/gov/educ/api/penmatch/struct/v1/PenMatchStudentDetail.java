@@ -1,7 +1,5 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1;
 
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

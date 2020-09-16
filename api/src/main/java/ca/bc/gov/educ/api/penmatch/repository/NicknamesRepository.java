@@ -1,11 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.repository;
 
-import java.util.List;
-
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
+import java.util.List;
 
 @Repository
 public interface NicknamesRepository extends CrudRepository<NicknamesEntity, String> {

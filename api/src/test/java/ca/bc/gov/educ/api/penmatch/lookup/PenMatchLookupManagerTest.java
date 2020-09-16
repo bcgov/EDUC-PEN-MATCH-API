@@ -1,17 +1,17 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,15 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.persistence.EntityManager;
+import java.io.File;
+import java.util.List;
 
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

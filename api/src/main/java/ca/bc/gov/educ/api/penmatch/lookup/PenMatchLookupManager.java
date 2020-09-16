@@ -40,8 +40,8 @@ import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 @SuppressWarnings("unchecked")
 public class PenMatchLookupManager {
 
-    DateTimeFormatter DOB_FORMATTER_FROM = DateTimeFormatter.ofPattern("yyyyMMdd");
-    DateTimeFormatter DOB_FORMATTER_TO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String PARAMETERS_ATTRIBUTE = "parameters";
     public static final String CHECK_DIGIT_ERROR_CODE_000 = "000";
     public static final String CHECK_DIGIT_ERROR_CODE_001 = "001";
@@ -80,7 +80,6 @@ public class PenMatchLookupManager {
     /**
      * Local ID is not blank, lookup with all parts
      *
-     * @return
      */
     public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) {
         try {
@@ -88,9 +87,9 @@ public class PenMatchLookupManager {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_LONG.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -142,9 +141,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_LONG.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -180,11 +179,11 @@ public class PenMatchLookupManager {
             if(studentResponse.hasBody()) {
                 return studentResponse.getBody().getContent();
             }
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
 
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         }
     }
 
@@ -195,9 +194,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_LONG.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -227,11 +226,11 @@ public class PenMatchLookupManager {
             if(studentResponse.hasBody()) {
                 return studentResponse.getBody().getContent();
             }
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
 
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         }
     }
 
@@ -242,9 +241,9 @@ public class PenMatchLookupManager {
         try {
             RestTemplate restTemplate = restUtils.getRestTemplate();
 
-            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_FROM);
+            LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
 
-            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_TO.format(dobDate)).valueType(ValueType.DATE).build();
+            SearchCriteria criteriaDob = SearchCriteria.builder().key("dob").operation(FilterOperation.EQUAL).value(DOB_FORMATTER_LONG.format(dobDate)).valueType(ValueType.DATE).build();
             List<SearchCriteria> criteriaListDob = new LinkedList<>();
             criteriaListDob.add(criteriaDob);
 
@@ -271,10 +270,10 @@ public class PenMatchLookupManager {
             if(studentResponse.hasBody()) {
                 return studentResponse.getBody().getContent();
             }
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         }
     }
 
@@ -300,7 +299,7 @@ public class PenMatchLookupManager {
     /**
      * Fetches a PEN Master Record given a student number
      */
-    public String lookupStudentTruePENNumberByStudentID(UUID studentID) {
+    public String lookupStudentTruePENNumberByStudentID(String studentID) {
         if (studentID != null) {
             RestTemplate restTemplate = restUtils.getRestTemplate();
             HttpHeaders headers = new HttpHeaders();

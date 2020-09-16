@@ -2,7 +2,6 @@ package ca.bc.gov.educ.api.penmatch.struct.v1.newmatch;
 
 
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +19,6 @@ public class NewPenMatchStudentDetail extends PenMatchStudentDetail {
     private String partialStudentGiven;
     private Integer fullSurnameFrequency;
     private Integer partialSurnameFrequency;
+    private String studentTrueNumber;
+    private String oldMatchF1PEN;
 }

@@ -14,5 +14,4 @@ public class PenConfirmationResult {
 	private boolean deceased;
 	private String penConfirmationResultCode;
 	private PenMasterRecord masterRecord;
-	private String localStudentNumber;
 }
