@@ -1,12 +1,12 @@
 package ca.bc.gov.educ.api.penmatch.compare;
 
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.OldPenMatchRecord;
 
 import java.util.Comparator;
 
-public class PenMatchComparator implements Comparator<PenMatchRecord> {
+public class PenMatchComparator implements Comparator<OldPenMatchRecord> {
     @Override
-    public int compare(PenMatchRecord x, PenMatchRecord y) {
+    public int compare(OldPenMatchRecord x, OldPenMatchRecord y) {
         //This is a single result situation...no algorithm was used
         if(x.getMatchingAlgorithmResult() == null){
             return 0;

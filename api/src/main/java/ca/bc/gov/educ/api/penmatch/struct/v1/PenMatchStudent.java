@@ -12,14 +12,10 @@ public class PenMatchStudent {
 	protected String enrolledGradeCode;
 	protected String surname;
 	protected String givenName;
-	protected String givenInitial;
 	protected String middleName;
-	protected String middleInitial;
 	protected String usualSurname;
 	protected String usualGivenName;
-	protected String usualGivenInitial;
 	protected String usualMiddleName;
-	protected String usualMiddleInitial;
 	protected String mincode;
 	protected String localID;
 	protected String postal;

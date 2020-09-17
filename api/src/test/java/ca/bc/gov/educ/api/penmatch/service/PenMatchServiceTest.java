@@ -34,6 +34,9 @@ public class PenMatchServiceTest {
     private static PenMatchService service;
 
     @Autowired
+    private static NewPenMatchService newPenMatchService;
+
+    @Autowired
     NicknamesRepository nicknamesRepository;
 
     @Autowired
@@ -47,7 +50,8 @@ public class PenMatchServiceTest {
     @Before
     public void setup() throws Exception {
         if (!dataLoaded) {
-            service = new PenMatchService(lookupManager);
+            newPenMatchService = new NewPenMatchService(lookupManager);
+            service = new PenMatchService(lookupManager, newPenMatchService);
 
             final File fileNick = new File("src/test/resources/mock_nicknames.json");
             List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {

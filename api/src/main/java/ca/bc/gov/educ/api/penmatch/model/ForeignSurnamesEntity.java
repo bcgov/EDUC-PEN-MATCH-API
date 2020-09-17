@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Immutable
-@Table(name = "SURNAME_FREQUENCY")
+@Table(name = "FOREIGN_SURNAMES")
 public class ForeignSurnamesEntity {
 
     @Id

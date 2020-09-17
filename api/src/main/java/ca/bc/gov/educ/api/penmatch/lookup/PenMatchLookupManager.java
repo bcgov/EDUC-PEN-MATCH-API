@@ -433,7 +433,7 @@ public class PenMatchLookupManager {
             return matchCodesEntity.get().getMatchResult();
         }
 
-        return null;
+        return matchCode;
     }
 
 }

@@ -1,15 +1,15 @@
-package ca.bc.gov.educ.api.penmatch.struct.v1;
+package ca.bc.gov.educ.api.penmatch.struct;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class PenMatchRecord {
-	private Integer matchingAlgorithmResult;
-	private Integer matchingScore;
 	private String matchingPEN;
 	private String studentID;
 }

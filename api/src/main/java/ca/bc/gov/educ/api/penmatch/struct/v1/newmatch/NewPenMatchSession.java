@@ -14,7 +14,6 @@ public class NewPenMatchSession {
     private Integer reallyGoodMatches;
     private Integer prettyGoodMatches;
     private String reallyGoodPEN;
-    private String studentNumber;
     private String penStatus;
     private String penStatusMessage;
     private String pen1;

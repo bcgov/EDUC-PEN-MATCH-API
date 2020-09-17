@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 @Data
 @NoArgsConstructor
 public class PenMatchSession {
-	private PriorityQueue<PenMatchRecord> matchingRecords;
+	private PriorityQueue<OldPenMatchRecord> matchingRecords;
 	private PenMasterRecord prettyGoodMatchRecord;
 	private PenMasterRecord reallyGoodMasterRecord;
 	private String penStatus;
