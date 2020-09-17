@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.penmatch.lookup;
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.model.*;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
+import ca.bc.gov.educ.api.penmatch.repository.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
@@ -50,6 +51,9 @@ public class PenMatchLookupManager {
     public static final Integer VERY_RARE = 5;
 
     @Getter(AccessLevel.PRIVATE)
+    private final ForeignSurnameRepository foreignSurnameRepository;
+
+    @Getter(AccessLevel.PRIVATE)
     private final SurnameFrequencyRepository surnameFrequencyRepository;
 
     @Getter(AccessLevel.PRIVATE)
@@ -68,7 +72,8 @@ public class PenMatchLookupManager {
     private final ApplicationProperties props;
 
     @Autowired
-    public PenMatchLookupManager(final EntityManager entityManager, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final ApplicationProperties props) {
+    public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final EntityManager entityManager, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final ApplicationProperties props) {
+        this.foreignSurnameRepository = foreignSurnameRepository;
         this.nicknamesRepository = nicknamesRepository;
         this.surnameFrequencyRepository = surnameFrequencyRepository;
         this.matchCodesRepository = matchCodesRepository;
@@ -400,6 +405,21 @@ public class PenMatchLookupManager {
     }
 
     /**
+     * Lookup foreign surname
+     */
+    public boolean lookupForeignSurname(String surname, String ancestry) {
+        LocalDate curDate = LocalDate.now();
+
+        Optional<ForeignSurnamesEntity> foreignSurnamesEntities = getForeignSurnameRepository().findBySurnameAndAncestryAndEffectiveDateLessThanEqualAndExpiryDateGreaterThanEqual(surname, ancestry, curDate, curDate);
+
+        if(foreignSurnamesEntities.isPresent()){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Lookup match codes
      */
     public String lookupMatchResult(String matchCode) {
@@ -413,7 +433,7 @@ public class PenMatchLookupManager {
             return matchCodesEntity.get().getMatchResult();
         }
 
-        return null;
+        return matchCode;
     }
 
 }

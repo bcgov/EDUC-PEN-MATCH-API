@@ -14,7 +14,6 @@ public class NewPenMatchSession {
     private Integer reallyGoodMatches;
     private Integer prettyGoodMatches;
     private String reallyGoodPEN;
-    private String studentNumber;
     private String penStatus;
     private String penStatusMessage;
     private String pen1;
@@ -22,6 +21,7 @@ public class NewPenMatchSession {
     private String applicationCode;
     private String bestMatchPEN;
     private String bestMatchCode;
+    private String bestMatchValue;
     private boolean assignNewPEN;
     private boolean isPSI;
 }

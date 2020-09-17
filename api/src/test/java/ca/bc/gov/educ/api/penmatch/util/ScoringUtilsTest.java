@@ -1085,12 +1085,6 @@ public class ScoringUtilsTest {
 		student.setLocalID(null);
 		student.setSex("M");
 		student.setMincode("12345567");
-
-		student.setUsualMiddleInitial(null);
-		student.setUsualGivenInitial(null);
-
-		student.setGivenInitial(null);
-		student.setMiddleInitial(null);
 		student.setUpdateCode(null);
 
 		student.setEnrolledGradeCode(null);

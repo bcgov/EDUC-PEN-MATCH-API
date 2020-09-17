@@ -75,14 +75,6 @@ public class PenMatchUtils {
             student.setPostal(student.getPostal().trim().toUpperCase());
         }
 
-        if (student.getGivenInitial() != null) {
-            student.setGivenInitial(student.getGivenInitial().trim().toUpperCase());
-        }
-
-        if (student.getMiddleInitial() != null) {
-            student.setMiddleInitial(student.getMiddleInitial().trim().toUpperCase());
-        }
-
     }
 
     /**

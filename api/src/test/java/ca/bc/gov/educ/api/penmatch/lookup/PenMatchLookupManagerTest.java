@@ -4,6 +4,7 @@ import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
+import ca.bc.gov.educ.api.penmatch.repository.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
@@ -39,6 +40,9 @@ public class PenMatchLookupManagerTest {
     ApplicationProperties props;
 
     @Autowired
+    ForeignSurnameRepository foreignSurnameRepository;
+
+    @Autowired
     NicknamesRepository nicknamesRepository;
 
     @Autowired
@@ -66,7 +70,7 @@ public class PenMatchLookupManagerTest {
             List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
             });
             surnameFrequencyRepository.saveAll(surnameFreqEntities);
-            lookupManager = new PenMatchLookupManager(entityManager, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, props);
+            lookupManager = new PenMatchLookupManager(foreignSurnameRepository, entityManager, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, props);
             dataLoaded = true;
         }
     }
