@@ -2,10 +2,9 @@ package ca.bc.gov.educ.api.penmatch.util;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
+import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.BestMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 
 @Slf4j
 public class PenMatchUtils {
@@ -113,6 +114,28 @@ public class PenMatchUtils {
             return value.trim();
         }
         return null;
+    }
+
+    public static List<PenMatchRecord> convertBestMatchPriorityQueueToList(PriorityQueue<BestMatchRecord> queue) {
+        ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            BestMatchRecord rec = queue.poll();
+            matchRecords.add(new PenMatchRecord(rec.getMatchPEN(), rec.getStudentID()));
+        }
+
+        return matchRecords;
+    }
+
+    public static List<PenMatchRecord> convertOldMatchPriorityQueueToList(PriorityQueue<OldPenMatchRecord> queue) {
+        ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            OldPenMatchRecord rec = queue.poll();
+            matchRecords.add(new PenMatchRecord(rec.getMatchingPEN(), rec.getStudentID()));
+        }
+
+        return matchRecords;
     }
 
     /**
@@ -278,10 +301,6 @@ public class PenMatchUtils {
      * Small utility method to check for partial name
      */
     public static boolean checkForPartialName(String transactionName, String masterName) {
-        if (transactionName.contains(masterName) || masterName.contains(transactionName)) {
-            return true;
-        }
-
-        return false;
+       return (transactionName.contains(masterName) || masterName.contains(transactionName));
     }
 }
