@@ -43,6 +43,7 @@ public class PenMatchService {
      * This is the main method to match a student
      */
     public PenMatchResult matchStudent(PenMatchStudentDetail student) {
+        log.info("Started old PEN match");
         log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
         PenMatchSession session = initialize(student);
 
@@ -117,7 +118,7 @@ public class PenMatchService {
         if (session.getPenStatus().equals(PenStatus.F1.getValue())) {
             PenMatchRecord record = session.getMatchingRecords().peek();
             NewPenMatchStudentDetail newStudentDetail = new NewPenMatchStudentDetail(student, record.getMatchingPEN(), record.getStudentID());
-            log.info(" Running new PEN match algorithm with payload: {}", JsonUtil.getJsonPrettyStringFromObject(newStudentDetail));
+            log.debug(" Running new PEN match algorithm with payload: {}", JsonUtil.getJsonPrettyStringFromObject(newStudentDetail));
             return newPenMatchService.matchStudent(newStudentDetail);
         } else {
             result = new PenMatchResult(PenMatchUtils.convertOldMatchPriorityQueueToList(session.getMatchingRecords()), session.getPenStatus(), session.getPenStatusMessage());
@@ -125,6 +126,7 @@ public class PenMatchService {
 
 
         log.debug(" output :: PenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
+        log.info("Completed old PEN match");
         return result;
     }
 

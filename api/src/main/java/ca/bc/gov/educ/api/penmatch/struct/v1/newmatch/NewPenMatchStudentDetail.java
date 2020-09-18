@@ -1,12 +1,15 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1.newmatch;
 
 
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,8 +22,12 @@ public class NewPenMatchStudentDetail extends PenMatchStudent {
     private String oldMatchF1StudentID;
     private String partialStudentSurname;
     private String partialStudentGiven;
+    private Integer minSurnameSearchSize;
+    private Integer maxSurnameSearchSize;
     private Integer fullSurnameFrequency;
     private Integer partialSurnameFrequency;
+    private List<NicknamesEntity> givenNameNicknames;
+    private List<NicknamesEntity> middleNameNicknames;
 
     @Builder
     public NewPenMatchStudentDetail(PenMatchStudentDetail studentDetail, String oldMatchF1PEN, String oldMatchF1StudentID){
