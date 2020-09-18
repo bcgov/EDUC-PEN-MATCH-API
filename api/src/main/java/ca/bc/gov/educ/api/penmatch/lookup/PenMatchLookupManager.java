@@ -38,7 +38,6 @@ import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 
 @Service
 @Slf4j
-@SuppressWarnings("unchecked")
 public class PenMatchLookupManager {
 
     private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -132,10 +131,10 @@ public class PenMatchLookupManager {
             if(studentResponse.hasBody()) {
                 return studentResponse.getBody().getContent();
             }
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         } catch (JsonProcessingException e) {
             log.error("Error occurred while writing criteria as JSON: " + e.getMessage());
-            return new ArrayList<StudentEntity>();
+            return new ArrayList<>();
         }
     }
 
@@ -294,7 +293,7 @@ public class PenMatchLookupManager {
             };
             ResponseEntity<List<StudentEntity>> studentResponse = restTemplate.exchange(props.getStudentApiURL() + "?pen=" + pen, HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), type);
 
-            if (studentResponse.hasBody() && studentResponse.getBody().size() > 0) {
+            if (studentResponse.hasBody() && !studentResponse.getBody().isEmpty()) {
                 return PenMatchUtils.convertStudentEntityToPenMasterRecord(studentResponse.getBody().get(0));
             }
         }
@@ -313,7 +312,7 @@ public class PenMatchLookupManager {
             studentResponse = restTemplate.exchange(props.getStudentApiURL() + "/" + studentID + "/mergeDirection=TO", HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), StudentMergeEntity.class);
 
             if (studentResponse.hasBody()) {
-                return studentResponse.getBody().getMergeStudent().getPen();
+                return studentResponse.getBody().getMergeStudent().getPen().trim();
             }
         }
         return null;
@@ -343,12 +342,28 @@ public class PenMatchLookupManager {
      * <p>
      * Nickname 1 Nickname 2 JAMES JIM JAMES JIMMY JAMES JAIMIE
      */
+    public List<NicknamesEntity> lookupNicknamesOnly(String givenName) {
+        if (givenName == null || givenName.length() < 1) {
+            return new ArrayList<>();
+        }
+
+        String givenNameUpper = givenName.toUpperCase();
+
+        return getNicknamesRepository().findAllByNickname1OrNickname2(givenNameUpper, givenNameUpper);
+    }
+
+    /**
+     * Look up nicknames Nickname1 (by convention) is the "base" nickname. For
+     * example, we would expect the following in the nickname file:
+     * <p>
+     * Nickname 1 Nickname 2 JAMES JIM JAMES JIMMY JAMES JAIMIE
+     */
     public void lookupNicknames(PenMatchNames penMatchTransactionNames, String givenName) {
         if (givenName == null || givenName.length() < 1) {
             return;
         }
 
-        String givenNameUpper = givenName;
+        String givenNameUpper = givenName.toUpperCase();
 
         // Part 1 - Find the base nickname
         String baseNickname = null;
@@ -379,8 +394,8 @@ public class PenMatchLookupManager {
                 }
             }
         }
-
     }
+
 
     /**
      * Check frequency of surname
@@ -412,11 +427,7 @@ public class PenMatchLookupManager {
 
         Optional<ForeignSurnamesEntity> foreignSurnamesEntities = getForeignSurnameRepository().findBySurnameAndAncestryAndEffectiveDateLessThanEqualAndExpiryDateGreaterThanEqual(surname, ancestry, curDate, curDate);
 
-        if(foreignSurnamesEntities.isPresent()){
-            return true;
-        }
-
-        return false;
+        return foreignSurnamesEntities.isPresent();
     }
 
     /**

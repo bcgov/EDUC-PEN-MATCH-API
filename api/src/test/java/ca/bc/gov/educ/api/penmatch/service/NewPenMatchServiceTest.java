@@ -25,8 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,12 +52,12 @@ public class NewPenMatchServiceTest {
             service = new NewPenMatchService(lookupManager);
 
             final File fileNick = new File("src/test/resources/mock_nicknames.json");
-            List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<List<NicknamesEntity>>() {
+            List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
             });
             nicknamesRepository.saveAll(nicknameEntities);
 
             final File fileSurnameFreqs = new File("src/test/resources/mock_surname_frequency.json");
-            List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
+            List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<>() {
             });
             surnameFreqRepository.saveAll(surnameFreqEntities);
             dataLoaded = true;
@@ -69,31 +68,30 @@ public class NewPenMatchServiceTest {
     public void testChangeResultFromQtoF() {
         NewPenMatchStudentDetail student = createNewPenMatchStudentDetail();
         NewPenMatchSession session = new NewPenMatchSession();
-        session.setMatchingRecords(new PriorityQueue<>(new NewPenMatchComparator()));
-        session.getMatchingRecords().add(new NewPenMatchRecord("Q", "1241112", "12345678", "12321"));
-        session.getMatchingRecords().add(new NewPenMatchRecord("100", "1111222", "87654321","34343"));
+        session.getMatchingRecordsList().add(new NewPenMatchRecord("Q", "1241112", "12445566","1231232132313123"));
 
         service.changeResultFromQtoF(student, session);
+        assertEquals(0, session.getMatchingRecordsList().size());
     }
 
     @Test
     public void testSumOfIntMatchCodes() {
-        service.getSumOfMatchCode("1111222");
+        assertEquals(10, service.getSumOfMatchCode("1111222"));
     }
 
     @Test
     public void testOneCharTypoTrue() {
-        assertTrue(service.oneCharTypo("MARCO", "MAARCO" ));
+        assertTrue(service.oneCharTypo("MARCO", "MAARCO"));
     }
 
     @Test
     public void testOneCharTypoLengthFalse() {
-        assertFalse(service.oneCharTypo("MARCO", "MAAARCO" ));
+        assertFalse(service.oneCharTypo("MARCO", "MAAARCO"));
     }
 
     @Test
     public void testOneCharTypoFalse() {
-        assertFalse(service.oneCharTypo("MARCO", "JAMES" ));
+        assertFalse(service.oneCharTypo("MARCO", "JAMES"));
     }
 
     private NewPenMatchStudentDetail createNewPenMatchStudentDetail() {

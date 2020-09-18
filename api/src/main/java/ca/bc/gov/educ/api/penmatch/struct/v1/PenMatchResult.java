@@ -4,13 +4,13 @@ import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.PriorityQueue;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class PenMatchResult {
 
-	private PriorityQueue<? extends PenMatchRecord> matchingRecords;
+	private List<PenMatchRecord> matchingRecords;
 	private String penStatus;
 	private String penStatusMessage;
 }

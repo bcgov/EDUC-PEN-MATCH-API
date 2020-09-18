@@ -116,9 +116,11 @@ public class PenMatchService {
 
         if (session.getPenStatus().equals(PenStatus.F1.getValue())) {
             PenMatchRecord record = session.getMatchingRecords().peek();
-            return newPenMatchService.matchStudent(new NewPenMatchStudentDetail(student, record.getMatchingPEN(), record.getStudentID() ));
-        }else{
-            result = new PenMatchResult(session.getMatchingRecords(), session.getPenStatus(), session.getPenStatusMessage());
+            NewPenMatchStudentDetail newStudentDetail = new NewPenMatchStudentDetail(student, record.getMatchingPEN(), record.getStudentID());
+            log.info(" Running new PEN match algorithm with payload: {}", JsonUtil.getJsonPrettyStringFromObject(newStudentDetail));
+            return newPenMatchService.matchStudent(newStudentDetail);
+        } else {
+            result = new PenMatchResult(PenMatchUtils.convertOldMatchPriorityQueueToList(session.getMatchingRecords()), session.getPenStatus(), session.getPenStatusMessage());
         }
 
 
@@ -149,7 +151,7 @@ public class PenMatchService {
         student.setMinSurnameSearchSize(4);
         student.setMaxSurnameSearchSize(6);
 
-        int surnameSize = 0;
+        int surnameSize;
 
         if (student.getSurname() != null) {
             surnameSize = student.getSurname().length();
@@ -399,7 +401,7 @@ public class PenMatchService {
             return;
         }
 
-        if (session.getMatchingRecords().size() == 0) {
+        if (session.getMatchingRecords().isEmpty()) {
             // No matches found
             session.setPenStatus(session.getPenStatus().trim() + "0");
         } else if (session.getMatchingRecords().size() == 1) {

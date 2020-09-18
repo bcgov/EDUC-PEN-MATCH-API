@@ -20,4 +20,6 @@ public class PenMatchStudent {
 	protected String localID;
 	protected String postal;
 	protected String updateCode;
+	protected String applicationCode;
+	protected boolean assignNewPEN;
 }
