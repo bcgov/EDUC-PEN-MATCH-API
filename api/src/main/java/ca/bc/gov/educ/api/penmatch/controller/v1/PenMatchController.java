@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @EnableResourceServer
 public class PenMatchController implements PenMatchEndpoint {
@@ -25,8 +27,8 @@ public class PenMatchController implements PenMatchEndpoint {
 	}
 
 	@Override
-	public PenMatchResult matchStudent(PenMatchStudent student) {
-		return penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student));
+	public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
+    return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
 	}
 
 }
