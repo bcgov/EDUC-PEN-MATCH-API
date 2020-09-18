@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -48,6 +49,7 @@ public class PenMatchLookupManager {
     public static final Integer VERY_FREQUENT = 500;
     public static final Integer NOT_VERY_FREQUENT = 50;
     public static final Integer VERY_RARE = 5;
+    private HashMap<String, String> matchCodesMap;
 
     @Getter(AccessLevel.PRIVATE)
     private final ForeignSurnameRepository foreignSurnameRepository;
@@ -308,11 +310,12 @@ public class PenMatchLookupManager {
             RestTemplate restTemplate = restUtils.getRestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            ResponseEntity<StudentMergeEntity> studentResponse;
-            studentResponse = restTemplate.exchange(props.getStudentApiURL() + "/" + studentID + "/mergeDirection=TO", HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), StudentMergeEntity.class);
+            ParameterizedTypeReference<List<StudentMergeEntity>> type = new ParameterizedTypeReference<>() {
+            };
+            ResponseEntity<List<StudentMergeEntity>> studentResponse = restTemplate.exchange(props.getStudentApiURL() + "/" + studentID + "/merges?mergeDirection=TO", HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), type);
 
             if (studentResponse.hasBody()) {
-                return studentResponse.getBody().getMergeStudent().getPen().trim();
+                return studentResponse.getBody().get(0).getMergeStudent().getPen().trim();
             }
         }
         return null;
@@ -437,14 +440,27 @@ public class PenMatchLookupManager {
         if (matchCode == null) {
             return null;
         }
-        // Note this returns in two different places
-        Optional<MatchCodesEntity> matchCodesEntity = getMatchCodesRepository().findByMatchCode(matchCode);
 
-        if (matchCodesEntity.isPresent()) {
-            return matchCodesEntity.get().getMatchResult();
+        if(matchCodesMap == null){
+            matchCodesMap = new HashMap<>();
+            List<MatchCodesEntity> matchCodesEntities = getMatchCodesRepository().findAll();
+            for(MatchCodesEntity entity: matchCodesEntities){
+                matchCodesMap.put(entity.getMatchCode(), entity.getMatchResult());
+            }
+        }
+
+        if (matchCodesMap.containsKey(matchCode)) {
+            return matchCodesMap.get(matchCode);
         }
 
         return matchCode;
+    }
+
+    //Evict cache every 24 hours
+    @Scheduled(fixedRate = 86400000)
+    public void evictAllMatchCodesCache() {
+        log.info("Evicting match codes cache");
+        matchCodesMap = null;
     }
 
 }
