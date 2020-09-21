@@ -61,12 +61,14 @@ public class EventTaskScheduler {
    * @throws IOException          the io exception
    * @throws TimeoutException     the timeout exception
    */
-  @Scheduled(cron = "0/5 * * * * *")
+  @Scheduled(cron = "${scheduled.jobs.extract.unprocessed.events.cron}")
   @SchedulerLock(name = "EventTablePoller",
-          lockAtLeastFor = "4s", lockAtMostFor = "4s")
+          lockAtLeastFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtLeastFor}",
+      lockAtMostFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtMostFor}")
   public void pollEventTableAndPublish() throws InterruptedException, IOException, TimeoutException {
     List<PENMatchEvent> events = getPenMatchEventRepository().findByEventStatus(DB_COMMITTED.toString());
     if (!events.isEmpty()) {
+      log.info("found {} records, publishing message",events.size());
       for (var event : events) {
         try {
           if (Optional.ofNullable(event.getReplyChannel()).isPresent()) {

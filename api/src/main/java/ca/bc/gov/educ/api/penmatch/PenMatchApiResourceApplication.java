@@ -69,12 +69,12 @@ public class PenMatchApiResourceApplication {
   public Executor threadPoolTaskExecutor() {
     ThreadFactory namedThreadFactory =
         new ThreadFactoryBuilder().withNameFormat("message-subscriber-%d").get();
-    return Executors.newFixedThreadPool(20, namedThreadFactory);
+    return Executors.newFixedThreadPool(8, namedThreadFactory);
   }
   @Bean(name = "controllerExecutor")
   public Executor controllerTaskExecutor() {
     ThreadFactory namedThreadFactory =
         new ThreadFactoryBuilder().withNameFormat("controller-%d").get();
-    return Executors.newFixedThreadPool(10, namedThreadFactory);
+    return Executors.newFixedThreadPool(8, namedThreadFactory);
   }
 }
