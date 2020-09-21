@@ -1,15 +1,27 @@
 package ca.bc.gov.educ.api.penmatch.exception.errors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-
+import org.hibernate.validator.internal.engine.path.PathImpl;
+import javax.validation.ConstraintViolation;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class ApiError {
+@AllArgsConstructor
+@Data
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@SuppressWarnings("squid:S1948")
+public class ApiError implements Serializable {
 
 	private HttpStatus status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
@@ -73,6 +85,20 @@ public class ApiError {
 		globalErrors.forEach(this::addValidationError);
 	}
 
+	/**
+	 * Utility method for adding error of ConstraintViolation. Usually when
+	 * a @Validated validation fails.
+	 *
+	 * @param cv the ConstraintViolation
+	 */
+	private void addValidationError(ConstraintViolation<?> cv) {
+		this.addValidationError(cv.getRootBeanClass().getSimpleName(),
+				((PathImpl) cv.getPropertyPath()).getLeafNode().asString(), cv.getInvalidValue(), cv.getMessage());
+	}
+
+	public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
+		constraintViolations.forEach(this::addValidationError);
+	}
 
 	public HttpStatus getStatus() {
 		return status;
