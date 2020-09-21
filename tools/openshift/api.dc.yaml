@@ -138,6 +138,8 @@ objects:
       labels:
         app: "${APP_NAME}-${JOB_NAME}"
       name: "${APP_NAME}-${JOB_NAME}"
+      annotations:
+        haproxy.router.openshift.io/timeout: 2m
     spec:
       host: "${HOST_ROUTE}"
       path: ${HOST_PATH}
