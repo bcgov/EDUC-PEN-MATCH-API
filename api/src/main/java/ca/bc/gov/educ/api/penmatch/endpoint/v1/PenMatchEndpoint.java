@@ -29,7 +29,7 @@ public interface PenMatchEndpoint {
   @Transactional(readOnly = true)
   @Tag(name = "Endpoint to run pen match algorithm on the given payload.", description = "Endpoint to run pen match algorithm on the given payload.")
   @Schema(name = "PenMatchStudent", implementation = PenMatchStudent.class)
-  @Async
+  @Async("controllerExecutor")
   CompletableFuture<PenMatchResult> matchStudent(@Validated @RequestBody PenMatchStudent student);
 
 }

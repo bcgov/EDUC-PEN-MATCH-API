@@ -1,5 +1,5 @@
 package ca.bc.gov.educ.api.penmatch;
-
+import jodd.util.ThreadFactoryBuilder;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
@@ -18,6 +18,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -59,5 +63,18 @@ public class PenMatchApiResourceApplication {
   @Autowired
   public LockProvider lockProvider(final JdbcTemplate jdbcTemplate, final PlatformTransactionManager transactionManager) {
     return new JdbcTemplateLockProvider(jdbcTemplate, transactionManager, "PEN_MATCH_SHEDLOCK");
+  }
+
+  @Bean(name = "subscriberExecutor")
+  public Executor threadPoolTaskExecutor() {
+    ThreadFactory namedThreadFactory =
+        new ThreadFactoryBuilder().withNameFormat("message-subscriber-%d").get();
+    return Executors.newFixedThreadPool(20, namedThreadFactory);
+  }
+  @Bean(name = "controllerExecutor")
+  public Executor controllerTaskExecutor() {
+    ThreadFactory namedThreadFactory =
+        new ThreadFactoryBuilder().withNameFormat("controller-%d").get();
+    return Executors.newFixedThreadPool(10, namedThreadFactory);
   }
 }
