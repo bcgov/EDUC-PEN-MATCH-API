@@ -19,8 +19,6 @@ DB_USER=$(oc -o json get configmaps "${APP_NAME}"-"${envValue}"-setup-config | s
 SPLUNK_TOKEN=$(oc -o json get configmaps "${APP_NAME}"-"${envValue}"-setup-config | sed -n "s/.*\"SPLUNK_TOKEN_${APP_NAME_UPPER}\": \"\(.*\)\"/\1/p")
 NATS_CLUSTER=educ_nats_cluster
 NATS_URL="nats://nats.${COMMON_NAMESPACE}-${envValue}.svc.cluster.local:4222"
-#Run the changes we need
-oc annotate route pen-match-api-master --overwrite haproxy.router.openshift.io/timeout=2m route.route.openshift.io/pen-match-api-master annotated
 oc project $PEN_NAMESPACE-tools
 ###########################################################
 #Fetch the public key
