@@ -16,19 +16,19 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @EnableResourceServer
 public class PenMatchController implements PenMatchEndpoint {
-	@Getter(AccessLevel.PRIVATE)
-	private final PenMatchService penMatchService;
+    @Getter(AccessLevel.PRIVATE)
+    private final PenMatchService penMatchService;
 
-	private static final PenMatchStudentMapper mapper = PenMatchStudentMapper.mapper;
+    private static final PenMatchStudentMapper mapper = PenMatchStudentMapper.mapper;
 
-	@Autowired
-	public PenMatchController(final PenMatchService penMatchService) {
-		this.penMatchService = penMatchService;
-	}
+    @Autowired
+    public PenMatchController(final PenMatchService penMatchService) {
+        this.penMatchService = penMatchService;
+    }
 
-	@Override
-	public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
-    return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
-	}
+    @Override
+    public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
+        return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
+    }
 
 }
