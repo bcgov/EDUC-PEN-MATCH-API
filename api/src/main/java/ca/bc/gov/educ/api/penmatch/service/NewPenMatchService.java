@@ -88,7 +88,6 @@ public class NewPenMatchService {
     /**
      * This is the main method to match a student
      */
-    //Complete
     public PenMatchResult matchStudent(NewPenMatchStudentDetail student) {
         log.info("Started new match");
         log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
