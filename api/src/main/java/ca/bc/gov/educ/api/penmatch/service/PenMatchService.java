@@ -649,7 +649,7 @@ public class PenMatchService {
       }
 
       if (bonusPoints >= 55 || (bonusPoints >= 40 && localIDMatchResult.getLocalIDPoints() >= 20) || (bonusPoints >= 50 && surnameMatchResult.getSurnamePoints() >= 10 && birthdayPoints >= 15 && givenNameMatchResult.getGivenNamePoints() >= 15) || (bonusPoints >= 50 && birthdayPoints >= 20)
-          || (bonusPoints >= 50 && student.getLocalID() != null && student.getLocalID().startsWith("ZZZ", 1))) {
+          || (bonusPoints >= 50 && student.getLocalID() != null && student.getLocalID().startsWith("ZZZ"))) {
         matchFound = true;
         algorithmUsed = PenAlgorithm.ALG_50;
         totalPoints = bonusPoints;
