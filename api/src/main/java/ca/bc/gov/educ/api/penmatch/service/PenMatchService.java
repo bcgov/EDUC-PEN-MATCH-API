@@ -694,7 +694,7 @@ public class PenMatchService {
       log.debug(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
     stopwatch.stop();
-    log.info("Completed old PEN match :: checkForMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    log.debug("Completed old PEN match :: checkForMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
