@@ -17,9 +17,11 @@ public class PenMatchStudent {
 	@NotNull(message = "Sex Code can not be null.")
 	protected String sex;
 	protected String enrolledGradeCode;
-	@Size(max = 40)
+	@Size(max = 255)
 	@NotNull(message = "Surname can not be null.")
 	protected String surname;
+	@Size(max = 255)
+	@NotNull(message = "Given name can not be null.")
 	protected String givenName;
 	protected String middleName;
 	protected String usualSurname;
