@@ -449,7 +449,9 @@ public class PenMatchService {
         session.setPenStatus(PenStatus.F.getValue());
       } else {
         // one solid match, put in t_stud_no
-        session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getMatchingRecords().peek().getMatchingPEN(), session.getMatchingRecords().peek().getStudentID()));
+        PenMatchRecord record = session.getMatchingRecords().peek();
+        session.getMatchingRecords().clear();
+        session.getMatchingRecords().add(new OldPenMatchRecord(null, null, record.getMatchingPEN(), record.getStudentID()));
       }
       session.setPenStatus(session.getPenStatus().trim() + "1");
     } else {
