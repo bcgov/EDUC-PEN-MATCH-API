@@ -143,6 +143,7 @@ public class PenMatchService {
    * Initialize the student record and variables (will be refactored)
    */
   private PenMatchSession initialize(PenMatchStudentDetail student) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
@@ -199,6 +200,8 @@ public class PenMatchService {
     if (log.isDebugEnabled()) {
       log.debug(" output :: PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(session));
     }
+    stopwatch.stop();
+    log.info("Completed old PEN match :: initialize :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return session;
   }
 
@@ -207,6 +210,7 @@ public class PenMatchService {
    * given/middle names
    */
   private PenMatchNames storeNamesFromTransaction(PenMatchStudentDetail student) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
@@ -254,6 +258,8 @@ public class PenMatchService {
     if (log.isDebugEnabled()) {
       log.debug(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames));
     }
+    stopwatch.stop();
+    log.info("Completed old PEN match :: storeNamesFromTransaction :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return penMatchTransactionNames;
   }
 
@@ -263,6 +269,7 @@ public class PenMatchService {
    * birthday
    */
   private CheckForMatchResult simpleCheckForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master), JsonUtil.getJsonPrettyStringFromObject(session));
     }
@@ -293,6 +300,8 @@ public class PenMatchService {
     if (log.isDebugEnabled()) {
       log.debug(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
+    stopwatch.stop();
+    log.info("Completed old PEN match :: simpleCheckForMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
@@ -300,6 +309,7 @@ public class PenMatchService {
    * Confirm that the PEN on transaction is correct.
    */
   private PenConfirmationResult confirmPEN(PenMatchStudentDetail student, PenMatchSession session) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
     }
@@ -348,6 +358,8 @@ public class PenMatchService {
     if (log.isDebugEnabled()) {
       log.debug(" output :: PenConfirmationResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
+    stopwatch.stop();
+    log.info("Completed old PEN match :: confirmPEN :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
@@ -359,6 +371,7 @@ public class PenMatchService {
    * is quite rare
    */
   private void findMatchesOnPenDemog(PenMatchStudentDetail student, boolean penFoundOnMaster, PenMatchSession session, PenMasterRecord masterRecord) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} penFoundOnMaster={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), penFoundOnMaster, masterRecord);
     }
@@ -443,7 +456,8 @@ public class PenMatchService {
       // many matches, so they are all considered questionable, even if some are "solid"
       session.setPenStatus(session.getPenStatus().trim() + "M");
     }
-
+    stopwatch.stop();
+    log.info("Completed old PEN match :: findMatchesOnPenDemog :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   /**
@@ -451,6 +465,7 @@ public class PenMatchService {
    * use
    */
   private void mergeNewMatchIntoList(PenMatchStudentDetail student, PenMasterRecord masterRecord, String matchingPEN, PenMatchSession session, PenAlgorithm algorithmUsed, int totalPoints) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} matchingPEN={} PenAlgorithm={} totalPoints={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), matchingPEN, algorithmUsed, totalPoints);
     }
@@ -493,13 +508,15 @@ public class PenMatchService {
       // Add new slot in the array
       session.getMatchingRecords().add(new OldPenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN, masterRecord.getStudentID()));
     }
-
+    stopwatch.stop();
+    log.info("Completed old PEN match :: mergeNewMatchIntoList :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   /**
    * Check for Matching demographic data on Master
    */
   private CheckForMatchResult checkForMatch(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), JsonUtil.getJsonPrettyStringFromObject(master));
     }
@@ -548,10 +565,7 @@ public class PenMatchService {
     // Special search algorithm - just looks for any points in all of
     // the non-blank search fields provided
     if (student.getUpdateCode() != null && student.getUpdateCode().equals("S")) {
-      matchFound = true;
-      if (student.getSex() != null && sexPoints == 0) {
-        matchFound = false;
-      }
+      matchFound = student.getSex() == null || sexPoints != 0;
       if ((student.getSurname() != null || student.getUsualSurname() != null) && surnameMatchResult.getSurnamePoints() == 0) {
         matchFound = false;
       }
@@ -635,7 +649,7 @@ public class PenMatchService {
       }
 
       if (bonusPoints >= 55 || (bonusPoints >= 40 && localIDMatchResult.getLocalIDPoints() >= 20) || (bonusPoints >= 50 && surnameMatchResult.getSurnamePoints() >= 10 && birthdayPoints >= 15 && givenNameMatchResult.getGivenNamePoints() >= 15) || (bonusPoints >= 50 && birthdayPoints >= 20)
-          || (bonusPoints >= 50 && student.getLocalID() != null && student.getLocalID().substring(1, 4).equals("ZZZ"))) {
+          || (bonusPoints >= 50 && student.getLocalID() != null && student.getLocalID().startsWith("ZZZ"))) {
         matchFound = true;
         algorithmUsed = PenAlgorithm.ALG_50;
         totalPoints = bonusPoints;
@@ -679,6 +693,8 @@ public class PenMatchService {
     if (log.isDebugEnabled()) {
       log.debug(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
+    stopwatch.stop();
+    log.debug("Completed old PEN match :: checkForMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
@@ -695,6 +711,7 @@ public class PenMatchService {
    * Utility method for checking and merging lookups
    */
   private void performCheckForMatchAndMerge(List<StudentEntity> penDemogList, PenMatchStudentDetail student, PenMatchSession session, String localStudentNumber) {
+    var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: penDemogList={} PenMatchStudentDetail={} PenMatchSession={} localStudentNumber={}", JsonUtil.getJsonPrettyStringFromObject(penDemogList), JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), localStudentNumber);
     }
@@ -716,6 +733,8 @@ public class PenMatchService {
         }
       }
     }
+    stopwatch.stop();
+    log.info("Completed old PEN match :: performCheckForMatchAndMerge :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
 }
