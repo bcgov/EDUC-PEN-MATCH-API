@@ -17,290 +17,307 @@ import java.util.PriorityQueue;
 
 @Slf4j
 public class PenMatchUtils {
-    private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
-    private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
+  private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private PenMatchUtils() {
+  private PenMatchUtils() {
+  }
+
+  /**
+   * Utility method which sets the penMatchTransactionNames
+   */
+  public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
+    if (log.isDebugEnabled()) {
+      log.debug(" input :: PenMatchNames={} nextNickname={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), nextNickname);
+    }
+    if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
+      penMatchTransactionNames.setNickname1(nextNickname);
+    } else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
+      penMatchTransactionNames.setNickname2(nextNickname);
+    } else if (penMatchTransactionNames.getNickname3() == null || penMatchTransactionNames.getNickname3().length() < 1) {
+      penMatchTransactionNames.setNickname3(nextNickname);
+    } else if (penMatchTransactionNames.getNickname4() == null || penMatchTransactionNames.getNickname4().length() < 1) {
+      penMatchTransactionNames.setNickname4(nextNickname);
+    }
+  }
+
+  /**
+   * Utility function to uppercase all incoming student data
+   */
+  public static void upperCaseInputStudent(PenMatchStudent student) {
+    if (log.isDebugEnabled()) {
+      log.debug(" input :: PenMatchStudent={}", JsonUtil.getJsonPrettyStringFromObject(student));
+    }
+    if (student.getSurname() != null) {
+      student.setSurname(student.getSurname().trim().toUpperCase());
     }
 
-    /**
-     * Utility method which sets the penMatchTransactionNames
-     */
-    public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
-        log.debug(" input :: PenMatchNames={} nextNickname={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), nextNickname);
-        if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
-            penMatchTransactionNames.setNickname1(nextNickname);
-        } else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
-            penMatchTransactionNames.setNickname2(nextNickname);
-        } else if (penMatchTransactionNames.getNickname3() == null || penMatchTransactionNames.getNickname3().length() < 1) {
-            penMatchTransactionNames.setNickname3(nextNickname);
-        } else if (penMatchTransactionNames.getNickname4() == null || penMatchTransactionNames.getNickname4().length() < 1) {
-            penMatchTransactionNames.setNickname4(nextNickname);
-        }
+    if (student.getGivenName() != null) {
+      student.setGivenName(student.getGivenName().trim().toUpperCase());
     }
 
-    /**
-     * Utility function to uppercase all incoming student data
-     */
-    public static void upperCaseInputStudent(PenMatchStudent student) {
-        log.debug(" input :: PenMatchStudent={}", JsonUtil.getJsonPrettyStringFromObject(student));
-        if (student.getSurname() != null) {
-            student.setSurname(student.getSurname().trim().toUpperCase());
-        }
-
-        if (student.getGivenName() != null) {
-            student.setGivenName(student.getGivenName().trim().toUpperCase());
-        }
-
-        if (student.getMiddleName() != null) {
-            student.setMiddleName(student.getMiddleName().trim().toUpperCase());
-        }
-
-        if (student.getUsualSurname() != null) {
-            student.setUsualSurname(student.getUsualSurname().trim().toUpperCase());
-        }
-
-        if (student.getUsualGivenName() != null) {
-            student.setUsualGivenName(student.getUsualGivenName().trim().toUpperCase());
-        }
-
-        if (student.getUsualMiddleName() != null) {
-            student.setUsualMiddleName(student.getUsualMiddleName().trim().toUpperCase());
-        }
-
-        if (student.getSex() != null) {
-            student.setSex(student.getSex().trim().toUpperCase());
-        }
-
-        if (student.getPostal() != null) {
-            student.setPostal(student.getPostal().trim().toUpperCase());
-        }
-
+    if (student.getMiddleName() != null) {
+      student.setMiddleName(student.getMiddleName().trim().toUpperCase());
     }
 
-    /**
-     * Converts PEN Demog record to a PEN Master record
-     */
-    public static PenMasterRecord convertStudentEntityToPenMasterRecord(StudentEntity entity) {
-        log.debug(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
-        PenMasterRecord masterRecord = new PenMasterRecord();
-
-        masterRecord.setStudentID(entity.getStudentID().toString());
-        masterRecord.setPen(checkForValidValue(entity.getPen()));
-        LocalDate dobDate = LocalDate.parse(entity.getDob(), DOB_FORMATTER_LONG);
-        masterRecord.setDob(DOB_FORMATTER_SHORT.format(dobDate));
-        masterRecord.setSurname(checkForValidValue(entity.getLegalLastName()));
-        masterRecord.setGiven(checkForValidValue(entity.getLegalFirstName()));
-        masterRecord.setMiddle(checkForValidValue(entity.getLegalMiddleNames()));
-        masterRecord.setUsualSurname(checkForValidValue(entity.getUsualLastName()));
-        masterRecord.setUsualGivenName(checkForValidValue(entity.getUsualFirstName()));
-        masterRecord.setUsualMiddleName(checkForValidValue(entity.getUsualMiddleNames()));
-        masterRecord.setPostal(checkForValidValue(entity.getPostalCode()));
-        masterRecord.setSex(checkForValidValue(entity.getSexCode()));
-        masterRecord.setGrade(checkForValidValue(entity.getGradeCode()));
-        masterRecord.setStatus(checkForValidValue(entity.getStatusCode()));
-        masterRecord.setMincode(checkForValidValue(entity.getMincode()));
-        masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
-
-        log.debug(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
-        return masterRecord;
+    if (student.getUsualSurname() != null) {
+      student.setUsualSurname(student.getUsualSurname().trim().toUpperCase());
     }
 
-    /**
-     * Checks for valid string value
-     */
-    public static String checkForValidValue(String value) {
-        if (value != null && !value.trim().isEmpty()) {
-            return value.trim();
-        }
-        return null;
+    if (student.getUsualGivenName() != null) {
+      student.setUsualGivenName(student.getUsualGivenName().trim().toUpperCase());
     }
 
-    public static List<PenMatchRecord> convertBestMatchPriorityQueueToList(PriorityQueue<BestMatchRecord> queue) {
-        ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
-
-        while (!queue.isEmpty()) {
-            BestMatchRecord rec = queue.poll();
-            matchRecords.add(new PenMatchRecord(rec.getMatchPEN(), rec.getStudentID()));
-        }
-
-        return matchRecords;
+    if (student.getUsualMiddleName() != null) {
+      student.setUsualMiddleName(student.getUsualMiddleName().trim().toUpperCase());
     }
 
-    public static List<PenMatchRecord> convertOldMatchPriorityQueueToList(PriorityQueue<OldPenMatchRecord> queue) {
-        ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
-
-        while (!queue.isEmpty()) {
-            OldPenMatchRecord rec = queue.poll();
-            matchRecords.add(new PenMatchRecord(rec.getMatchingPEN(), rec.getStudentID()));
-        }
-
-        return matchRecords;
+    if (student.getSex() != null) {
+      student.setSex(student.getSex().trim().toUpperCase());
     }
 
-    /**
-     * Check that the core data is there for a pen master add
-     */
-    public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
-        log.debug(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
-        if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
-            session.setPenStatus(PenStatus.G0.getValue());
-        }
+    if (student.getPostal() != null) {
+      student.setPostal(student.getPostal().trim().toUpperCase());
     }
 
-    /**
-     * Check that the core data is there for a pen master add
-     */
-    public static void checkForCoreData(PenMatchStudent student, NewPenMatchSession session) {
-        log.debug(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
-        if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
-            session.setPenStatus(PenStatus.G0.getValue());
-        }
+  }
+
+  /**
+   * Converts PEN Demog record to a PEN Master record
+   */
+  public static PenMasterRecord convertStudentEntityToPenMasterRecord(StudentEntity entity) {
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
+    }
+    PenMasterRecord masterRecord = new PenMasterRecord();
+
+    masterRecord.setStudentID(entity.getStudentID().toString());
+    masterRecord.setPen(checkForValidValue(entity.getPen()));
+    LocalDate dobDate = LocalDate.parse(entity.getDob(), DOB_FORMATTER_LONG);
+    masterRecord.setDob(DOB_FORMATTER_SHORT.format(dobDate));
+    masterRecord.setSurname(checkForValidValue(entity.getLegalLastName()));
+    masterRecord.setGiven(checkForValidValue(entity.getLegalFirstName()));
+    masterRecord.setMiddle(checkForValidValue(entity.getLegalMiddleNames()));
+    masterRecord.setUsualSurname(checkForValidValue(entity.getUsualLastName()));
+    masterRecord.setUsualGivenName(checkForValidValue(entity.getUsualFirstName()));
+    masterRecord.setUsualMiddleName(checkForValidValue(entity.getUsualMiddleNames()));
+    masterRecord.setPostal(checkForValidValue(entity.getPostalCode()));
+    masterRecord.setSex(checkForValidValue(entity.getSexCode()));
+    masterRecord.setGrade(checkForValidValue(entity.getGradeCode()));
+    masterRecord.setStatus(checkForValidValue(entity.getStatusCode()));
+    masterRecord.setMincode(checkForValidValue(entity.getMincode()));
+    masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
+    if(log.isDebugEnabled()) {
+      log.debug(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
+    }
+    return masterRecord;
+  }
+
+  /**
+   * Checks for valid string value
+   */
+  public static String checkForValidValue(String value) {
+    if (value != null && !value.trim().isEmpty()) {
+      return value.trim();
+    }
+    return null;
+  }
+
+  public static List<PenMatchRecord> convertBestMatchPriorityQueueToList(PriorityQueue<BestMatchRecord> queue) {
+    ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
+
+    while (!queue.isEmpty()) {
+      BestMatchRecord rec = queue.poll();
+      matchRecords.add(new PenMatchRecord(rec.getMatchPEN(), rec.getStudentID()));
     }
 
-    /**
-     * Strip off leading zeros , leading blanks and trailing blanks from the
-     * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
-     */
-    public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
-        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
-        master.setAlternateLocalId("MMM");
-        if (master.getLocalId() != null) {
-            master.setAlternateLocalId(StringUtils.stripStart(master.getLocalId(), "0").replace(" ", ""));
-        }
+    return matchRecords;
+  }
+
+  public static List<PenMatchRecord> convertOldMatchPriorityQueueToList(PriorityQueue<OldPenMatchRecord> queue) {
+    ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
+
+    while (!queue.isEmpty()) {
+      OldPenMatchRecord rec = queue.poll();
+      matchRecords.add(new PenMatchRecord(rec.getMatchingPEN(), rec.getStudentID()));
     }
 
-    /**
-     * This function stores all names in an object It includes some split logic for
-     * given/middle names
-     */
-    public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
-        log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
-        String given = master.getGiven();
-        String usualGiven = master.getUsualGivenName();
+    return matchRecords;
+  }
 
-        PenMatchNames penMatchMasterNames;
-        penMatchMasterNames = new PenMatchNames();
+  /**
+   * Check that the core data is there for a pen master add
+   */
+  public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+    }
+    if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+      session.setPenStatus(PenStatus.G0.getValue());
+    }
+  }
 
-        penMatchMasterNames.setLegalGiven(storeNameIfNotNull(given));
-        penMatchMasterNames.setLegalMiddle(storeNameIfNotNull(master.getMiddle()));
-        penMatchMasterNames.setUsualGiven(storeNameIfNotNull(usualGiven));
-        penMatchMasterNames.setUsualMiddle(storeNameIfNotNull(master.getUsualMiddleName()));
+  /**
+   * Check that the core data is there for a pen master add
+   */
+  public static void checkForCoreData(PenMatchStudent student, NewPenMatchSession session) {
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
+    }
+    if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+      session.setPenStatus(PenStatus.G0.getValue());
+    }
+  }
 
-        if (given != null) {
-            int spaceIndex = StringUtils.indexOf(given, " ");
-            if (spaceIndex != -1) {
-                penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
-                penMatchMasterNames.setAlternateLegalMiddle(given.substring(spaceIndex).trim());
-            }
-            int dashIndex = StringUtils.indexOf(given, "-");
-            if (dashIndex != -1) {
-                penMatchMasterNames.setAlternateLegalGiven(given.substring(0, dashIndex));
-                penMatchMasterNames.setAlternateLegalMiddle(given.substring(dashIndex).trim());
-            }
-        }
+  /**
+   * Strip off leading zeros , leading blanks and trailing blanks from the
+   * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
+   */
+  public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+    }
+    master.setAlternateLocalId("MMM");
+    if (master.getLocalId() != null) {
+      master.setAlternateLocalId(StringUtils.stripStart(master.getLocalId(), "0").replace(" ", ""));
+    }
+  }
 
-        if (usualGiven != null) {
-            int spaceIndex = StringUtils.indexOf(usualGiven, " ");
-            if (spaceIndex != -1) {
-                penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
-                penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex).trim());
-            }
-            int dashIndex = StringUtils.indexOf(usualGiven, "-");
-            if (dashIndex != -1) {
-                penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
-                penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
-            }
-        }
-        log.debug(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
-        return penMatchMasterNames;
+  /**
+   * This function stores all names in an object It includes some split logic for
+   * given/middle names
+   */
+  public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
+    }
+    String given = master.getGiven();
+    String usualGiven = master.getUsualGivenName();
+
+    PenMatchNames penMatchMasterNames;
+    penMatchMasterNames = new PenMatchNames();
+
+    penMatchMasterNames.setLegalGiven(storeNameIfNotNull(given));
+    penMatchMasterNames.setLegalMiddle(storeNameIfNotNull(master.getMiddle()));
+    penMatchMasterNames.setUsualGiven(storeNameIfNotNull(usualGiven));
+    penMatchMasterNames.setUsualMiddle(storeNameIfNotNull(master.getUsualMiddleName()));
+
+    if (given != null) {
+      int spaceIndex = StringUtils.indexOf(given, " ");
+      if (spaceIndex != -1) {
+        penMatchMasterNames.setAlternateLegalGiven(given.substring(0, spaceIndex));
+        penMatchMasterNames.setAlternateLegalMiddle(given.substring(spaceIndex).trim());
+      }
+      int dashIndex = StringUtils.indexOf(given, "-");
+      if (dashIndex != -1) {
+        penMatchMasterNames.setAlternateLegalGiven(given.substring(0, dashIndex));
+        penMatchMasterNames.setAlternateLegalMiddle(given.substring(dashIndex).trim());
+      }
     }
 
-    /**
-     * Small utility method for storing names to keep things clean
-     */
-    private static String storeNameIfNotNull(String name) {
-        if (name != null && !name.isEmpty()) {
-            return name.trim();
-        }
-        return null;
+    if (usualGiven != null) {
+      int spaceIndex = StringUtils.indexOf(usualGiven, " ");
+      if (spaceIndex != -1) {
+        penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, spaceIndex));
+        penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(spaceIndex).trim());
+      }
+      int dashIndex = StringUtils.indexOf(usualGiven, "-");
+      if (dashIndex != -1) {
+        penMatchMasterNames.setAlternateUsualGiven(usualGiven.substring(0, dashIndex));
+        penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
+      }
+    }
+    if(log.isDebugEnabled()) {
+      log.debug(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
+    }
+    return penMatchMasterNames;
+  }
+
+  /**
+   * Small utility method for storing names to keep things clean
+   */
+  private static String storeNameIfNotNull(String name) {
+    if (name != null && !name.isEmpty()) {
+      return name.trim();
+    }
+    return null;
+  }
+
+  /**
+   * Example: the original PEN number is 746282656 1. First 8 digits are 74628265
+   * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1) 3. Extract the even digits
+   * 4,2,2,5 to get A = 4225. 4. Multiply A times 2 to get B = 8450 5. Sum the
+   * digits of B: 8 + 4 + 5 + 0 = 17 (S2) 6. 27 + 17 = 44 (S3) 7. S3 is not a
+   * multiple of 10 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) =
+   * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
+   * 50 B) Subtract S3 from this: 50 - 44 = 6
+   */
+  public static boolean penCheckDigit(String pen) {
+    log.debug(" input :: pen={}", pen);
+    if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
+      return false;
     }
 
-    /**
-     * Example: the original PEN number is 746282656 1. First 8 digits are 74628265
-     * 2. Sum the odd digits: 7 + 6 + 8 + 6 = 27 (S1) 3. Extract the even digits
-     * 4,2,2,5 to get A = 4225. 4. Multiply A times 2 to get B = 8450 5. Sum the
-     * digits of B: 8 + 4 + 5 + 0 = 17 (S2) 6. 27 + 17 = 44 (S3) 7. S3 is not a
-     * multiple of 10 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) =
-     * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
-     * 50 B) Subtract S3 from this: 50 - 44 = 6
-     */
-    public static boolean penCheckDigit(String pen) {
-        log.debug(" input :: pen={}", pen);
-        if (pen == null || pen.length() != 9 || !pen.matches("-?\\d+(\\.\\d+)?")) {
-            return false;
-        }
-
-        ArrayList<Integer> odds = new ArrayList<>();
-        ArrayList<Integer> evens = new ArrayList<>();
-        for (int i = 0; i < pen.length() - 1; i++) {
-            int number = Integer.parseInt(pen.substring(i, i + 1));
-            if (i % 2 == 0) {
-                odds.add(number);
-            } else {
-                evens.add(number);
-            }
-        }
-
-        int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
-
-        StringBuilder fullEvenStringBuilder = new StringBuilder();
-        for (int i : evens) {
-            fullEvenStringBuilder.append(i);
-        }
-
-        ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
-        String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenStringBuilder.toString()) * 2);
-        for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
-            listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
-        }
-
-        int sumEvens = listOfFullEvenValueDoubled.stream().mapToInt(Integer::intValue).sum();
-
-        int finalSum = sumEvens + sumOdds;
-
-        String penCheckDigit = pen.substring(8, 9);
-
-
-        boolean result = ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
-        log.debug(" output :: booleanResult={}", result);
-        return result;
+    ArrayList<Integer> odds = new ArrayList<>();
+    ArrayList<Integer> evens = new ArrayList<>();
+    for (int i = 0; i < pen.length() - 1; i++) {
+      int number = Integer.parseInt(pen.substring(i, i + 1));
+      if (i % 2 == 0) {
+        odds.add(number);
+      } else {
+        evens.add(number);
+      }
     }
 
-    /**
-     * Utility method which will drop spaces, dashes & apostrophes
-     */
-    public static String dropNonLetters(String name) {
-        if (name != null) {
-            return name.replace(" ", "").replace("-", "").replace("'", "");
-        }
-        return null;
+    int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
+
+    StringBuilder fullEvenStringBuilder = new StringBuilder();
+    for (int i : evens) {
+      fullEvenStringBuilder.append(i);
     }
 
-    /**
-     * Replaces hyphens with spaces
-     */
-    public static String replaceHyphensWithBlank(String name) {
-        if (name != null) {
-            return name.replace("-", " ");
-        }
-        return null;
+    ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
+    String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenStringBuilder.toString()) * 2);
+    for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
+      listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
     }
 
-    /**
-     * Small utility method to check for partial name
-     */
-    public static boolean checkForPartialName(String transactionName, String masterName) {
-       return (transactionName.contains(masterName) || masterName.contains(transactionName));
+    int sumEvens = listOfFullEvenValueDoubled.stream().mapToInt(Integer::intValue).sum();
+
+    int finalSum = sumEvens + sumOdds;
+
+    String penCheckDigit = pen.substring(8, 9);
+
+
+    boolean result = ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
+    log.debug(" output :: booleanResult={}", result);
+    return result;
+  }
+
+  /**
+   * Utility method which will drop spaces, dashes & apostrophes
+   */
+  public static String dropNonLetters(String name) {
+    if (name != null) {
+      return name.replace(" ", "").replace("-", "").replace("'", "");
     }
+    return null;
+  }
+
+  /**
+   * Replaces hyphens with spaces
+   */
+  public static String replaceHyphensWithBlank(String name) {
+    if (name != null) {
+      return name.replace("-", " ");
+    }
+    return null;
+  }
+
+  /**
+   * Small utility method to check for partial name
+   */
+  public static boolean checkForPartialName(String transactionName, String masterName) {
+    return (transactionName.contains(masterName) || masterName.contains(transactionName));
+  }
 }
