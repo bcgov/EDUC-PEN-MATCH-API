@@ -11,7 +11,7 @@ public class NewPenMatchComparator implements Comparator<BestMatchRecord> {
     if (x.getMatchValue() == null) {
       return 0;
     }
-    if (x.getMatchValue() < y.getMatchValue() || (x.getMatchPEN() != null && x.getMatchPEN().contains("?"))) {
+    if (x.getMatchValue() < y.getMatchValue()) {
       return -1;
     }
 
