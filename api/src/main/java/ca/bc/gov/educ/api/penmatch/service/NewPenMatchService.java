@@ -14,6 +14,7 @@ import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +91,6 @@ public class NewPenMatchService {
   /**
    * This is the main method to match a student
    */
-  //Complete
   public PenMatchResult matchStudent(NewPenMatchStudentDetail student) {
     var stopwatch = Stopwatch.createStarted();
     log.info("Started new match");
@@ -140,13 +140,6 @@ public class NewPenMatchService {
               } else {
                 //Single questionable match
                 session.setPenStatus(PenStatus.F1.getValue());
-//                                if (matchRecord.getMatchingPEN().equals("Old F1")) {
-//                                    session.setBestMatchPEN(null);
-//                                    session.setBestMatchCode(null);
-//                                } else {
-//                                    session.setBestMatchPEN(matchRecord.getMatchingPEN());
-//                                    session.setBestMatchCode(matchRecord.getMatchCode());
-//                                }
               }
             }
           } else if (session.getMatchingRecordsList().size() > 1) {
@@ -239,10 +232,12 @@ public class NewPenMatchService {
     log.info("Completed new PEN match :: findMatchesByDemog :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
-  //!---------------------------------------------------------------------------
-  //! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
-  //!---------------------------------------------------------------------------
-  //Complete
+
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
+   * !---------------------------------------------------------------------------
+   */
   private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
@@ -253,10 +248,12 @@ public class NewPenMatchService {
     log.info("Completed new PEN match :: lookupByDobSurnameGiven :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
-  //!---------------------------------------------------------------------------
-  //! Determine if the match is a Pass or Fail
-  //!---------------------------------------------------------------------------
-  //Complete
+
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Determine if the match is a Pass or Fail
+   * !---------------------------------------------------------------------------
+   */
   private void determineIfMatch(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
@@ -288,10 +285,12 @@ public class NewPenMatchService {
     log.info("Completed new PEN match :: determineIfMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
-  //!---------------------------------------------------------------------------
-  //! Read Pen master by BIRTH DATE or (SURNAME AND GIVEN NAME)
-  //!                               or (MINCODE and LOCAL ID)
-  //!---------------------------------------------------------------------------
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Read Pen master by BIRTH DATE or (SURNAME AND GIVEN NAME)
+   * !                               or (MINCODE and LOCAL ID)
+   * !---------------------------------------------------------------------------
+   */
   private void lookupByDobSurname(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     List<StudentEntity> penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname());
@@ -302,10 +301,12 @@ public class NewPenMatchService {
     log.info("Completed new PEN match :: lookupByDobSurname :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
-  //!---------------------------------------------------------------------------
-  //! Override: Change result if there is one match and it meets specific
-  //! criteria for specific match codes
-  //!---------------------------------------------------------------------------
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Override: Change result if there is one match and it meets specific
+   * ! criteria for specific match codes
+   * !---------------------------------------------------------------------------
+   */
   private void oneMatchOverrides(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     //! 1 match and matched PEN is F1 PEN from the Old PEN Match
@@ -330,7 +331,6 @@ public class NewPenMatchService {
   /**
    * Initialize the student record and variables (will be refactored)
    */
-  //Complete
   private NewPenMatchSession initialize(NewPenMatchStudentDetail student) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
@@ -400,10 +400,9 @@ public class NewPenMatchService {
   /**
    * This function stores all names in an object
    */
-  //Complete
   private PenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
     var stopwatch = Stopwatch.createStarted();
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
     String surname = student.getSurname();
@@ -427,7 +426,6 @@ public class NewPenMatchService {
    * This function stores all names in an object It includes some split logic for
    * given/middle names
    */
-  //Complete
   public static PenMatchNames formatNamesFromMaster(PenMasterRecord master) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
@@ -453,7 +451,6 @@ public class NewPenMatchService {
   /**
    * Confirm that the PEN on transaction is correct.
    */
-  //Complete
   private PenConfirmationResult confirmPEN(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
@@ -509,7 +506,6 @@ public class NewPenMatchService {
    * Determine match code based on legal names, birth date and gender
    * ---------------------------------------------------------------------------
    */
-  //Complete
   private String determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, boolean reOrganizedNames) {
     var stopwatch = Stopwatch.createStarted();
     PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
@@ -786,10 +782,12 @@ public class NewPenMatchService {
     return surnameMatchCode + givenNameMatchCode + middleNameMatchCode + yearMatchCode + monthMatchCode + dayMatchCode + genderMatchCode;
   }
 
-  //!---------------------------------------------------------------------------
-  //! Check to see if both submitted and master names are at least x characters
-  //! long (where x = MIN_SURNAME_COMPARE_SIZE) and different by only one character
-  //!---------------------------------------------------------------------------
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Check to see if both submitted and master names are at least x characters
+   * ! long (where x = MIN_SURNAME_COMPARE_SIZE) and different by only one character
+   * !---------------------------------------------------------------------------
+   */
   public boolean oneCharTypo(String transactionName, String masterName) {
     var stopwatch = Stopwatch.createStarted();
     int transactionNameLength = transactionName.length();
@@ -851,9 +849,11 @@ public class NewPenMatchService {
   }
 
 
-  //!---------------------------------------------------------------------------
-  //! Overrides that apply immediately after a Match Code is calculated.
-  //!---------------------------------------------------------------------------
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Overrides that apply immediately after a Match Code is calculated.
+   * !---------------------------------------------------------------------------
+   */
   private String matchOverrides(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, String matchCode, String curMatchResult) {
     var stopwatch = Stopwatch.createStarted();
     String matchResult = curMatchResult;
@@ -931,10 +931,12 @@ public class NewPenMatchService {
     return matchResult;
   }
 
-  //!---------------------------------------------------------------------------
-  //! Override: Change result from Q to F for specific match codes if the
-  //! transaction meets specific criteria and drop the fails from the list (array)
-  //!---------------------------------------------------------------------------
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Override: Change result from Q to F for specific match codes if the
+   * ! transaction meets specific criteria and drop the fails from the list (array)
+   * !---------------------------------------------------------------------------
+   */
   public void changeResultFromQtoF(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     //!   Change result from Questionable to Fail
@@ -957,12 +959,15 @@ public class NewPenMatchService {
     log.info("Completed new PEN match  :: changeResultFromQtoF :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
-  //!---------------------------------------------------------------------------
-  //! Override: Check the list of matches for the F1 PEN from the Old PEN Match
-  //! and add it to the list if it is not already there. Replace the last match
-  //! in the list with the F1 PEN if the list is full (20 matches). Set the
-  //! result of the added match to 'Questionable'.
-  //!---------------------------------------------------------------------------
+
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Override: Check the list of matches for the F1 PEN from the Old PEN Match
+   * ! and add it to the list if it is not already there. Replace the last match
+   * ! in the list with the F1 PEN if the list is full (20 matches). Set the
+   * ! result of the added match to 'Questionable'.
+   * !---------------------------------------------------------------------------
+   */
   private void appendOldF1(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
     boolean penF1Found;
@@ -1061,17 +1066,19 @@ public class NewPenMatchService {
   }
 
 
-  //!---------------------------------------------------------------------------
-  //!   Override. Combine given and middle names and re-calculate match code
-  //!   (for specific match codes)
-  //!---------------------------------------------------------------------------
-  //!   Re-calculate match code after combining legal given name and middle name
-  //!   into legal given name. If the new match code does not result in a pass then
-  //!   re-calculate the match code once again after combining legal middle name
-  //!   and given name into legal given name.
-  //!   Do this with the transaction names and if still no match , the names
-  //!   in the master. If the new match code still does not result in a pass then
-  //!   restore the original match code and result.
+  /**
+   * !---------------------------------------------------------------------------
+   * !   Override. Combine given and middle names and re-calculate match code
+   * !   (for specific match codes)
+   * !---------------------------------------------------------------------------
+   * !   Re-calculate match code after combining legal given name and middle name
+   * !   into legal given name. If the new match code does not result in a pass then
+   * !   re-calculate the match code once again after combining legal middle name
+   * !   and given name into legal given name.
+   * !   Do this with the transaction names and if still no match , the names
+   * !   in the master. If the new match code still does not result in a pass then
+   * !   restore the original match code and result.
+   */
   private NewPenMatchNameChangeResult concatenateNamesAndRecalc(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
     var stopwatch = Stopwatch.createStarted();
     String savedGiven = student.getPenMatchTransactionNames().getLegalGiven();
@@ -1123,13 +1130,15 @@ public class NewPenMatchService {
     return null;
   }
 
-  //!---------------------------------------------------------------------------
-  //!   Override. Switch given and middle names and re-calculate match code
-  //!   (for specific match codes)
-  //!---------------------------------------------------------------------------
-  //!   Re-calculate match code after switching legal middle name and given name
-  //!   in the transaction. If the new match code does not result in a pass then
-  //!   restore the original match code and result.
+  /**
+   * !---------------------------------------------------------------------------
+   * !   Override. Switch given and middle names and re-calculate match code
+   * !   (for specific match codes)
+   * !---------------------------------------------------------------------------
+   * !   Re-calculate match code after switching legal middle name and given name
+   * !   in the transaction. If the new match code does not result in a pass then
+   * !   restore the original match code and result.
+   */
   private NewPenMatchNameChangeResult switchNamesAndRecalc(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
     var stopwatch = Stopwatch.createStarted();
     String legalGiven = student.getPenMatchTransactionNames().getLegalGiven();
