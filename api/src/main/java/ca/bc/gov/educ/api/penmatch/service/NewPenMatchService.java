@@ -192,7 +192,7 @@ public class NewPenMatchService {
       log.debug(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
     stopwatch.stop();
-    log.info("Completed new PEN match in {} seconds", stopwatch.elapsed(TimeUnit.SECONDS));
+    log.info("Completed new PEN match in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
@@ -384,7 +384,9 @@ public class NewPenMatchService {
    */
   //Complete
   private PenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
-    log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+    if(log.isDebugEnabled()) {
+      log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
+    }
     String surname = student.getSurname();
     String usualSurname = student.getUsualSurname();
     String given = student.getGivenName();
