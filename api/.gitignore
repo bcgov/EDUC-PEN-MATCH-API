@@ -1,2 +1,6 @@
 /bin/
 /target/
+/.idea
+/penmatch-api.iml
+/src/main/resources/*.http
+/src/main/resources/*-local*.properties

@@ -23,13 +23,13 @@ import java.util.concurrent.CompletableFuture;
 @OpenAPIDefinition(info = @Info(title = "API for PEN Match.", description = "This API is to match students to PENs.", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"READ_PEN_MATCH"})})
 public interface PenMatchEndpoint {
 
-  @Async
   @PostMapping
   @PreAuthorize("#oauth2.hasAnyScope('READ_PEN_MATCH')")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
   @Transactional(readOnly = true)
   @Tag(name = "Endpoint to run pen match algorithm on the given payload.", description = "Endpoint to run pen match algorithm on the given payload.")
   @Schema(name = "PenMatchStudent", implementation = PenMatchStudent.class)
+  @Async("controllerExecutor")
   CompletableFuture<PenMatchResult> matchStudent(@Validated @RequestBody PenMatchStudent student);
 
 }

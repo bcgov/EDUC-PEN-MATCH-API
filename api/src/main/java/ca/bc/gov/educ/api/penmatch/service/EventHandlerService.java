@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +25,6 @@ import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.DB_COMMITTED;
 import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.MESSAGE_PUBLISHED;
 import static lombok.AccessLevel.PRIVATE;
 
-/**
- * The type Event handler service.
- */
 @Service
 @Slf4j
 public class EventHandlerService {
@@ -40,7 +37,7 @@ public class EventHandlerService {
    * The constant RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE.
    */
   public static final String RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE = "record found for the saga id and event type combination, might be a duplicate or replay, {} {}" +
-    " just updating the db status so that it will be polled and sent back again.";
+      " just updating the db status so that it will be polled and sent back again.";
   /**
    * The constant EVENT_LOG.
    */
@@ -66,44 +63,9 @@ public class EventHandlerService {
   @Getter(PRIVATE)
   private final PenMatchService penMatchService;
 
-  /**
-   * Instantiates a new Event handler service.
-   *
-   * @param penMatchEventRepository the pen match event repository
-   * @param penMatchService         the pen match service
-   */
-  @Autowired
   public EventHandlerService(PENMatchEventRepository penMatchEventRepository, PenMatchService penMatchService) {
     this.penMatchEventRepository = penMatchEventRepository;
     this.penMatchService = penMatchService;
-  }
-
-  /**
-   * Handle event.
-   *
-   * @param event the event
-   */
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handleEvent(Event event) {
-    try {
-      switch (event.getEventType()) {
-        case PEN_MATCH_EVENT_OUTBOX_PROCESSED:
-          log.info("received outbox processed event :: ");
-          log.trace(PAYLOAD_LOG + event.getEventPayload());
-          handlePenMatchEventOutboxProcessedEvent(event.getEventPayload());
-          break;
-        case PROCESS_PEN_MATCH:
-          log.info("received PROCESS_PEN_MATCH event :: ");
-          log.trace(PAYLOAD_LOG + event.getEventPayload());
-          handleProcessPenMatchEvent(event);
-          break;
-        default:
-          log.info("silently ignoring other events.");
-          break;
-      }
-    } catch (final Exception e) {
-      log.error("Exception", e);
-    }
   }
 
   /**
@@ -112,7 +74,9 @@ public class EventHandlerService {
    * @param event the event
    * @throws JsonProcessingException the json processing exception
    */
-  private void handleProcessPenMatchEvent(@NonNull Event event) throws JsonProcessingException {
+  @Async("subscriberExecutor")
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleProcessPenMatchEvent(@NonNull Event event) throws JsonProcessingException {
     var eventOptional = getPenMatchEventRepository().findBySagaIdAndEventType(event.getSagaId(), event.getEventType().toString()); //mandatory fields, should not be null.
     if (eventOptional.isEmpty()) {
       log.info(NO_RECORD_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
@@ -135,12 +99,14 @@ public class EventHandlerService {
    *
    * @param eventId the event id
    */
-  private void handlePenMatchEventOutboxProcessedEvent(String eventId) {
+  public void handlePenMatchEventOutboxProcessedEvent(String eventId) {
     val eventOptional = getPenMatchEventRepository().findById(UUID.fromString(eventId));
     if (eventOptional.isPresent()) {
       val event = eventOptional.get();
       event.setEventStatus(MESSAGE_PUBLISHED.toString());
       getPenMatchEventRepository().save(event);
+    }else {
+      log.error("Did not find anything for :: {}", eventId);
     }
   }
 
@@ -153,16 +119,16 @@ public class EventHandlerService {
    */
   private PENMatchEvent createEventRecord(Event event) {
     return PENMatchEvent.builder()
-      .createDate(LocalDateTime.now())
-      .updateDate(LocalDateTime.now())
-      .createUser(event.getEventType().toString()) //need to discuss what to put here.
-      .updateUser(event.getEventType().toString())
-      .eventPayload(event.getEventPayload())
-      .eventType(event.getEventType().toString())
-      .sagaId(event.getSagaId())
-      .eventStatus(DB_COMMITTED.toString())
-      .eventOutcome(event.getEventOutcome().toString())
-      .replyChannel(event.getReplyTo())
-      .build();
+        .createDate(LocalDateTime.now())
+        .updateDate(LocalDateTime.now())
+        .createUser(event.getEventType().toString()) //need to discuss what to put here.
+        .updateUser(event.getEventType().toString())
+        .eventPayload(event.getEventPayload())
+        .eventType(event.getEventType().toString())
+        .sagaId(event.getSagaId())
+        .eventStatus(DB_COMMITTED.toString())
+        .eventOutcome(event.getEventOutcome().toString())
+        .replyChannel(event.getReplyTo())
+        .build();
   }
 }
