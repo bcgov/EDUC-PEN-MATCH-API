@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.messaging;
 
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
-import ca.bc.gov.educ.api.penmatch.service.EventHandlerService;
+import ca.bc.gov.educ.api.penmatch.service.EventHandlerDelegatorService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import io.nats.streaming.*;
@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -34,14 +35,15 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @Slf4j
 @SuppressWarnings("java:S2142")
+@Transactional
 public class MessageSubscriber extends MessagePubSub {
 
   @Getter(PRIVATE)
-  private final EventHandlerService eventHandlerService;
+  private final EventHandlerDelegatorService eventHandlerDelegatorService;
 
   @Autowired
-  public MessageSubscriber(final ApplicationProperties applicationProperties, final EventHandlerService eventHandlerService) throws IOException, InterruptedException {
-    this.eventHandlerService = eventHandlerService;
+  public MessageSubscriber(final ApplicationProperties applicationProperties, final EventHandlerDelegatorService eventHandlerDelegatorService) throws IOException, InterruptedException {
+    this.eventHandlerDelegatorService = eventHandlerDelegatorService;
     Options options = new Options.Builder()
         .natsUrl(applicationProperties.getNatsUrl())
         .clusterId(applicationProperties.getNatsClusterId())
@@ -64,12 +66,12 @@ public class MessageSubscriber extends MessagePubSub {
         try {
           Event event = JsonUtil.getJsonObjectFromString(Event.class, messageData);
           log.info("received event for event type :: {} and saga ID :: {}", event.getEventType(), event.getSagaId());
-          getEventHandlerService().handleEvent(event);
+          getEventHandlerDelegatorService().handleEvent(event);
         } catch (final Exception ex) {
           log.error("Exception ", ex);
         }
       } else {
-        log.info("Received Message :: {}", messageData);
+        log.info("Ignoring Received Message :: {}", messageData);
       }
     }
   }
@@ -78,11 +80,11 @@ public class MessageSubscriber extends MessagePubSub {
   /**
    * This method will keep retrying for a connection.
    */
-
+  @Override
   protected int connectionLostHandler(StreamingConnection streamingConnection, Exception e) {
     int numOfRetries = 1;
     if (e != null) {
-      numOfRetries = super.connectionLostHandler(streamingConnection,e);
+      numOfRetries = super.connectionLostHandler(streamingConnection, e);
       retrySubscription(numOfRetries);
     }
     return numOfRetries;
