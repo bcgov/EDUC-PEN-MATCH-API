@@ -51,8 +51,6 @@ public class PenMatchLookupManagerTest {
     @Autowired
     SurnameFrequencyRepository surnameFrequencyRepository;
 
-    @Autowired
-    private EntityManager entityManager;
 
     private static PenMatchLookupManager lookupManager;
 
@@ -70,7 +68,7 @@ public class PenMatchLookupManagerTest {
             List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFreqs, new TypeReference<List<SurnameFrequencyEntity>>() {
             });
             surnameFrequencyRepository.saveAll(surnameFreqEntities);
-            lookupManager = new PenMatchLookupManager(foreignSurnameRepository, entityManager, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, props);
+            lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, props);
             dataLoaded = true;
         }
     }
