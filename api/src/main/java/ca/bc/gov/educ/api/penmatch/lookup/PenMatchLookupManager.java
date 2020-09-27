@@ -29,10 +29,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
@@ -49,7 +52,7 @@ public class PenMatchLookupManager {
     public static final Integer VERY_FREQUENT = 500;
     public static final Integer NOT_VERY_FREQUENT = 50;
     public static final Integer VERY_RARE = 5;
-    private HashMap<String, String> matchCodesMap;
+    private Map<String, String> matchCodesMap;
 
     @Getter(AccessLevel.PRIVATE)
     private final ForeignSurnameRepository foreignSurnameRepository;
@@ -63,22 +66,17 @@ public class PenMatchLookupManager {
     @Getter(AccessLevel.PRIVATE)
     private final MatchCodesRepository matchCodesRepository;
 
-    @Autowired
-    private final EntityManager entityManager;
 
-    @Autowired
     private final RestUtils restUtils;
 
-    @Autowired
     private final ApplicationProperties props;
 
     @Autowired
-    public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final EntityManager entityManager, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final ApplicationProperties props) {
+    public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final ApplicationProperties props) {
         this.foreignSurnameRepository = foreignSurnameRepository;
         this.nicknamesRepository = nicknamesRepository;
         this.surnameFrequencyRepository = surnameFrequencyRepository;
         this.matchCodesRepository = matchCodesRepository;
-        this.entityManager = entityManager;
         this.restUtils = restUtils;
         this.props = props;
     }
@@ -442,7 +440,7 @@ public class PenMatchLookupManager {
         }
 
         if(matchCodesMap == null){
-            matchCodesMap = new HashMap<>();
+            matchCodesMap = new ConcurrentHashMap<>();
             List<MatchCodesEntity> matchCodesEntities = getMatchCodesRepository().findAll();
             for(MatchCodesEntity entity: matchCodesEntities){
                 matchCodesMap.put(entity.getMatchCode(), entity.getMatchResult());
@@ -456,11 +454,22 @@ public class PenMatchLookupManager {
         return matchCode;
     }
 
-    //Evict cache every 24 hours
+    //Evict cache every 24 hours and reload again
     @Scheduled(fixedRate = 86400000)
     public void evictAllMatchCodesCache() {
-        log.info("Evicting match codes cache");
-        matchCodesMap = null;
+      log.info("Evicting match codes cache");
+      if (matchCodesMap != null) {
+        matchCodesMap.clear();
+      }
+      matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+      log.info("Reloaded match codes into cache. {} entries", matchCodesMap.size());
+    }
+
+    @PostConstruct
+    public void init(){
+      log.info("Load Match codes during startup.");
+      matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+      log.info("Loaded Match codes during startup. {} entries", matchCodesMap.size());
     }
 
 }
