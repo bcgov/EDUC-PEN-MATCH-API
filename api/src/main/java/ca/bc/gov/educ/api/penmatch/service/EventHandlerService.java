@@ -76,21 +76,25 @@ public class EventHandlerService {
    */
   @Async("subscriberExecutor")
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handleProcessPenMatchEvent(@NonNull Event event) throws JsonProcessingException {
-    var eventOptional = getPenMatchEventRepository().findBySagaIdAndEventType(event.getSagaId(), event.getEventType().toString()); //mandatory fields, should not be null.
-    if (eventOptional.isEmpty()) {
-      log.info(NO_RECORD_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
-      var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())));
-      event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
-      event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
-      eventOptional = Optional.of(createEventRecord(event));
-    } else {
-      log.info(RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
-      log.trace(EVENT_LOG, event);
-      var penMatchEvent = eventOptional.get();
-      penMatchEvent.setEventStatus(DB_COMMITTED.toString()); // changing the status so that it will be polled and published again.
+  public void handleProcessPenMatchEvent(@NonNull Event event) {
+    try {
+      var eventOptional = getPenMatchEventRepository().findBySagaIdAndEventType(event.getSagaId(), event.getEventType().toString()); //mandatory fields, should not be null.
+      if (eventOptional.isEmpty()) {
+        log.info(NO_RECORD_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
+        var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())));
+        event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
+        event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
+        eventOptional = Optional.of(createEventRecord(event));
+      } else {
+        log.info(RECORD_FOUND_FOR_SAGA_ID_EVENT_TYPE, event.getSagaId(), event.getEventType());
+        log.trace(EVENT_LOG, event);
+        var penMatchEvent = eventOptional.get();
+        penMatchEvent.setEventStatus(DB_COMMITTED.toString()); // changing the status so that it will be polled and published again.
+      }
+      getPenMatchEventRepository().save(eventOptional.get());
+    } catch (final JsonProcessingException jsonProcessingException) {
+      log.error("JSON processing exception for :: {} , {}", event.getSagaId(), jsonProcessingException);
     }
-    getPenMatchEventRepository().save(eventOptional.get());
   }
 
 
@@ -105,7 +109,7 @@ public class EventHandlerService {
       val event = eventOptional.get();
       event.setEventStatus(MESSAGE_PUBLISHED.toString());
       getPenMatchEventRepository().save(event);
-    }else {
+    } else {
       log.error("Did not find anything for :: {}", eventId);
     }
   }
