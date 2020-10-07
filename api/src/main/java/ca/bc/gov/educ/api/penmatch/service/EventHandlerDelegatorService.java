@@ -4,10 +4,7 @@ import ca.bc.gov.educ.api.penmatch.struct.Event;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The type Event handler service.
@@ -39,7 +36,7 @@ public class EventHandlerDelegatorService {
           getEventHandlerService().handlePenMatchEventOutboxProcessedEvent(event.getEventPayload());
           break;
         case PROCESS_PEN_MATCH:
-          log.info("received PROCESS_PEN_MATCH event :: ");
+          log.info("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
           log.trace(PAYLOAD_LOG + event.getEventPayload());
           getEventHandlerService().handleProcessPenMatchEvent(event);
           break;

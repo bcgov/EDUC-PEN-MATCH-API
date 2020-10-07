@@ -25,6 +25,9 @@ import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.DB_COMMITTED;
 import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.MESSAGE_PUBLISHED;
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * The type Event handler service.
+ */
 @Service
 @Slf4j
 public class EventHandlerService {
@@ -63,6 +66,12 @@ public class EventHandlerService {
   @Getter(PRIVATE)
   private final PenMatchService penMatchService;
 
+  /**
+   * Instantiates a new Event handler service.
+   *
+   * @param penMatchEventRepository the pen match event repository
+   * @param penMatchService         the pen match service
+   */
   public EventHandlerService(PENMatchEventRepository penMatchEventRepository, PenMatchService penMatchService) {
     this.penMatchEventRepository = penMatchEventRepository;
     this.penMatchService = penMatchService;
@@ -72,7 +81,6 @@ public class EventHandlerService {
    * Handle process pen match event.
    *
    * @param event the event
-   * @throws JsonProcessingException the json processing exception
    */
   @Async("subscriberExecutor")
   @Transactional(propagation = Propagation.REQUIRES_NEW)
