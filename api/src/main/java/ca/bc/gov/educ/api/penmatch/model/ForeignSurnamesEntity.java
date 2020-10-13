@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+/**
+ * The type Foreign surnames entity.
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,28 +20,52 @@ import java.time.LocalDateTime;
 @Table(name = "FOREIGN_SURNAMES")
 public class ForeignSurnamesEntity {
 
-    @Id
-    @Column(name = "SURNAME")
-    private String surname;
+  /**
+   * The Surname.
+   */
+  @Id
+  @Column(name = "SURNAME")
+  private String surname;
 
-    @Column(name = "ANCESTRY")
-    private String ancestry;
+  /**
+   * The Ancestry.
+   */
+  @Column(name = "ANCESTRY")
+  private String ancestry;
 
-    @Column(name = "CREATE_DATE")
-    private LocalDateTime createDate;
+  /**
+   * The Create date.
+   */
+  @Column(name = "CREATE_DATE")
+  private LocalDateTime createDate;
 
-    @Column(name = "EFFECTIVE_DATE")
-    private LocalDateTime effectiveDate;
+  /**
+   * The Effective date.
+   */
+  @Column(name = "EFFECTIVE_DATE")
+  private LocalDateTime effectiveDate;
 
-    @Column(name = "EXPIRY_DATE")
-    private LocalDateTime expiryDate;
+  /**
+   * The Expiry date.
+   */
+  @Column(name = "EXPIRY_DATE")
+  private LocalDateTime expiryDate;
 
-    @Column(name = "CREATE_USER_NAME")
-    private String createUserName;
+  /**
+   * The Create user name.
+   */
+  @Column(name = "CREATE_USER_NAME")
+  private String createUserName;
 
-    @Column(name = "UPDATE_DATE")
-    private LocalDateTime updateDate;
+  /**
+   * The Update date.
+   */
+  @Column(name = "UPDATE_DATE")
+  private LocalDateTime updateDate;
 
-    @Column(name = "UPDATE_USER_NAME")
-    private String updateUserName;
+  /**
+   * The Update user name.
+   */
+  @Column(name = "UPDATE_USER_NAME")
+  private String updateUserName;
 }

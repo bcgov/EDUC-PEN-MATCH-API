@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -67,7 +69,7 @@ public class PenMatchUtilsTest {
 		student.setSurname(null);
 		PenMatchUtils.checkForCoreData(student, session);
 
-		assertTrue(session.getPenStatus().equals(PenStatus.G0.getValue()));
+    assertEquals(session.getPenStatus(), PenStatus.G0.getValue());
 	}
 
 	@Test
@@ -75,7 +77,7 @@ public class PenMatchUtilsTest {
 		PenMasterRecord master = new PenMasterRecord();
 		PenMatchUtils.normalizeLocalIDsFromMaster(master);
 
-		assertTrue(master.getAlternateLocalId().equals("MMM"));
+    assertEquals("MMM", master.getAlternateLocalId());
 	}
 
 	@Test
@@ -84,7 +86,7 @@ public class PenMatchUtilsTest {
 		master.setLocalId("123456");
 		PenMatchUtils.normalizeLocalIDsFromMaster(master);
 
-		assertTrue(master.getAlternateLocalId().equals(master.getLocalId()));
+    assertEquals(master.getAlternateLocalId(), master.getLocalId());
 	}
 
 	@Test
@@ -125,7 +127,7 @@ public class PenMatchUtilsTest {
 
 		StudentEntity entity = new StudentEntity();
 		entity.setPen("123456789");
-		entity.setDob("19800115");
+		entity.setDob("1980-01-15");
 		entity.setLegalLastName("JACKSON");
 		entity.setLegalFirstName("PETER");
 		entity.setLegalMiddleNames("AXLE");
@@ -137,6 +139,7 @@ public class PenMatchUtilsTest {
 		entity.setStatusCode("B0");
 		entity.setMincode("12345678");
 		entity.setLocalID("9876575");
+		entity.setStudentID(UUID.randomUUID());
 
 		PenMasterRecord masterRecord = PenMatchUtils.convertStudentEntityToPenMasterRecord(entity);
 		assertNotNull(masterRecord.getPen());

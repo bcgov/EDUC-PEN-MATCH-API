@@ -3,32 +3,107 @@ package ca.bc.gov.educ.api.penmatch.struct.v1;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Pen master record.
+ */
 @Data
 @NoArgsConstructor
 public class PenMasterRecord {
-	private String studentID;
-	private String archiveFlag;
-	private String pen;
-	private String surname;
-	private String given;
-	private String middle;
-	private String usualSurname;
-	private String usualGivenName;
-	private String usualMiddleName;
-	private String provinceCode;
-	private String countryCode;
-	private String postal;
-	private String dob;
-	private String sex;
-	private String grade;
-	private String citizenship;
-	private String status;
-	private String homeLanguage;
-	private String aboriginalIndicator;
-	private String bandCode;
-	private String mergedFromPEN;
-	private String mincode;
-	private String localId;
+  /**
+   * The Student id.
+   */
+  private String studentID;
+  /**
+   * The Archive flag.
+   */
+  private String archiveFlag;
+  /**
+   * The Pen.
+   */
+  private String pen;
+  /**
+   * The Surname.
+   */
+  private String surname;
+  /**
+   * The Given.
+   */
+  private String given;
+  /**
+   * The Middle.
+   */
+  private String middle;
+  /**
+   * The Usual surname.
+   */
+  private String usualSurname;
+  /**
+   * The Usual given name.
+   */
+  private String usualGivenName;
+  /**
+   * The Usual middle name.
+   */
+  private String usualMiddleName;
+  /**
+   * The Province code.
+   */
+  private String provinceCode;
+  /**
+   * The Country code.
+   */
+  private String countryCode;
+  /**
+   * The Postal.
+   */
+  private String postal;
+  /**
+   * The Dob.
+   */
+  private String dob;
+  /**
+   * The Sex.
+   */
+  private String sex;
+  /**
+   * The Grade.
+   */
+  private String grade;
+  /**
+   * The Citizenship.
+   */
+  private String citizenship;
+  /**
+   * The Status.
+   */
+  private String status;
+  /**
+   * The Home language.
+   */
+  private String homeLanguage;
+  /**
+   * The Aboriginal indicator.
+   */
+  private String aboriginalIndicator;
+  /**
+   * The Band code.
+   */
+  private String bandCode;
+  /**
+   * The Merged from pen.
+   */
+  private String mergedFromPEN;
+  /**
+   * The Mincode.
+   */
+  private String mincode;
+  /**
+   * The Local id.
+   */
+  private String localId;
 
-	private String alternateLocalId;
+  /**
+   * The Alternate local id.
+   */
+  private String alternateLocalId;
 }

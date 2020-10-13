@@ -7,13 +7,31 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * The type New pen match session.
+ */
 @Data
 @NoArgsConstructor
 public class NewPenMatchSession {
 
-    private List<NewPenMatchRecord> matchingRecordsList;
-    private PriorityQueue<BestMatchRecord> matchingRecordsQueue;
-    private String penStatus;
-    private String penStatusMessage;
-    private boolean isPSI;
+  /**
+   * The Matching records list.
+   */
+  private List<NewPenMatchRecord> matchingRecordsList;
+  /**
+   * The Matching records queue.
+   */
+  private PriorityQueue<BestMatchRecord> matchingRecordsQueue;
+  /**
+   * The Pen status.
+   */
+  private String penStatus;
+  /**
+   * The Pen status message.
+   */
+  private String penStatusMessage;
+  /**
+   * The Is psi.
+   */
+  private boolean isPSI;
 }

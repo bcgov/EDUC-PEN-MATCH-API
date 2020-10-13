@@ -15,16 +15,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * The type Pen match utils.
+ */
 @Slf4j
 public class PenMatchUtils {
+  /**
+   * The constant DOB_FORMATTER_SHORT.
+   */
   private static final DateTimeFormatter DOB_FORMATTER_SHORT = DateTimeFormatter.ofPattern("yyyyMMdd");
+  /**
+   * The constant DOB_FORMATTER_LONG.
+   */
   private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+  /**
+   * Instantiates a new Pen match utils.
+   */
   private PenMatchUtils() {
   }
 
   /**
    * Utility method which sets the penMatchTransactionNames
+   *
+   * @param penMatchTransactionNames the pen match transaction names
+   * @param nextNickname             the next nickname
    */
   public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
     if (log.isDebugEnabled()) {
@@ -43,50 +58,41 @@ public class PenMatchUtils {
 
   /**
    * Utility function to uppercase all incoming student data
+   *
+   * @param student the student
    */
   public static void upperCaseInputStudent(PenMatchStudent student) {
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudent={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
-    if (student.getSurname() != null) {
-      student.setSurname(student.getSurname().trim().toUpperCase());
-    }
+    student.setSurname(nullSafeTrimUpperCase(student.getSurname()));
+    student.setGivenName(nullSafeTrimUpperCase(student.getGivenName()));
+    student.setMiddleName(nullSafeTrimUpperCase(student.getMiddleName()));
+    student.setUsualSurname(nullSafeTrimUpperCase(student.getUsualSurname()));
+    student.setUsualGivenName(nullSafeTrimUpperCase(student.getUsualGivenName()));
+    student.setUsualMiddleName(nullSafeTrimUpperCase(student.getUsualMiddleName()));
+    student.setSex(nullSafeTrimUpperCase(student.getSex()));
+    student.setPostal(nullSafeTrimUpperCase(student.getPostal()));
+  }
 
-    if (student.getGivenName() != null) {
-      student.setGivenName(student.getGivenName().trim().toUpperCase());
-    }
-
-    if (student.getMiddleName() != null) {
-      student.setMiddleName(student.getMiddleName().trim().toUpperCase());
-    }
-
-    if (student.getUsualSurname() != null) {
-      student.setUsualSurname(student.getUsualSurname().trim().toUpperCase());
-    }
-
-    if (student.getUsualGivenName() != null) {
-      student.setUsualGivenName(student.getUsualGivenName().trim().toUpperCase());
-    }
-
-    if (student.getUsualMiddleName() != null) {
-      student.setUsualMiddleName(student.getUsualMiddleName().trim().toUpperCase());
-    }
-
-    if (student.getSex() != null) {
-      student.setSex(student.getSex().trim().toUpperCase());
-    }
-
-    if (student.getPostal() != null) {
-      student.setPostal(student.getPostal().trim().toUpperCase());
-    }
-
+  /**
+   * Null safe trim upper case string.
+   *
+   * @param fieldValue the field value
+   * @return the string
+   */
+  private static String nullSafeTrimUpperCase(String fieldValue) {
+    return StringUtils.upperCase(StringUtils.trim(fieldValue));
   }
 
   /**
    * Converts PEN Demog record to a PEN Master record
+   *
+   * @param entity the entity
+   * @return the pen master record
    */
   public static PenMasterRecord convertStudentEntityToPenMasterRecord(StudentEntity entity) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
     }
     PenMasterRecord masterRecord = new PenMasterRecord();
@@ -107,7 +113,7 @@ public class PenMatchUtils {
     masterRecord.setStatus(checkForValidValue(entity.getStatusCode()));
     masterRecord.setMincode(checkForValidValue(entity.getMincode()));
     masterRecord.setLocalId(checkForValidValue(entity.getLocalID()));
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" output :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(masterRecord));
     }
     return masterRecord;
@@ -115,6 +121,9 @@ public class PenMatchUtils {
 
   /**
    * Checks for valid string value
+   *
+   * @param value the value
+   * @return the string
    */
   public static String checkForValidValue(String value) {
     if (value != null && !value.trim().isEmpty()) {
@@ -123,6 +132,12 @@ public class PenMatchUtils {
     return null;
   }
 
+  /**
+   * Convert best match priority queue to list list.
+   *
+   * @param queue the queue
+   * @return the list
+   */
   public static List<PenMatchRecord> convertBestMatchPriorityQueueToList(PriorityQueue<BestMatchRecord> queue) {
     ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
 
@@ -134,6 +149,12 @@ public class PenMatchUtils {
     return matchRecords;
   }
 
+  /**
+   * Convert old match priority queue to list list.
+   *
+   * @param queue the queue
+   * @return the list
+   */
   public static List<PenMatchRecord> convertOldMatchPriorityQueueToList(PriorityQueue<OldPenMatchRecord> queue) {
     ArrayList<PenMatchRecord> matchRecords = new ArrayList<>();
 
@@ -147,9 +168,12 @@ public class PenMatchUtils {
 
   /**
    * Check that the core data is there for a pen master add
+   *
+   * @param student the student
+   * @param session the session
    */
   public static void checkForCoreData(PenMatchStudent student, PenMatchSession session) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudent={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
     }
     if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
@@ -159,9 +183,12 @@ public class PenMatchUtils {
 
   /**
    * Check that the core data is there for a pen master add
+   *
+   * @param student the student
+   * @param session the session
    */
   public static void checkForCoreData(PenMatchStudent student, NewPenMatchSession session) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudent={} NewPenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session));
     }
     if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
@@ -172,9 +199,11 @@ public class PenMatchUtils {
   /**
    * Strip off leading zeros , leading blanks and trailing blanks from the
    * PEN_MASTER stud_local_id. Put result in MAST_PEN_ALT_LOCAL_ID
+   *
+   * @param master the master
    */
   public static void normalizeLocalIDsFromMaster(PenMasterRecord master) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
     }
     master.setAlternateLocalId("MMM");
@@ -186,9 +215,12 @@ public class PenMatchUtils {
   /**
    * This function stores all names in an object It includes some split logic for
    * given/middle names
+   *
+   * @param master the master
+   * @return the pen match names
    */
   public static PenMatchNames storeNamesFromMaster(PenMasterRecord master) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
     }
     String given = master.getGiven();
@@ -227,7 +259,7 @@ public class PenMatchUtils {
         penMatchMasterNames.setAlternateUsualMiddle(usualGiven.substring(dashIndex).trim());
       }
     }
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       log.debug(" output :: PenMatchNames={}", JsonUtil.getJsonPrettyStringFromObject(penMatchMasterNames));
     }
     return penMatchMasterNames;
@@ -235,6 +267,9 @@ public class PenMatchUtils {
 
   /**
    * Small utility method for storing names to keep things clean
+   *
+   * @param name the name
+   * @return the string
    */
   private static String storeNameIfNotNull(String name) {
     if (name != null && !name.isEmpty()) {
@@ -251,6 +286,9 @@ public class PenMatchUtils {
    * multiple of 10 8. Calculate check-digit as 10 - MOD(S3,10): 10 - MOD(44,10) =
    * 10 - 4 = 6 A) Alternatively, round up S3 to next multiple of 10: 44 becomes
    * 50 B) Subtract S3 from this: 50 - 44 = 6
+   *
+   * @param pen the pen
+   * @return the boolean
    */
   public static boolean penCheckDigit(String pen) {
     log.debug(" input :: pen={}", pen);
@@ -296,26 +334,30 @@ public class PenMatchUtils {
 
   /**
    * Utility method which will drop spaces, dashes & apostrophes
+   *
+   * @param name the name
+   * @return the string
    */
   public static String dropNonLetters(String name) {
-    if (name != null) {
-      return name.replace(" ", "").replace("-", "").replace("'", "");
-    }
-    return null;
+    return StringUtils.replaceEach(name, new String[]{" ", "-", "'"}, new String[]{"", "", ""});
   }
 
   /**
    * Replaces hyphens with spaces
+   *
+   * @param name the name
+   * @return the string
    */
   public static String replaceHyphensWithBlank(String name) {
-    if (name != null) {
-      return name.replace("-", " ");
-    }
-    return null;
+    return StringUtils.replace(name, "-", " ");
   }
 
   /**
    * Small utility method to check for partial name
+   *
+   * @param transactionName the transaction name
+   * @param masterName      the master name
+   * @return the boolean
    */
   public static boolean checkForPartialName(String transactionName, String masterName) {
     return (transactionName.contains(masterName) || masterName.contains(transactionName));

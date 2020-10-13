@@ -7,6 +7,9 @@ import org.hibernate.annotations.Immutable;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * The type Nicknames entity.
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,12 +18,21 @@ import java.io.Serializable;
 @IdClass(NicknamesEntity.class)
 public class NicknamesEntity implements Serializable {
 
-	private static final long serialVersionUID = -8918085130403633012L;
-	@Id
-	@Column(name = "NICKNAME1")
-	private String nickname1;
-	@Id
-	@Column(name = "NICKNAME2")
-	private String nickname2;
+  /**
+   * The constant serialVersionUID.
+   */
+  private static final long serialVersionUID = -8918085130403633012L;
+  /**
+   * The Nickname 1.
+   */
+  @Id
+  @Column(name = "NICKNAME1")
+  private String nickname1;
+  /**
+   * The Nickname 2.
+   */
+  @Id
+  @Column(name = "NICKNAME2")
+  private String nickname2;
 
 }

@@ -4,6 +4,9 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.BestMatchRecord;
 
 import java.util.Comparator;
 
+/**
+ * The type New pen match comparator.
+ */
 public class NewPenMatchComparator implements Comparator<BestMatchRecord> {
   @Override
   public int compare(BestMatchRecord x, BestMatchRecord y) {

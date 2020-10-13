@@ -3,21 +3,66 @@ package ca.bc.gov.educ.api.penmatch.struct.v1;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Pen match names.
+ */
 @Data
 @NoArgsConstructor
 public class PenMatchNames {
-	private String legalGiven;
-	private String usualGiven;
-	private String alternateLegalGiven;
-	private String alternateUsualGiven;
-	private String legalMiddle;
-	private String usualMiddle;
-	private String alternateLegalMiddle;
-	private String alternateUsualMiddle;
-	private String nickname1;
-	private String nickname2;
-	private String nickname3;
-	private String nickname4;
-	private String legalSurname;
-	private String usualSurname;
+  /**
+   * The Legal given.
+   */
+  private String legalGiven;
+  /**
+   * The Usual given.
+   */
+  private String usualGiven;
+  /**
+   * The Alternate legal given.
+   */
+  private String alternateLegalGiven;
+  /**
+   * The Alternate usual given.
+   */
+  private String alternateUsualGiven;
+  /**
+   * The Legal middle.
+   */
+  private String legalMiddle;
+  /**
+   * The Usual middle.
+   */
+  private String usualMiddle;
+  /**
+   * The Alternate legal middle.
+   */
+  private String alternateLegalMiddle;
+  /**
+   * The Alternate usual middle.
+   */
+  private String alternateUsualMiddle;
+  /**
+   * The Nickname 1.
+   */
+  private String nickname1;
+  /**
+   * The Nickname 2.
+   */
+  private String nickname2;
+  /**
+   * The Nickname 3.
+   */
+  private String nickname3;
+  /**
+   * The Nickname 4.
+   */
+  private String nickname4;
+  /**
+   * The Legal surname.
+   */
+  private String legalSurname;
+  /**
+   * The Usual surname.
+   */
+  private String usualSurname;
 }

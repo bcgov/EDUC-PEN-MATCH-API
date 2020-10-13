@@ -12,23 +12,42 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * The type Message publisher.
+ */
 @Component
 @Slf4j
 @SuppressWarnings("java:S2142")
 public class MessagePublisher extends MessagePubSub {
 
 
+  /**
+   * Instantiates a new Message publisher.
+   *
+   * @param applicationProperties the application properties
+   * @throws IOException          the io exception
+   * @throws InterruptedException the interrupted exception
+   */
   @Autowired
   public MessagePublisher(final ApplicationProperties applicationProperties) throws IOException, InterruptedException {
     Options options = new Options.Builder()
-            .natsUrl(applicationProperties.getNatsUrl())
-            .clusterId(applicationProperties.getNatsClusterId())
-            .connectionLostHandler(this::connectionLostHandler)
-            .clientId("pen-match-api-publisher-" + UUID.randomUUID().toString()).build();
+        .natsUrl(applicationProperties.getNatsUrl())
+        .clusterId(applicationProperties.getNatsClusterId())
+        .connectionLostHandler(this::connectionLostHandler)
+        .clientId("pen-match-api-publisher-" + UUID.randomUUID().toString()).build();
     connectionFactory = new StreamingConnectionFactory(options);
     connection = connectionFactory.createConnection();
   }
 
+  /**
+   * Dispatch message.
+   *
+   * @param subject the subject
+   * @param message the message
+   * @throws InterruptedException the interrupted exception
+   * @throws TimeoutException     the timeout exception
+   * @throws IOException          the io exception
+   */
   public void dispatchMessage(String subject, byte[] message) throws InterruptedException, TimeoutException, IOException {
     try {
       AckHandler ackHandler = getAckHandler();
@@ -49,12 +68,18 @@ public class MessagePublisher extends MessagePubSub {
   }
 
 
+  /**
+   * Gets ack handler.
+   *
+   * @return the ack handler
+   */
   private AckHandler getAckHandler() {
     return new AckHandler() {
       @Override
       public void onAck(String guid, Exception err) {
         log.trace("already handled.");
       }
+
       @Override
       public void onAck(String guid, String subject, byte[] data, Exception ex) {
         if (ex != null) {
@@ -72,6 +97,15 @@ public class MessagePublisher extends MessagePubSub {
     };
   }
 
+  /**
+   * Retry publish.
+   *
+   * @param subject the subject
+   * @param message the message
+   * @throws InterruptedException the interrupted exception
+   * @throws TimeoutException     the timeout exception
+   * @throws IOException          the io exception
+   */
   public void retryPublish(String subject, byte[] message) throws InterruptedException, TimeoutException, IOException {
     log.trace("retrying...");
     this.dispatchMessage(subject, message);

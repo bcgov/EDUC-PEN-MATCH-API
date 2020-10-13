@@ -2,7 +2,7 @@ package ca.bc.gov.educ.api.penmatch.controller.v1;
 
 import ca.bc.gov.educ.api.penmatch.endpoint.v1.PenMatchEndpoint;
 import ca.bc.gov.educ.api.penmatch.mappers.PenMatchStudentMapper;
-import ca.bc.gov.educ.api.penmatch.service.PenMatchService;
+import ca.bc.gov.educ.api.penmatch.service.match.PenMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import lombok.AccessLevel;
@@ -13,22 +13,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The type Pen match controller.
+ */
 @RestController
 @EnableResourceServer
 public class PenMatchController implements PenMatchEndpoint {
-    @Getter(AccessLevel.PRIVATE)
-    private final PenMatchService penMatchService;
+  /**
+   * The constant mapper.
+   */
+  private static final PenMatchStudentMapper mapper = PenMatchStudentMapper.mapper;
+  /**
+   * The Pen match service.
+   */
+  @Getter(AccessLevel.PRIVATE)
+  private final PenMatchService penMatchService;
 
-    private static final PenMatchStudentMapper mapper = PenMatchStudentMapper.mapper;
+  /**
+   * Instantiates a new Pen match controller.
+   *
+   * @param penMatchService the pen match service
+   */
+  @Autowired
+  public PenMatchController(final PenMatchService penMatchService) {
+    this.penMatchService = penMatchService;
+  }
 
-    @Autowired
-    public PenMatchController(final PenMatchService penMatchService) {
-        this.penMatchService = penMatchService;
-    }
-
-    @Override
-    public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
-        return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
-    }
+  @Override
+  public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
+    return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
+  }
 
 }

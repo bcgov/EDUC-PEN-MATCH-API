@@ -11,45 +11,90 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * The type New pen match student detail.
+ */
 @Data
 @NoArgsConstructor
 public class NewPenMatchStudentDetail extends PenMatchStudent {
 
-    //These are updated by the match algorithm
-    private PenMatchNames penMatchTransactionNames;
-    private String studentTrueNumber;
-    private String oldMatchF1PEN;
-    private String oldMatchF1StudentID;
-    private String partialStudentSurname;
-    private String partialStudentGiven;
-    private Integer minSurnameSearchSize;
-    private Integer maxSurnameSearchSize;
-    private Integer fullSurnameFrequency;
-    private Integer partialSurnameFrequency;
-    private List<NicknamesEntity> givenNameNicknames;
-    private List<NicknamesEntity> middleNameNicknames;
+  /**
+   * The Pen match transaction names.
+   */
+//These are updated by the match algorithm
+  private PenMatchNames penMatchTransactionNames;
+  /**
+   * The Student true number.
+   */
+  private String studentTrueNumber;
+  /**
+   * The Old match f 1 pen.
+   */
+  private String oldMatchF1PEN;
+  /**
+   * The Old match f 1 student id.
+   */
+  private String oldMatchF1StudentID;
+  /**
+   * The Partial student surname.
+   */
+  private String partialStudentSurname;
+  /**
+   * The Partial student given.
+   */
+  private String partialStudentGiven;
+  /**
+   * The Min surname search size.
+   */
+  private Integer minSurnameSearchSize;
+  /**
+   * The Max surname search size.
+   */
+  private Integer maxSurnameSearchSize;
+  /**
+   * The Full surname frequency.
+   */
+  private Integer fullSurnameFrequency;
+  /**
+   * The Partial surname frequency.
+   */
+  private Integer partialSurnameFrequency;
+  /**
+   * The Given name nicknames.
+   */
+  private List<NicknamesEntity> givenNameNicknames;
+  /**
+   * The Middle name nicknames.
+   */
+  private List<NicknamesEntity> middleNameNicknames;
 
-    @Builder
-    public NewPenMatchStudentDetail(PenMatchStudentDetail studentDetail, String oldMatchF1PEN, String oldMatchF1StudentID){
-        this.pen = studentDetail.getPen();
-        this.dob = studentDetail.getDob();
-        this.sex = studentDetail.getSex();
-        this.enrolledGradeCode = studentDetail.getEnrolledGradeCode();
-        this.surname = studentDetail.getSurname();
-        this.givenName= studentDetail.getGivenName();
-        this.middleName = studentDetail.getMiddleName();
-        this.usualSurname =studentDetail.getUsualSurname();
-        this.usualGivenName = studentDetail.getUsualGivenName();
-        this.usualMiddleName = studentDetail.getUsualMiddleName();
-        this.mincode = studentDetail.getMincode();
-        this.localID = studentDetail.getLocalID();
-        this.postal = studentDetail.getPostal();
-        this.updateCode = studentDetail.getUpdateCode();
-        this.applicationCode = studentDetail.getApplicationCode();
-        this.oldMatchF1PEN = oldMatchF1PEN;
-        this.oldMatchF1StudentID = oldMatchF1StudentID;
-    }
-
+  /**
+   * Instantiates a new New pen match student detail.
+   *
+   * @param studentDetail       the student detail
+   * @param oldMatchF1PEN       the old match f 1 pen
+   * @param oldMatchF1StudentID the old match f 1 student id
+   */
+  @Builder
+  public NewPenMatchStudentDetail(PenMatchStudentDetail studentDetail, String oldMatchF1PEN, String oldMatchF1StudentID) {
+    this.pen = studentDetail.getPen();
+    this.dob = studentDetail.getDob();
+    this.sex = studentDetail.getSex();
+    this.enrolledGradeCode = studentDetail.getEnrolledGradeCode();
+    this.surname = studentDetail.getSurname();
+    this.givenName = studentDetail.getGivenName();
+    this.middleName = studentDetail.getMiddleName();
+    this.usualSurname = studentDetail.getUsualSurname();
+    this.usualGivenName = studentDetail.getUsualGivenName();
+    this.usualMiddleName = studentDetail.getUsualMiddleName();
+    this.mincode = studentDetail.getMincode();
+    this.localID = studentDetail.getLocalID();
+    this.postal = studentDetail.getPostal();
+    this.updateCode = studentDetail.getUpdateCode();
+    this.applicationCode = studentDetail.getApplicationCode();
+    this.oldMatchF1PEN = oldMatchF1PEN;
+    this.oldMatchF1StudentID = oldMatchF1StudentID;
+  }
 
 
 }

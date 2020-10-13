@@ -1,4 +1,5 @@
 package ca.bc.gov.educ.api.penmatch;
+
 import jodd.util.ThreadFactoryBuilder;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
@@ -23,6 +24,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * The type Pen match api resource application.
+ */
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableCaching
@@ -32,24 +36,13 @@ import java.util.concurrent.ThreadFactory;
 @EnableAsync
 public class PenMatchApiResourceApplication {
 
+  /**
+   * The entry point of application.
+   *
+   * @param args the input arguments
+   */
   public static void main(String[] args) {
     SpringApplication.run(PenMatchApiResourceApplication.class, args);
-  }
-
-  @Configuration
-  static
-  class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    public WebSecurityConfiguration() {
-      super();
-      SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-      web.ignoring().antMatchers("/v3/api-docs/**",
-          "/actuator/health", "/actuator/prometheus",
-          "/swagger-ui/**", "/health");
-    }
   }
 
   /**
@@ -65,16 +58,49 @@ public class PenMatchApiResourceApplication {
     return new JdbcTemplateLockProvider(jdbcTemplate, transactionManager, "PEN_MATCH_SHEDLOCK");
   }
 
+  /**
+   * Thread pool task executor executor.
+   *
+   * @return the executor
+   */
   @Bean(name = "subscriberExecutor")
   public Executor threadPoolTaskExecutor() {
     ThreadFactory namedThreadFactory =
         new ThreadFactoryBuilder().withNameFormat("message-subscriber-%d").get();
     return Executors.newFixedThreadPool(50, namedThreadFactory);
   }
+
+  /**
+   * Controller task executor executor.
+   *
+   * @return the executor
+   */
   @Bean(name = "controllerExecutor")
   public Executor controllerTaskExecutor() {
     ThreadFactory namedThreadFactory =
         new ThreadFactoryBuilder().withNameFormat("controller-%d").get();
     return Executors.newFixedThreadPool(8, namedThreadFactory);
+  }
+
+  /**
+   * The type Web security configuration.
+   */
+  @Configuration
+  static
+  class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    /**
+     * Instantiates a new Web security configuration.
+     */
+    public WebSecurityConfiguration() {
+      super();
+      SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+      web.ignoring().antMatchers("/v3/api-docs/**",
+          "/actuator/health", "/actuator/prometheus",
+          "/swagger-ui/**", "/health");
+    }
   }
 }

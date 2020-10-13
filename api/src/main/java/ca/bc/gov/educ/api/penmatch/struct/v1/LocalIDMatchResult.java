@@ -3,11 +3,20 @@ package ca.bc.gov.educ.api.penmatch.struct.v1;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Local id match result.
+ */
 @Data
 @NoArgsConstructor
 public class LocalIDMatchResult {
 
-	private int idDemerits;
-	private int localIDPoints;
+  /**
+   * The Id demerits.
+   */
+  private int idDemerits;
+  /**
+   * The Local id points.
+   */
+  private int localIDPoints;
 
 }

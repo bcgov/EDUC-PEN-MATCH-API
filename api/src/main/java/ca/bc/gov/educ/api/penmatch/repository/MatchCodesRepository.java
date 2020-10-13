@@ -7,9 +7,18 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The interface Match codes repository.
+ */
 @Repository
 public interface MatchCodesRepository extends CrudRepository<MatchCodesEntity, String> {
-	Optional<MatchCodesEntity> findByMatchCode(String matchCode);
+  /**
+   * Find by match code optional.
+   *
+   * @param matchCode the match code
+   * @return the optional
+   */
+  Optional<MatchCodesEntity> findByMatchCode(String matchCode);
 
-	List<MatchCodesEntity> findAll();
+  List<MatchCodesEntity> findAll();
 }

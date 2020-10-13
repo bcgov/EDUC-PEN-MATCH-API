@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.penmatch.service;
+package ca.bc.gov.educ.api.penmatch.service.events;
 
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import lombok.Getter;
@@ -12,10 +12,21 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class EventHandlerDelegatorService {
+  /**
+   * The constant PAYLOAD_LOG.
+   */
   public static final String PAYLOAD_LOG = "Payload is :: ";
+  /**
+   * The Event handler service.
+   */
   @Getter
   private final EventHandlerService eventHandlerService;
 
+  /**
+   * Instantiates a new Event handler delegator service.
+   *
+   * @param eventHandlerService the event handler service
+   */
   @Autowired
   public EventHandlerDelegatorService(EventHandlerService eventHandlerService) {
     this.eventHandlerService = eventHandlerService;
@@ -26,7 +37,6 @@ public class EventHandlerDelegatorService {
    *
    * @param event the event
    */
-
   public void handleEvent(Event event) {
     try {
       switch (event.getEventType()) {

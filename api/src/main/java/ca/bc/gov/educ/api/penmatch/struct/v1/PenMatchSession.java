@@ -5,12 +5,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.PriorityQueue;
 
+/**
+ * The type Pen match session.
+ */
 @Data
 @NoArgsConstructor
 public class PenMatchSession {
-	private PriorityQueue<OldPenMatchRecord> matchingRecords;
-	private PenMasterRecord prettyGoodMatchRecord;
-	private PenMasterRecord reallyGoodMasterRecord;
-	private String penStatus;
-	private String penStatusMessage;
+  /**
+   * The Matching records.
+   */
+  private PriorityQueue<OldPenMatchRecord> matchingRecords;
+  /**
+   * The Pretty good match record.
+   */
+  private PenMasterRecord prettyGoodMatchRecord;
+  /**
+   * The Really good master record.
+   */
+  private PenMasterRecord reallyGoodMasterRecord;
+  /**
+   * The Pen status.
+   */
+  private String penStatus;
+  /**
+   * The Pen status message.
+   */
+  private String penStatusMessage;
 }

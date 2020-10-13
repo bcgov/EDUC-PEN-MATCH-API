@@ -19,10 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The interface Pen match endpoint.
+ */
 @RequestMapping("/api/v1/pen-match")
 @OpenAPIDefinition(info = @Info(title = "API for PEN Match.", description = "This API is to match students to PENs.", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"READ_PEN_MATCH"})})
 public interface PenMatchEndpoint {
 
+  /**
+   * Match student completable future.
+   *
+   * @param student the student
+   * @return the completable future
+   */
   @PostMapping
   @PreAuthorize("#oauth2.hasAnyScope('READ_PEN_MATCH')")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})

@@ -4,10 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type New pen match name change result.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 public class NewPenMatchNameChangeResult {
-	private String matchResult;
-	private String matchCode;
+  /**
+   * The Match result.
+   */
+  private String matchResult;
+  /**
+   * The Match code.
+   */
+  private String matchCode;
 }

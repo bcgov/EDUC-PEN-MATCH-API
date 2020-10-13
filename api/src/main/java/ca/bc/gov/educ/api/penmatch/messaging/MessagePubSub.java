@@ -12,18 +12,30 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * The type Message pub sub.
+ */
 @Slf4j
 public abstract class MessagePubSub implements Closeable {
-  protected StreamingConnection connection;
-  protected StreamingConnectionFactory connectionFactory;
+  /**
+   * The Executor service.
+   */
   protected final ExecutorService executorService = Executors.newSingleThreadExecutor();
+  /**
+   * The Connection.
+   */
+  protected StreamingConnection connection;
+  /**
+   * The Connection factory.
+   */
+  protected StreamingConnectionFactory connectionFactory;
 
   @Override
   public void close() {
     if (!executorService.isShutdown()) {
       executorService.shutdown();
     }
-    if(Optional.ofNullable(connection).isPresent()){
+    if (Optional.ofNullable(connection).isPresent()) {
       log.info("closing nats connection ...");
       try {
         connection.close();
@@ -33,8 +45,13 @@ public abstract class MessagePubSub implements Closeable {
       log.info("nats connection closed...");
     }
   }
+
   /**
    * This method will keep retrying for a connection.
+   *
+   * @param streamingConnection the streaming connection
+   * @param e                   the e
+   * @return the int
    */
   protected int connectionLostHandler(StreamingConnection streamingConnection, Exception e) {
     int numOfRetries = 1;
