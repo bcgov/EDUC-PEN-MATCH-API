@@ -13,13 +13,37 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PenMatchStudentDetail extends PenMatchStudent {
 
-	//These are updated by the match algorithm
-	private PenMatchNames penMatchTransactionNames;
-	private String alternateLocalID;
-	private Integer minSurnameSearchSize;
-	private Integer maxSurnameSearchSize;
-	private String partialStudentSurname;
-	private String partialStudentGiven;
-	private Integer fullSurnameFrequency;
-	private Integer partialSurnameFrequency;
+  /**
+   * The Pen match transaction names.
+   */
+//These are updated by the match algorithm
+  private PenMatchNames penMatchTransactionNames;
+  /**
+   * The Alternate local id.
+   */
+  private String alternateLocalID;
+  /**
+   * The Min surname search size.
+   */
+  private Integer minSurnameSearchSize;
+  /**
+   * The Max surname search size.
+   */
+  private Integer maxSurnameSearchSize;
+  /**
+   * The Partial student surname.
+   */
+  private String partialStudentSurname;
+  /**
+   * The Partial student given.
+   */
+  private String partialStudentGiven;
+  /**
+   * The Full surname frequency.
+   */
+  private Integer fullSurnameFrequency;
+  /**
+   * The Partial surname frequency.
+   */
+  private Integer partialSurnameFrequency;
 }

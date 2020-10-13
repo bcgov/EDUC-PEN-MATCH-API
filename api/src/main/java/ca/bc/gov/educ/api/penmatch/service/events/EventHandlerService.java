@@ -1,9 +1,10 @@
-package ca.bc.gov.educ.api.penmatch.service;
+package ca.bc.gov.educ.api.penmatch.service.events;
 
 import ca.bc.gov.educ.api.penmatch.constants.EventOutcome;
 import ca.bc.gov.educ.api.penmatch.mappers.PenMatchStudentMapper;
 import ca.bc.gov.educ.api.penmatch.model.PENMatchEvent;
 import ca.bc.gov.educ.api.penmatch.repository.PENMatchEventRepository;
+import ca.bc.gov.educ.api.penmatch.service.match.PenMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;

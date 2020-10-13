@@ -4,12 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Best match record.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 public class BestMatchRecord {
-    private Long matchValue;
-    private String matchCode;
-    private String matchPEN;
-    private String studentID;
+  /**
+   * The Match value.
+   */
+  private Long matchValue;
+  /**
+   * The Match code.
+   */
+  private String matchCode;
+  /**
+   * The Match pen.
+   */
+  private String matchPEN;
+  /**
+   * The Student id.
+   */
+  private String studentID;
 }

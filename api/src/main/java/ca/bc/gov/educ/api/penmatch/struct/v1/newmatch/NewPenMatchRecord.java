@@ -6,17 +6,34 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type New pen match record.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 public class NewPenMatchRecord extends PenMatchRecord {
-	private String matchResult;
-	private String matchCode;
+  /**
+   * The Match result.
+   */
+  private String matchResult;
+  /**
+   * The Match code.
+   */
+  private String matchCode;
 
-	@Builder
-	public NewPenMatchRecord(String matchResult, String matchCode, String matchingPEN, String studentID){
-		super(matchingPEN, studentID);
-		this.matchResult = matchResult;
-		this.matchCode = matchCode;
-	}
+  /**
+   * Instantiates a new New pen match record.
+   *
+   * @param matchResult the match result
+   * @param matchCode   the match code
+   * @param matchingPEN the matching pen
+   * @param studentID   the student id
+   */
+  @Builder
+  public NewPenMatchRecord(String matchResult, String matchCode, String matchingPEN, String studentID) {
+    super(matchingPEN, studentID);
+    this.matchResult = matchResult;
+    this.matchCode = matchCode;
+  }
 }

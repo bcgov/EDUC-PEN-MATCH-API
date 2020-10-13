@@ -63,12 +63,12 @@ public class EventTaskScheduler {
    */
   @Scheduled(cron = "${scheduled.jobs.extract.unprocessed.events.cron}")
   @SchedulerLock(name = "EventTablePoller",
-          lockAtLeastFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtLeastFor}",
+      lockAtLeastFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtLeastFor}",
       lockAtMostFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtMostFor}")
   public void pollEventTableAndPublish() throws InterruptedException, IOException, TimeoutException {
     List<PENMatchEvent> events = getPenMatchEventRepository().findByEventStatus(DB_COMMITTED.toString());
     if (!events.isEmpty()) {
-      log.info("found {} records, publishing message",events.size());
+      log.info("found {} records, publishing message", events.size());
       for (var event : events) {
         try {
           if (Optional.ofNullable(event.getReplyChannel()).isPresent()) {
@@ -94,10 +94,10 @@ public class EventTaskScheduler {
    */
   private byte[] penMatchEventProcessed(PENMatchEvent penMatchEvent) throws JsonProcessingException {
     Event event = Event.builder()
-            .sagaId(penMatchEvent.getSagaId())
-            .eventType(EventType.valueOf(penMatchEvent.getEventType()))
-            .eventOutcome(EventOutcome.valueOf(penMatchEvent.getEventOutcome()))
-            .eventPayload(penMatchEvent.getEventPayload()).build();
+        .sagaId(penMatchEvent.getSagaId())
+        .eventType(EventType.valueOf(penMatchEvent.getEventType()))
+        .eventOutcome(EventOutcome.valueOf(penMatchEvent.getEventOutcome()))
+        .eventPayload(penMatchEvent.getEventPayload()).build();
     return JsonUtil.getJsonStringFromObject(event).getBytes();
   }
 

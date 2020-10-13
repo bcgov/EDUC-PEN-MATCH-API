@@ -31,32 +31,35 @@ public class FilterCriteria<T extends Comparable<T>> {
    * Holds the Function to convertString to <T>
    */
   private final Function<String, T> converterFunction;
-
+  /**
+   * Holds the filter criteria
+   */
+  private final Collection<String> originalValues;
+  /**
+   * Holds the filter criteria as type <T>
+   */
+  private final Collection<T> convertedValues;
   /**
    * Converted value
    */
   private T convertedSingleValue;
-
   /**
    * minimum value - application only for {@link FilterOperation#BETWEEN}
    */
   private T minValue;
-
   /**
    * maximum value - application only for {@link FilterOperation#BETWEEN}
    */
   private T maxValue;
 
   /**
-   * Holds the filter criteria
+   * Instantiates a new Filter criteria.
+   *
+   * @param fieldName         the field name
+   * @param fieldValue        the field value
+   * @param filterOperation   the filter operation
+   * @param converterFunction the converter function
    */
-  private final Collection<String> originalValues;
-
-  /**
-   * Holds the filter criteria as type <T>
-   */
-  private final Collection<T> convertedValues;
-
   public FilterCriteria(@NotNull String fieldName, @NotNull String fieldValue, @NotNull FilterOperation filterOperation, Function<String, T> converterFunction) {
 
     this.fieldName = fieldName;
@@ -77,6 +80,11 @@ public class FilterCriteria<T extends Comparable<T>> {
 
   }
 
+  /**
+   * Validate and assign.
+   *
+   * @param operationValues the operation values
+   */
   private void validateAndAssign(String[] operationValues) {
 
     //For operation 'btn'
@@ -109,34 +117,74 @@ public class FilterCriteria<T extends Comparable<T>> {
 
   }
 
+  /**
+   * Gets converted single value.
+   *
+   * @return the converted single value
+   */
   public T getConvertedSingleValue() {
     return convertedSingleValue;
   }
 
+  /**
+   * Gets min value.
+   *
+   * @return the min value
+   */
   public T getMinValue() {
     return minValue;
   }
 
+  /**
+   * Gets max value.
+   *
+   * @return the max value
+   */
   public T getMaxValue() {
     return maxValue;
   }
 
+  /**
+   * Gets operation.
+   *
+   * @return the operation
+   */
   public FilterOperation getOperation() {
     return operation;
   }
 
+  /**
+   * Gets field name.
+   *
+   * @return the field name
+   */
   public String getFieldName() {
     return fieldName;
   }
 
+  /**
+   * Gets converter function.
+   *
+   * @return the converter function
+   */
   public Function<String, T> getConverterFunction() {
     return converterFunction;
   }
 
+  /**
+   * Gets original values.
+   *
+   * @return the original values
+   */
   public Collection<String> getOriginalValues() {
     return originalValues;
   }
 
+  /**
+   * Gets converted values.
+   *
+   * @return the converted values
+   */
   public Collection<T> getConvertedValues() {
     return convertedValues;
   }

@@ -4,14 +4,24 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.language.Soundex;
 
+/**
+ * The type Scoring utils.
+ */
 @Slf4j
 public class ScoringUtils {
 
+  /**
+   * Instantiates a new Scoring utils.
+   */
   private ScoringUtils() {
   }
 
   /**
    * Calculate points for Birthday match
+   *
+   * @param student the student
+   * @param master  the master
+   * @return the int
    */
   public static int matchBirthday(PenMatchStudentDetail student, PenMasterRecord master) {
     if (log.isDebugEnabled()) {
@@ -75,6 +85,11 @@ public class ScoringUtils {
    * Calculate points for Local ID/School code combination - Some schools misuse
    * the local ID field with a bogus 1 character local ID unfortunately this will
    * jeopardize the checking for legit 1 character local IDs
+   *
+   * @param student the student
+   * @param master  the master
+   * @param session the session
+   * @return the local id match result
    */
   public static LocalIDMatchResult matchLocalID(PenMatchStudentDetail student, PenMasterRecord master, PenMatchSession session) {
     if (log.isDebugEnabled()) {
@@ -98,7 +113,7 @@ public class ScoringUtils {
     }
 
     // Same district
-    if (localIDPoints == 0 && mincode != null && masterMincode != null && mincode.substring(0, 3).equals(masterMincode.substring(0, 3)) && !mincode.substring(0, 3).equals("102")) {
+    if (localIDPoints == 0 && mincode != null && masterMincode != null && mincode.substring(0, 3).equals(masterMincode.substring(0, 3)) && !mincode.startsWith("102")) {
       localIDPoints = 5;
     }
 
@@ -120,6 +135,10 @@ public class ScoringUtils {
 
   /**
    * Calculate points for address match
+   *
+   * @param student the student
+   * @param master  the master
+   * @return the int
    */
   public static int matchAddress(PenMatchStudentDetail student, PenMasterRecord master) {
     if (log.isDebugEnabled()) {
@@ -129,9 +148,9 @@ public class ScoringUtils {
     String postal = student.getPostal();
     String masterPostal = master.getPostal();
 
-    if (postal != null && postal.equals(masterPostal) && !masterPostal.substring(0, 2).equals("V0")) {
+    if (postal != null && postal.equals(masterPostal) && !masterPostal.startsWith("V0")) {
       addressPoints = 10;
-    } else if (postal != null && postal.equals(masterPostal) && masterPostal.substring(0, 2).equals("V0")) {
+    } else if (postal != null && postal.equals(masterPostal) && masterPostal.startsWith("V0")) {
       addressPoints = 1;
     }
     log.debug(" output :: addressPoints={}", addressPoints);
@@ -140,6 +159,10 @@ public class ScoringUtils {
 
   /**
    * Calculate points for surname match
+   *
+   * @param student the student
+   * @param master  the master
+   * @return the surname match result
    */
   public static SurnameMatchResult matchSurname(PenMatchStudentDetail student, PenMasterRecord master) {
     if (log.isDebugEnabled()) {
@@ -224,6 +247,10 @@ public class ScoringUtils {
 
   /**
    * Calculate points for given name match
+   *
+   * @param penMatchTransactionNames the pen match transaction names
+   * @param penMatchMasterNames      the pen match master names
+   * @return the given name match result
    */
   public static GivenNameMatchResult matchGivenName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
     if (log.isDebugEnabled()) {
@@ -283,6 +310,10 @@ public class ScoringUtils {
 
   /**
    * Calculate points for middle name match
+   *
+   * @param penMatchTransactionNames the pen match transaction names
+   * @param penMatchMasterNames      the pen match master names
+   * @return the middle name match result
    */
   public static MiddleNameMatchResult matchMiddleName(PenMatchNames penMatchTransactionNames, PenMatchNames penMatchMasterNames) {
     if (log.isDebugEnabled()) {
@@ -332,6 +363,9 @@ public class ScoringUtils {
 
   /**
    * Soundex calculation
+   *
+   * @param inputString the input string
+   * @return the string
    */
   private static String runSoundex(String inputString) {
     log.debug(" input :: soundexInputString={}", inputString);
@@ -385,124 +419,146 @@ public class ScoringUtils {
 
   /**
    * Utility function to check for subset given name matches
+   *
+   * @param givenName           the given name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasGivenNameSubsetMatch(String givenName, PenMatchNames penMatchMasterNames) {
     if (givenName != null && givenName.length() >= 1) {
-      if ((penMatchMasterNames.getLegalGiven() != null && (penMatchMasterNames.getLegalGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getLegalGiven())))
+      return (penMatchMasterNames.getLegalGiven() != null && (penMatchMasterNames.getLegalGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getLegalGiven())))
           || (penMatchMasterNames.getUsualGiven() != null && (penMatchMasterNames.getUsualGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getUsualGiven())))
           || (penMatchMasterNames.getAlternateLegalGiven() != null && (penMatchMasterNames.getAlternateLegalGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getAlternateLegalGiven())))
-          || (penMatchMasterNames.getAlternateUsualGiven() != null && (penMatchMasterNames.getAlternateUsualGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getAlternateUsualGiven())))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualGiven() != null && (penMatchMasterNames.getAlternateUsualGiven().contains(givenName) || givenName.contains(penMatchMasterNames.getAlternateUsualGiven())));
     }
     return false;
   }
 
   /**
    * Utility function for subset match
+   *
+   * @param givenName           the given name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasGivenNameFullCharMatch(String givenName, PenMatchNames penMatchMasterNames) {
     if (givenName != null) {
-      if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().equals(givenName)) || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().equals(givenName))
-          || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().equals(givenName)) || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().equals(givenName))) {
-        return true;
-      }
+      return (penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().equals(givenName)) || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().equals(givenName))
+          || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().equals(givenName)) || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().equals(givenName));
     }
     return false;
   }
 
   /**
    * Utility function for subset match
+   *
+   * @param givenName           the given name
+   * @param numOfChars          the num of chars
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasGivenNameSubsetCharMatch(String givenName, int numOfChars, PenMatchNames penMatchMasterNames) {
     if (givenName != null && givenName.length() >= numOfChars) {
-      if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
+      return (penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().length() >= numOfChars && penMatchMasterNames.getUsualGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars && penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
-          || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)));
     }
     return false;
   }
 
   /**
    * Utility function to check for subset given name matches to given names
+   *
+   * @param givenName           the given name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasGivenNameSubsetToMiddleNameMatch(String givenName, PenMatchNames penMatchMasterNames) {
     int numOfChars = 4;
     if (givenName != null && givenName.length() >= numOfChars) {
-      if ((penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().length() >= numOfChars && penMatchMasterNames.getLegalMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
+      return (penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().length() >= numOfChars && penMatchMasterNames.getLegalMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getUsualMiddle() != null && penMatchMasterNames.getUsualMiddle().length() >= numOfChars && penMatchMasterNames.getUsualMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateLegalMiddle() != null && penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
-          || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)));
     }
     return false;
   }
 
   /**
    * Utility function to check for subset middle name matches
+   *
+   * @param middleName          the middle name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasMiddleNameSubsetMatch(String middleName, PenMatchNames penMatchMasterNames) {
     if (middleName != null && middleName.length() > 1) {
-      if ((penMatchMasterNames.getLegalMiddle() != null && (penMatchMasterNames.getLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getLegalMiddle())))
+      return (penMatchMasterNames.getLegalMiddle() != null && (penMatchMasterNames.getLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getLegalMiddle())))
           || (penMatchMasterNames.getUsualMiddle() != null && (penMatchMasterNames.getUsualMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getUsualMiddle())))
           || (penMatchMasterNames.getAlternateLegalMiddle() != null && (penMatchMasterNames.getAlternateLegalMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getAlternateLegalMiddle())))
-          || (penMatchMasterNames.getAlternateUsualMiddle() != null && (penMatchMasterNames.getAlternateUsualMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getAlternateUsualMiddle())))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualMiddle() != null && (penMatchMasterNames.getAlternateUsualMiddle().contains(middleName) || middleName.contains(penMatchMasterNames.getAlternateUsualMiddle())));
     }
     return false;
   }
 
   /**
    * Utility function for subset match
+   *
+   * @param middleName          the middle name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasMiddleNameFullCharMatch(String middleName, PenMatchNames penMatchMasterNames) {
     if (middleName != null) {
-      if ((penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().equals(middleName)) || (penMatchMasterNames.getUsualMiddle() != null && penMatchMasterNames.getUsualMiddle().equals(middleName))
-          || (penMatchMasterNames.getAlternateLegalMiddle() != null && penMatchMasterNames.getAlternateLegalMiddle().equals(middleName)) || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().equals(middleName))) {
-        return true;
-      }
+      return (penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().equals(middleName)) || (penMatchMasterNames.getUsualMiddle() != null && penMatchMasterNames.getUsualMiddle().equals(middleName))
+          || (penMatchMasterNames.getAlternateLegalMiddle() != null && penMatchMasterNames.getAlternateLegalMiddle().equals(middleName)) || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().equals(middleName));
     }
     return false;
   }
 
   /**
    * Utility function for subset match
+   *
+   * @param middleName          the middle name
+   * @param numOfChars          the num of chars
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasMiddleNameSubsetCharMatch(String middleName, int numOfChars, PenMatchNames penMatchMasterNames) {
     if (middleName != null && middleName.length() >= numOfChars) {
-      if ((penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().length() >= numOfChars && penMatchMasterNames.getLegalMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
+      return (penMatchMasterNames.getLegalMiddle() != null && penMatchMasterNames.getLegalMiddle().length() >= numOfChars && penMatchMasterNames.getLegalMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
           || (penMatchMasterNames.getUsualMiddle() != null && penMatchMasterNames.getUsualMiddle().length() >= numOfChars && penMatchMasterNames.getUsualMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateLegalMiddle() != null && penMatchMasterNames.getAlternateLegalMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateLegalMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
-          || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualMiddle() != null && penMatchMasterNames.getAlternateUsualMiddle().length() >= numOfChars && penMatchMasterNames.getAlternateUsualMiddle().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)));
     }
     return false;
   }
 
   /**
    * Utility function to check for subset middle name matches to given names
+   *
+   * @param middleName          the middle name
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
    */
   public static boolean hasMiddleNameSubsetToGivenNameMatch(String middleName, PenMatchNames penMatchMasterNames) {
     int numOfChars = 4;
     if (middleName != null && middleName.length() >= numOfChars) {
-      if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
+      return (penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
           || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().length() >= numOfChars && penMatchMasterNames.getUsualGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars && penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))
-          || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)))) {
-        return true;
-      }
+          || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(middleName.substring(0, numOfChars)));
     }
     return false;
   }
 
   /**
    * Calculate points for Sex match
+   *
+   * @param student the student
+   * @param master  the master
+   * @return the int
    */
   public static int matchSex(PenMatchStudentDetail student, PenMasterRecord master) {
     if (log.isDebugEnabled()) {

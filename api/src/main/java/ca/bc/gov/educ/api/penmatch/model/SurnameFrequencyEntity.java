@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * The type Surname frequency entity.
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -16,11 +19,17 @@ import javax.persistence.Table;
 @Table(name = "SURNAME_FREQUENCY")
 public class SurnameFrequencyEntity {
 
-	@Id
-	@Column(name = "SURNAME")
-	private String surname;
+  /**
+   * The Surname.
+   */
+  @Id
+  @Column(name = "SURNAME")
+  private String surname;
 
-	@Column(name = "SURNAME_FREQUENCY")
-	private String surnameFrequency;
+  /**
+   * The Surname frequency.
+   */
+  @Column(name = "SURNAME_FREQUENCY")
+  private String surnameFrequency;
 
 }

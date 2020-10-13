@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.support;
 import ca.bc.gov.educ.api.penmatch.messaging.MessagePublisher;
 import ca.bc.gov.educ.api.penmatch.messaging.MessageSubscriber;
+import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.schedulers.EventTaskScheduler;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
@@ -29,4 +30,9 @@ public class MockConfiguration {
     return Mockito.mock(EventTaskScheduler.class);
   }
 
+  @Bean
+  @Primary
+  public RestUtils restUtils() {
+    return Mockito.mock(RestUtils.class);
+  }
 }

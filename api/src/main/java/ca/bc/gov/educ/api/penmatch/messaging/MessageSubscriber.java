@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.messaging;
 
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
-import ca.bc.gov.educ.api.penmatch.service.EventHandlerDelegatorService;
+import ca.bc.gov.educ.api.penmatch.service.events.EventHandlerDelegatorService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import io.nats.streaming.*;
@@ -38,9 +38,20 @@ import static lombok.AccessLevel.PRIVATE;
 @Transactional
 public class MessageSubscriber extends MessagePubSub {
 
+  /**
+   * The Event handler delegator service.
+   */
   @Getter(PRIVATE)
   private final EventHandlerDelegatorService eventHandlerDelegatorService;
 
+  /**
+   * Instantiates a new Message subscriber.
+   *
+   * @param applicationProperties        the application properties
+   * @param eventHandlerDelegatorService the event handler delegator service
+   * @throws IOException          the io exception
+   * @throws InterruptedException the interrupted exception
+   */
   @Autowired
   public MessageSubscriber(final ApplicationProperties applicationProperties, final EventHandlerDelegatorService eventHandlerDelegatorService) throws IOException, InterruptedException {
     this.eventHandlerDelegatorService = eventHandlerDelegatorService;
@@ -53,12 +64,24 @@ public class MessageSubscriber extends MessagePubSub {
     connection = connectionFactory.createConnection();
   }
 
+  /**
+   * Subscribe.
+   *
+   * @throws InterruptedException the interrupted exception
+   * @throws TimeoutException     the timeout exception
+   * @throws IOException          the io exception
+   */
   @PostConstruct
   public void subscribe() throws InterruptedException, TimeoutException, IOException {
     SubscriptionOptions options = new SubscriptionOptions.Builder().durableName("pen-match-api-consumer").build();
     connection.subscribe(PEN_MATCH_API_TOPIC.toString(), "pen_match_api", this::onPenMatchApiTopicMessage, options);
   }
 
+  /**
+   * On pen match api topic message.
+   *
+   * @param message the message
+   */
   private void onPenMatchApiTopicMessage(Message message) {
     if (message != null && message.getData() != null) {
       String messageData = new String(message.getData());
@@ -90,6 +113,11 @@ public class MessageSubscriber extends MessagePubSub {
     return numOfRetries;
   }
 
+  /**
+   * Retry subscription.
+   *
+   * @param numOfRetries the num of retries
+   */
   private void retrySubscription(int numOfRetries) {
     while (true) {
       try {
