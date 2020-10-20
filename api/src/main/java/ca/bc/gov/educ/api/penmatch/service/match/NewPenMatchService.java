@@ -167,84 +167,88 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
 
     PenConfirmationResult confirmationResult = new PenConfirmationResult();
     confirmationResult.setDeceased(false);
-
+    boolean validCheckDigit = false;
     if (student.getPen() != null) {
-      boolean validCheckDigit = PenMatchUtils.penCheckDigit(student.getPen());
-      if (validCheckDigit) {
-        // Attempt to confirm a supplied PEN
-        confirmationResult = confirmPEN(student, session);
-        if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
-          if (student.getStudentTrueNumber() == null) {
+      validCheckDigit = PenMatchUtils.penCheckDigit(student.getPen());
+    }
+    if (validCheckDigit) {
+      // Attempt to confirm a supplied PEN
+      confirmationResult = confirmPEN(student, session);
+      if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
+        if (student.getStudentTrueNumber() == null) {
+          session.setPenStatus(PenStatus.AA.getValue());
+        } else {
+          session.setPenStatus(PenStatus.B1.getValue());
+        }
+      }
+    } else {
+      // Find match using demographics if
+      // The supplied PEN was not confirmed or no PEN was supplied
+      findMatchesByDemog(student, session);
+      if (session.getMatchingRecordsList().size() == 1) {
+        NewPenMatchRecord matchRecord = session.getMatchingRecordsList().get(0);
+        if (matchRecord.getMatchResult().equals("P")) {
+          if (student.getPen() != null && student.getPen().equals(matchRecord.getMatchingPEN())) {
+            //PEN confirmed
             session.setPenStatus(PenStatus.AA.getValue());
-          } else {
+          } else if (student.getPen() == null) {
+            //No PEN Supplied
+            session.setPenStatus(PenStatus.D1.getValue());
+          } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+            //Wrong PEN Supplied
             session.setPenStatus(PenStatus.B1.getValue());
+          } else {
+            //Invalid PEN Supplied
+            session.setPenStatus(PenStatus.C1.getValue());
           }
         } else {
-          // Find match using demographics if
-          // The supplied PEN was not confirmed or no PEN was supplied
-          findMatchesByDemog(student, session);
-          if (session.getMatchingRecordsList().size() == 1) {
-            NewPenMatchRecord matchRecord = session.getMatchingRecordsList().get(0);
-            if (matchRecord.getMatchResult().equals("P")) {
-              if (student.getPen() != null && student.getPen().equals(matchRecord.getMatchingPEN())) {
-                //PEN confirmed
-                session.setPenStatus(PenStatus.AA.getValue());
-              } else if (student.getPen() == null) {
-                //No PEN Supplied
-                session.setPenStatus(PenStatus.D1.getValue());
-              } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
-                //Wrong PEN Supplied
-                session.setPenStatus(PenStatus.B1.getValue());
-              } else {
-                //Invalid PEN Supplied
-                session.setPenStatus(PenStatus.C1.getValue());
-              }
-            } else {
-              if (matchRecord.getMatchResult() == null) {
-                //Unknown match result
-                session.setPenStatus(PenStatus.UR.getValue());
-              } else {
-                //Single questionable match
-                //session.getMatchingRecordsQueue().add(new BestMatchRecord(Long.parseLong("999999999999"), matchRecord.getMatchCode(), matchRecord.getMatchingPEN(), matchRecord.getStudentID()));
-                session.setPenStatus(PenStatus.F1.getValue());
-              }
-            }
-          } else if (session.getMatchingRecordsList().size() > 1) {
-            if (student.getPen() == null) {
-              //No PEN Supplied
-              session.setPenStatus(PenStatus.DM.getValue());
-            } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
-              //Wrong PEN Supplied
-              session.setPenStatus(PenStatus.BM.getValue());
-            } else {
-              //Invalid PEN Supplied
-              session.setPenStatus(PenStatus.CM.getValue());
-            }
-            determineBestMatch(session);
+          if (matchRecord.getMatchResult() == null) {
+            //Unknown match result
+            session.setPenStatus(PenStatus.UR.getValue());
           } else {
-            //! Assign a new PEN if there were no matches and the flag was passed to assign
-            //! new PENS (not just lookup mode) (NO LONGER DONE HERE - NEW PENS NOW ASSIGNED
-            //! IN CALLING QUICK PROGRAM VIA ASSIGN_NEW_PEN.USE)
-            if (student.getPen() == null) {
-              //No PEN Supplied
-              session.setPenStatus(PenStatus.D0.getValue());
-            } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
-              //Wrong PEN Supplied
-              session.setPenStatus(PenStatus.B0.getValue());
-            } else {
-              //Invalid PEN Supplied
-              session.setPenStatus(PenStatus.C0.getValue());
-            }
+            //Single questionable match
+            //session.getMatchingRecordsQueue().add(new BestMatchRecord(Long.parseLong("999999999999"), matchRecord.getMatchCode(), matchRecord.getMatchingPEN(), matchRecord.getStudentID()));
+            session.setPenStatus(PenStatus.F1.getValue());
+          }
+        }
+      } else if (session.getMatchingRecordsList().size() > 1) {
+        if (student.getPen() == null) {
+          //No PEN Supplied
+          session.setPenStatus(PenStatus.DM.getValue());
+        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+          //Wrong PEN Supplied
+          session.setPenStatus(PenStatus.BM.getValue());
+        } else {
+          //Invalid PEN Supplied
+          session.setPenStatus(PenStatus.CM.getValue());
+        }
+        determineBestMatch(session);
+      } else {
+        //! Assign a new PEN if there were no matches and the flag was passed to assign
+        //! new PENS (not just lookup mode) (NO LONGER DONE HERE - NEW PENS NOW ASSIGNED
+        //! IN CALLING QUICK PROGRAM VIA ASSIGN_NEW_PEN.USE)
+        if (student.getPen() == null) {
+          //No PEN Supplied
+          session.setPenStatus(PenStatus.D0.getValue());
+        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+          //Wrong PEN Supplied
+          session.setPenStatus(PenStatus.B0.getValue());
+        } else {
+          //Invalid PEN Supplied
+          session.setPenStatus(PenStatus.C0.getValue());
+        }
 
-            if (student.isAssignNewPEN() && session.getPenStatus().equals(PenStatus.B0.getValue())) {
-              if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
-                session.setPenStatus(PenStatus.G0.getValue());
-              }
-            }
+        if (student.isAssignNewPEN() && session.getPenStatus().equals(PenStatus.B0.getValue())) {
+          if (student.getSurname() == null || student.getGivenName() == null || student.getDob() == null || student.getSex() == null || student.getMincode() == null) {
+            session.setPenStatus(PenStatus.G0.getValue());
           }
         }
       }
+    }
 
+    if(session.getMatchingRecordsList().size() == 1){
+      NewPenMatchRecord matchRec = session.getMatchingRecordsList().get(0);
+      session.getMatchingRecordsQueue().add(new BestMatchRecord(null, matchRec.getMatchCode(), matchRec.getMatchingPEN(), matchRec.getStudentID()));
     }
 
     PenMatchResult result = new PenMatchResult(PenMatchUtils.convertBestMatchPriorityQueueToList(session.getMatchingRecordsQueue()), session.getPenStatus(), session.getPenStatusMessage());
@@ -421,7 +425,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     }
     NewPenMatchSession session = new NewPenMatchSession();
 
-    if (StringUtils.length(student.getMincode()) > 2  && student.getMincode().startsWith("102")) {
+    if (StringUtils.length(student.getMincode()) > 2 && student.getMincode().startsWith("102")) {
       session.setPSI(true);
     }
 

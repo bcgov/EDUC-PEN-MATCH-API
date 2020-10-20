@@ -114,7 +114,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
     PenMatchResult result;
 
-    if (session.getPenStatus().equals(PenStatus.F1.getValue())) {
+    if (!session.getPenStatus().contains("1") && !session.getPenStatus().equals(PenStatus.AA.getValue())) {
       PenMatchRecord record = new PenMatchRecord();
       if (!session.getMatchingRecords().isEmpty()) {
         record = Objects.requireNonNull(session.getMatchingRecords().peek());
