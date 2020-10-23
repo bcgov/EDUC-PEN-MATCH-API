@@ -915,7 +915,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
 
     }
     stopwatch.stop();
-    log.info("Completed new PEN match  :: oneCharTypo :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    log.debug("Completed new PEN match  :: oneCharTypo :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return false;
   }
 
