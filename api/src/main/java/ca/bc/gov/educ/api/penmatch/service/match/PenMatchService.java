@@ -124,7 +124,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         log.debug(" Running new PEN match algorithm with payload: {}", JsonUtil.getJsonPrettyStringFromObject(newStudentDetail));
       }
       stopwatch.stop();
-      log.info("Completed old PEN match in {} seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+      log.info("Completed old PEN match in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
       return newPenMatchService.matchStudent(newStudentDetail);
     } else {
       result = new PenMatchResult(PenMatchUtils.convertOldMatchPriorityQueueToList(session.getMatchingRecords()), session.getPenStatus(), session.getPenStatusMessage());
