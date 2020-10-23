@@ -150,7 +150,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     penMatchTransactionNames.setUsualSurname(PenMatchUtils.dropNonLetters(usualSurname));
     penMatchTransactionNames.setUsualGiven(PenMatchUtils.dropNonLetters(usualGiven));
     stopwatch.stop();
-    log.info("Completed new PEN match :: formatNamesFromMaster :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    log.debug("Completed new PEN match :: formatNamesFromMaster :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return penMatchTransactionNames;
   }
 
