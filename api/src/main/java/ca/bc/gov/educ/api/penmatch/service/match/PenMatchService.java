@@ -696,7 +696,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       session.getMatchingRecords().add(new OldPenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN, masterRecord.getStudentID()));
     }
     stopwatch.stop();
-    log.info("Completed old PEN match :: mergeNewMatchIntoList :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    log.debug("Completed old PEN match :: mergeNewMatchIntoList :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   /**
