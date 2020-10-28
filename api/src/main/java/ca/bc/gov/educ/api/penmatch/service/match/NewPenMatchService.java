@@ -174,12 +174,13 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     if (validCheckDigit) {
       // Attempt to confirm a supplied PEN
       confirmationResult = confirmPEN(student, session);
-      if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
-        if (student.getStudentTrueNumber() == null) {
-          session.setPenStatus(PenStatus.AA.getValue());
-        } else {
-          session.setPenStatus(PenStatus.B1.getValue());
-        }
+    }
+
+    if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
+      if (student.getStudentTrueNumber() == null) {
+        session.setPenStatus(PenStatus.AA.getValue());
+      } else {
+        session.setPenStatus(PenStatus.B1.getValue());
       }
     } else {
       // Find match using demographics if
@@ -246,7 +247,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       }
     }
 
-    if(session.getMatchingRecordsList().size() == 1){
+    if (session.getMatchingRecordsList().size() == 1) {
       NewPenMatchRecord matchRec = session.getMatchingRecordsList().get(0);
       session.getMatchingRecordsQueue().add(new BestMatchRecord(null, matchRec.getMatchCode(), matchRec.getMatchingPEN(), matchRec.getStudentID()));
     }
