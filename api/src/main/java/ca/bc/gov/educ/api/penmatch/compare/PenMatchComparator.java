@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.compare;
 
 import ca.bc.gov.educ.api.penmatch.struct.v1.OldPenMatchRecord;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Comparator;
 
@@ -14,7 +15,7 @@ public class PenMatchComparator implements Comparator<OldPenMatchRecord> {
     if (x.getMatchingAlgorithmResult() == null) {
       return 0;
     }
-    if (x.getMatchingPEN() != null && !x.getMatchingPEN().contains("?") && y.getMatchingPEN() != null && y.getMatchingPEN().contains("?")) {
+    if (!StringUtils.contains(x.getMatchingPEN(), "?")  && StringUtils.contains(y.getMatchingPEN(), "?") ) {
       return -1;
     }
     if (!(x.getMatchingAlgorithmResult() < y.getMatchingAlgorithmResult()
