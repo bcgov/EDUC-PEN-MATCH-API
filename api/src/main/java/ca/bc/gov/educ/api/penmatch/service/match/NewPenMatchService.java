@@ -176,7 +176,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       confirmationResult = confirmPEN(student, session);
     }
 
-    if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
+    if (PenConfirmationResult.PEN_CONFIRMED.equals(confirmationResult.getPenConfirmationResultCode())) {
       if (student.getStudentTrueNumber() == null) {
         session.setPenStatus(PenStatus.AA.getValue());
       } else {
