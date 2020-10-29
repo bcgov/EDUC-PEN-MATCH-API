@@ -216,7 +216,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
         if (student.getPen() == null) {
           //No PEN Supplied
           session.setPenStatus(PenStatus.DM.getValue());
-        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+        } else if (PenConfirmationResult.PEN_ON_FILE.equals(confirmationResult.getPenConfirmationResultCode())) {
           //Wrong PEN Supplied
           session.setPenStatus(PenStatus.BM.getValue());
         } else {
@@ -231,7 +231,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
         if (student.getPen() == null) {
           //No PEN Supplied
           session.setPenStatus(PenStatus.D0.getValue());
-        } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
+        } else if (PenConfirmationResult.PEN_ON_FILE.equals(confirmationResult.getPenConfirmationResultCode())) {
           //Wrong PEN Supplied
           session.setPenStatus(PenStatus.B0.getValue());
         } else {
