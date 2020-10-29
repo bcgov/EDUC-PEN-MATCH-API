@@ -373,8 +373,6 @@ public class PenMatchServiceTest {
     assertThat(result.getPenStatus()).isEqualTo(PenStatus.C0.toString());
   }
 
-  //FIXME the below needs to be fixed it is expected to have results in case of F1.
-  // result.getMatchingRecords().size() should be greater than ZERO.
   @Test
   public void testMatchStudentWithMergedValid_givenOldMatchReturnsF1_shouldExecuteNewPenMatch() throws JsonProcessingException {
     PenMatchStudentDetail student = createPenMatchStudentDetailMergedValid();
@@ -389,7 +387,7 @@ public class PenMatchServiceTest {
     verify(restUtils, atLeastOnce()).getPenMasterRecordByPen(student.getPen());
     assertNotNull(result);
     assertNotNull(result.getPenStatus());
-    assertThat(result.getMatchingRecords()).size().isEqualTo(0);
+    assertThat(result.getMatchingRecords()).size().isEqualTo(1);
     assertThat(result.getPenStatus()).isEqualTo(F1.toString());
   }
 
