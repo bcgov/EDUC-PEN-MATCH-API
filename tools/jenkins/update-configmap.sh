@@ -6,7 +6,7 @@ APP_NAME_UPPER=${APP_NAME^^}
 TZVALUE="America/Vancouver"
 SOAM_KC_REALM_ID="master"
 KCADM_FILE_BIN_FOLDER="/tmp/keycloak-9.0.3/bin"
-SOAM_KC=soam-$envValue.apps.silver.devops.gov.bc.ca
+SOAM_KC=$COMMON_NAMESPACE-$envValue.pathfinder.gov.bc.ca
 
 oc project $COMMON_NAMESPACE-$envValue
 SOAM_KC_LOAD_USER_ADMIN=$(oc -o json get secret sso-admin-${envValue} | sed -n 's/.*"username": "\(.*\)"/\1/p' | base64 --decode)
@@ -91,7 +91,7 @@ FLB_CONFIG="[SERVICE]
 "
 
 echo Creating config map "$APP_NAME"-config-map
-oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map --from-literal=TZ=$TZVALUE --from-literal=CLIENT_ID=pen-match-api-service --from-literal=CLIENT_SECRET=$penMatchAPIServiceClientSecret --from-literal=STUDENT_API_URL=https://student-api-$COMMON_NAMESPACE-$envValue.apps.silver.devops.gov.bc.ca --from-literal=TOKEN_URL=https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID/protocol/openid-connect/token --from-literal=JDBC_URL=$DB_JDBC_CONNECT_STRING --from-literal=ORACLE_USERNAME="$DB_USER" --from-literal=ORACLE_PASSWORD="$DB_PWD" --from-literal=KEYCLOAK_PUBLIC_KEY="$soamFullPublicKey" --from-literal=SPRING_SECURITY_LOG_LEVEL=INFO --from-literal=SPRING_WEB_LOG_LEVEL=INFO --from-literal=APP_LOG_LEVEL=INFO --from-literal=SPRING_BOOT_AUTOCONFIG_LOG_LEVEL=INFO --from-literal=SPRING_SHOW_REQUEST_DETAILS=false --from-literal=NATS_URL="$NATS_URL" --from-literal=NATS_CLUSTER="$NATS_CLUSTER" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON="0/30 * * * * *" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_LEAST_FOR="25s" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_MOST_FOR="27s" --dry-run -o yaml | oc apply -f -
+oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map --from-literal=TZ=$TZVALUE --from-literal=CLIENT_ID=pen-match-api-service --from-literal=CLIENT_SECRET=$penMatchAPIServiceClientSecret --from-literal=STUDENT_API_URL=https://student-api-$COMMON_NAMESPACE-$envValue.pathfinder.gov.bc.ca --from-literal=TOKEN_URL=https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID/protocol/openid-connect/token --from-literal=JDBC_URL=$DB_JDBC_CONNECT_STRING --from-literal=ORACLE_USERNAME="$DB_USER" --from-literal=ORACLE_PASSWORD="$DB_PWD" --from-literal=KEYCLOAK_PUBLIC_KEY="$soamFullPublicKey" --from-literal=SPRING_SECURITY_LOG_LEVEL=INFO --from-literal=SPRING_WEB_LOG_LEVEL=INFO --from-literal=APP_LOG_LEVEL=INFO --from-literal=SPRING_BOOT_AUTOCONFIG_LOG_LEVEL=INFO --from-literal=SPRING_SHOW_REQUEST_DETAILS=false --from-literal=NATS_URL="$NATS_URL" --from-literal=NATS_CLUSTER="$NATS_CLUSTER" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON="0/30 * * * * *" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_LEAST_FOR="25s" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_MOST_FOR="27s" --dry-run -o yaml | oc apply -f -
 
 echo
 echo Setting environment variables for $APP_NAME-$SOAM_KC_REALM_ID application
