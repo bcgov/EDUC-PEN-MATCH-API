@@ -20,20 +20,6 @@ public class ApplicationProperties {
   public static final String API_NAME = "PEN_MATCH_API";
 
   /**
-   * The Nats url.
-   */
-  @Value("${nats.streaming.server.url}")
-  @Getter
-  private String natsUrl;
-
-  /**
-   * The Nats cluster id.
-   */
-  @Value("${nats.streaming.server.clusterId}")
-  @Getter
-  private String natsClusterId;
-
-  /**
    * The Client id.
    */
   @Value("${client.id}")
