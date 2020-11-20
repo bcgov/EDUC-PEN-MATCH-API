@@ -31,6 +31,6 @@ public class PenMatchMVCConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(penMatchRequestInterceptor).addPathPatterns("/**/**/");
+    registry.addInterceptor(penMatchRequestInterceptor).addPathPatterns("/**");
   }
 }

@@ -1,139 +1,66 @@
 package ca.bc.gov.educ.api.penmatch.messaging;
 
-import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.service.events.EventHandlerDelegatorService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
-import io.nats.streaming.*;
+import io.nats.client.Connection;
+import io.nats.client.Message;
+import io.nats.client.MessageHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_API_TOPIC;
 import static lombok.AccessLevel.PRIVATE;
 
-/**
- * This listener uses durable queue groups of nats streaming client.
- * A durable queue group allows you to have all members leave but still maintain state. When a member re-joins, it starts at the last position in that group.
- * <b>DO NOT call unsubscribe on the subscription.</b> please see the below for details.
- * Closing the Group
- * The last member calling Unsubscribe will close (that is destroy) the group. So if you want to maintain durability of the group,
- * <b>you should not be calling Unsubscribe.</b>
- * <p>
- * So unlike for non-durable queue subscribers, it is possible to maintain a queue group with no member in the server.
- * When a new member re-joins the durable queue group, it will resume from where the group left of, actually first receiving
- * all unacknowledged messages that may have been left when the last member previously left.
- */
+
 @Component
 @Slf4j
-@SuppressWarnings("java:S2142")
-@Transactional
 public class MessageSubscriber extends MessagePubSub {
 
-  /**
-   * The Event handler delegator service.
-   */
   @Getter(PRIVATE)
   private final EventHandlerDelegatorService eventHandlerDelegatorService;
 
-  /**
-   * Instantiates a new Message subscriber.
-   *
-   * @param applicationProperties        the application properties
-   * @param eventHandlerDelegatorService the event handler delegator service
-   * @throws IOException          the io exception
-   * @throws InterruptedException the interrupted exception
-   */
   @Autowired
-  public MessageSubscriber(final ApplicationProperties applicationProperties, final EventHandlerDelegatorService eventHandlerDelegatorService) throws IOException, InterruptedException {
+  public MessageSubscriber(final Connection con, EventHandlerDelegatorService eventHandlerDelegatorService) {
     this.eventHandlerDelegatorService = eventHandlerDelegatorService;
-    Options options = new Options.Builder()
-        .natsUrl(applicationProperties.getNatsUrl())
-        .clusterId(applicationProperties.getNatsClusterId())
-        .clientId("pen-match-api-subscriber-" + UUID.randomUUID().toString())
-        .connectionLostHandler(this::connectionLostHandler).build();
-    connectionFactory = new StreamingConnectionFactory(options);
-    connection = connectionFactory.createConnection();
+    super.connection = con;
   }
 
   /**
+   * This subscription will makes sure the messages are required to acknowledge manually to STAN.
    * Subscribe.
-   *
-   * @throws InterruptedException the interrupted exception
-   * @throws TimeoutException     the timeout exception
-   * @throws IOException          the io exception
    */
   @PostConstruct
-  public void subscribe() throws InterruptedException, TimeoutException, IOException {
-    SubscriptionOptions options = new SubscriptionOptions.Builder().durableName("pen-match-api-consumer").build();
-    connection.subscribe(PEN_MATCH_API_TOPIC.toString(), "pen_match_api", this::onPenMatchApiTopicMessage, options);
+  public void subscribe() {
+    String queue = PEN_MATCH_API_TOPIC.toString().replace("_", "-");
+    var dispatcher = connection.createDispatcher(onMessage());
+    dispatcher.subscribe(PEN_MATCH_API_TOPIC.toString(), queue);
   }
 
   /**
-   * On pen match api topic message.
+   * On message message handler.
    *
-   * @param message the message
+   * @return the message handler
    */
-  private void onPenMatchApiTopicMessage(Message message) {
-    if (message != null && message.getData() != null) {
-      String messageData = new String(message.getData());
-      if (messageData.contains("eventType")) {
+  private MessageHandler onMessage() {
+    return (Message message) -> {
+      if (message != null) {
+        log.info("Message received is :: {} ", message);
         try {
-          Event event = JsonUtil.getJsonObjectFromString(Event.class, messageData);
-          log.info("received event for event type :: {} and saga ID :: {}", event.getEventType(), event.getSagaId());
-          getEventHandlerDelegatorService().handleEvent(event);
-        } catch (final Exception ex) {
-          log.error("Exception ", ex);
-        }
-      } else {
-        log.info("Ignoring Received Message :: {}", messageData);
-      }
-    }
-  }
-
-
-  /**
-   * This method will keep retrying for a connection.
-   */
-  @Override
-  protected int connectionLostHandler(StreamingConnection streamingConnection, Exception e) {
-    int numOfRetries = 1;
-    if (e != null) {
-      numOfRetries = super.connectionLostHandler(streamingConnection, e);
-      retrySubscription(numOfRetries);
-    }
-    return numOfRetries;
-  }
-
-  /**
-   * Retry subscription.
-   *
-   * @param numOfRetries the num of retries
-   */
-  private void retrySubscription(int numOfRetries) {
-    while (true) {
-      try {
-        log.trace("retrying subscription as connection was lost :: retrying ::" + numOfRetries++);
-        this.subscribe();
-        log.info("successfully resubscribed after {} attempts", numOfRetries);
-        break;
-      } catch (InterruptedException | TimeoutException | IOException exception) {
-        log.error("exception occurred while retrying subscription", exception);
-        try {
-          double sleepTime = (2 * numOfRetries);
-          TimeUnit.SECONDS.sleep((long) sleepTime);
-        } catch (InterruptedException exc) {
-          log.error("InterruptedException occurred while retrying subscription", exc);
+          var eventString = new String(message.getData());
+          var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
+          eventHandlerDelegatorService.handleEvent(event);
+          log.debug("Event is :: {}", event);
+        } catch (final Exception e) {
+          log.error("Exception ", e);
         }
       }
-    }
+    };
   }
+
+
 }

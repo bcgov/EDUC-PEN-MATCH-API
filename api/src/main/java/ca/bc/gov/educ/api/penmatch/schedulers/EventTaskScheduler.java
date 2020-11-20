@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.DB_COMMITTED;
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_API_TOPIC;
@@ -57,15 +56,13 @@ public class EventTaskScheduler {
   /**
    * Poll event table and publish.
    *
-   * @throws InterruptedException the interrupted exception
    * @throws IOException          the io exception
-   * @throws TimeoutException     the timeout exception
    */
   @Scheduled(cron = "${scheduled.jobs.extract.unprocessed.events.cron}")
   @SchedulerLock(name = "EventTablePoller",
       lockAtLeastFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtLeastFor}",
       lockAtMostFor = "${scheduled.jobs.extract.unprocessed.events.cron.lockAtMostFor}")
-  public void pollEventTableAndPublish() throws InterruptedException, IOException, TimeoutException {
+  public void pollEventTableAndPublish() throws IOException {
     List<PENMatchEvent> events = getPenMatchEventRepository().findByEventStatus(DB_COMMITTED.toString());
     if (!events.isEmpty()) {
       log.info("found {} records, publishing message", events.size());
@@ -75,7 +72,7 @@ public class EventTaskScheduler {
             getMessagePubSub().dispatchMessage(event.getReplyChannel(), penMatchEventProcessed(event));
           }
           getMessagePubSub().dispatchMessage(PEN_MATCH_API_TOPIC.toString(), createOutboxEvent(event));
-        } catch (InterruptedException | TimeoutException | IOException e) {
+        } catch (IOException e) {
           log.error("exception occurred", e);
           throw e;
         }
