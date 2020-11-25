@@ -4,6 +4,7 @@ import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
+import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
@@ -75,6 +76,10 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
   public PenMatchService(PenMatchLookupManager lookupManager, NewPenMatchService newPenMatchService) {
     this.lookupManager = lookupManager;
     this.newPenMatchService = newPenMatchService;
+  }
+
+  public List<NicknamesEntity> getNicknames(String givenName) {
+    return lookupManager.lookupNicknamesOnly(givenName);
   }
 
   /**

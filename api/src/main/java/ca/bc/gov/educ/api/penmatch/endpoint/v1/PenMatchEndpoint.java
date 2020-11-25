@@ -13,10 +13,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -41,4 +40,17 @@ public interface PenMatchEndpoint {
   @Async("controllerExecutor")
   CompletableFuture<PenMatchResult> matchStudent(@Validated @RequestBody PenMatchStudent student);
 
+  /**
+   * Retrieve nicknames for a given name
+   *
+   * @param givenName the given name
+   * @return List of Nicknames
+   */
+  @GetMapping("/nicknames/{givenName}")
+  @PreAuthorize("#oauth2.hasAnyScope('READ_PEN_MATCH')")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
+  @Transactional(readOnly = true)
+  @Tag(name = "Endpoint to retrieve nicknames for a given name", description = "Endpoint to to retrieve nicknames for a given name.")
+  List<String> getNicknames(@PathVariable("givenName") String givenName);
+  
 }

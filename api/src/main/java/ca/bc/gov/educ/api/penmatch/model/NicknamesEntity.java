@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Immutable;
 
@@ -33,6 +34,7 @@ public class NicknamesEntity implements Serializable {
    */
   @Id
   @Column(name = "NICKNAME2")
+  @Getter
   private String nickname2;
 
 }
