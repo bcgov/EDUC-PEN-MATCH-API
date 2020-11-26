@@ -12,6 +12,7 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.support.WithMockOAuth2Scope;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PenMatchControllerTest {
 
   public static final String PEN = "122740046";
-  private static boolean dataLoaded = false;
+  //private static boolean dataLoaded = false;
   @Autowired
   RestUtils restUtils;
 
@@ -76,7 +77,7 @@ public class PenMatchControllerTest {
 
   @Before
   public void setUp() throws Exception {
-    if (!dataLoaded) {
+//    if (!dataLoaded) {
       MockitoAnnotations.initMocks(this);
       mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
 
@@ -93,8 +94,14 @@ public class PenMatchControllerTest {
       List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
       });
       surnameFreqRepository.saveAll(surnameFreqEntities);
-      dataLoaded = true;
-    }
+//      dataLoaded = true;
+//    }
+  }
+
+  @After
+  public void after() {
+    nicknamesRepository.deleteAll();
+    surnameFreqRepository.deleteAll();
   }
 
   @Test
@@ -115,10 +122,10 @@ public class PenMatchControllerTest {
   @Test
   @WithMockOAuth2Scope(scope = "READ_NICKNAMES")
   public void testNicknames_ForGivenName_ShouldReturnListOfNicknames() throws Exception {
-    PenMatchStudent entity = createPenMatchStudent();
+    //PenMatchStudent entity = createPenMatchStudent();
     when(restUtils.getRestTemplate()).thenReturn(restTemplate);
 
-    mockMvc
+    this.mockMvc
         .perform(get("/api/v1/pen-match/nicknames/ALEXANDER").contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
   }

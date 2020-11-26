@@ -57,6 +57,9 @@ penMatchAPIServiceClientSecret=$(getPENMatchAPIServiceClientSecret)
 #READ_PEN_MATCH
 $KCADM_FILE_BIN_FOLDER/kcadm.sh create client-scopes -r $SOAM_KC_REALM_ID --body "{\"description\": \"Read Pen Match\",\"id\": \"READ_PEN_MATCH\",\"name\": \"READ_PEN_MATCH\",\"protocol\": \"openid-connect\",\"attributes\" : {\"include.in.token.scope\" : \"true\",\"display.on.consent.screen\" : \"false\"}}"
 
+#READ_NICKNAMES
+$KCADM_FILE_BIN_FOLDER/kcadm.sh create client-scopes -r $SOAM_KC_REALM_ID --body "{\"description\": \"Read Nicknames\",\"id\": \"READ_NICKNAMES\",\"name\": \"READ_NICKNAMES\",\"protocol\": \"openid-connect\",\"attributes\" : {\"include.in.token.scope\" : \"true\",\"display.on.consent.screen\" : \"false\"}}"
+
 ###########################################################
 #Setup for config-map
 ###########################################################
