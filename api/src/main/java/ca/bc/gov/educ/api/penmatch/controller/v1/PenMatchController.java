@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * The type Pen match controller.
@@ -42,6 +44,11 @@ public class PenMatchController implements PenMatchEndpoint {
   @Override
   public CompletableFuture<PenMatchResult> matchStudent(PenMatchStudent student) {
     return CompletableFuture.completedFuture(penMatchService.matchStudent(mapper.toPenMatchStudentDetails(student)));
+  }
+
+  @Override
+  public List<String> getNicknames(String givenName) {
+    return penMatchService.getNicknames(givenName).stream().map(entity -> entity.getNickname2().trim()).collect(Collectors.toList());
   }
 
 }
