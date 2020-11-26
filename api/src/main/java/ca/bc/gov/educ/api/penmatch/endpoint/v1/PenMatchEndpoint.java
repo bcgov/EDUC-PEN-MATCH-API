@@ -47,7 +47,7 @@ public interface PenMatchEndpoint {
    * @return List of Nicknames
    */
   @GetMapping("/nicknames/{givenName}")
-  @PreAuthorize("#oauth2.hasAnyScope('READ_PEN_MATCH')")
+  @PreAuthorize("#oauth2.hasAnyScope('READ_NICKNAMES')")
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
   @Transactional(readOnly = true)
   @Tag(name = "Endpoint to retrieve nicknames for a given name", description = "Endpoint to to retrieve nicknames for a given name.")
