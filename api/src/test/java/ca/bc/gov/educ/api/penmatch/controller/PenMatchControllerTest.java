@@ -50,7 +50,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PenMatchControllerTest {
 
   public static final String PEN = "122740046";
-  //private static boolean dataLoaded = false;
   @Autowired
   RestUtils restUtils;
 
@@ -77,25 +76,22 @@ public class PenMatchControllerTest {
 
   @Before
   public void setUp() throws Exception {
-//    if (!dataLoaded) {
-      MockitoAnnotations.initMocks(this);
-      mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
+    MockitoAnnotations.initMocks(this);
+    mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
 
-      final File fileNick = new File(
-              Objects.requireNonNull(getClass().getClassLoader().getResource("mock_nicknames.json")).getFile()
-      );
-      List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
-      });
-      nicknamesRepository.saveAll(nicknameEntities);
+    final File fileNick = new File(
+            Objects.requireNonNull(getClass().getClassLoader().getResource("mock_nicknames.json")).getFile()
+    );
+    List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
+    });
+    nicknamesRepository.saveAll(nicknameEntities);
 
-      final File fileSurnameFrequency = new File(
-              Objects.requireNonNull(getClass().getClassLoader().getResource("mock_surname_frequency.json")).getFile()
-      );
-      List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
-      });
-      surnameFreqRepository.saveAll(surnameFreqEntities);
-//      dataLoaded = true;
-//    }
+    final File fileSurnameFrequency = new File(
+            Objects.requireNonNull(getClass().getClassLoader().getResource("mock_surname_frequency.json")).getFile()
+    );
+    List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
+    });
+    surnameFreqRepository.saveAll(surnameFreqEntities);
   }
 
   @After
