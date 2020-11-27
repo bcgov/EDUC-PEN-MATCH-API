@@ -118,7 +118,6 @@ public class PenMatchControllerTest {
   @Test
   @WithMockOAuth2Scope(scope = "READ_NICKNAMES")
   public void testNicknames_ForGivenName_ShouldReturnListOfNicknames() throws Exception {
-    //PenMatchStudent entity = createPenMatchStudent();
     when(restUtils.getRestTemplate()).thenReturn(restTemplate);
 
     this.mockMvc

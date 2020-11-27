@@ -25,6 +25,9 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 /**
@@ -78,6 +81,12 @@ public class PenMatchLookupManager {
    * The Match codes map.
    */
   private Map<String, String> matchCodesMap;
+  /**
+   * The Nicknames map
+   */
+  private final Map<String, List<NicknamesEntity>> nicknamesMap = new ConcurrentHashMap<>();
+
+  private final ReadWriteLock nicknamesLock = new ReentrantReadWriteLock();
 
   /**
    * Instantiates a new Pen match lookup manager.
@@ -236,8 +245,7 @@ public class PenMatchLookupManager {
     }
 
     String givenNameUpper = givenName.toUpperCase();
-
-    return getNicknamesRepository().findAllByNickname1OrNickname2(givenNameUpper, givenNameUpper);
+    return getNicknames(givenNameUpper);
   }
 
   /**
@@ -259,7 +267,7 @@ public class PenMatchLookupManager {
     // Part 1 - Find the base nickname
     String baseNickname = null;
 
-    List<NicknamesEntity> nicknamesBaseList = getNicknamesRepository().findAllByNickname1OrNickname2(givenNameUpper, givenNameUpper);
+    List<NicknamesEntity> nicknamesBaseList = getNicknames(givenNameUpper);
     if (!nicknamesBaseList.isEmpty()) {
       baseNickname = StringUtils.trimToNull(nicknamesBaseList.get(0).getNickname1());
     }
@@ -274,8 +282,7 @@ public class PenMatchLookupManager {
         penMatchTransactionNames.setNickname1(baseNickname);
       }
 
-      List<NicknamesEntity> tempNicknamesList = getNicknamesRepository().findAllByNickname1OrNickname2(baseNickname, baseNickname);
-
+      List<NicknamesEntity> tempNicknamesList = getNicknames(baseNickname);
       for (NicknamesEntity nickEntity : tempNicknamesList) {
         if (!StringUtils.equals(nickEntity.getNickname2(), givenNameUpper)) {
           PenMatchUtils.setNextNickname(penMatchTransactionNames, StringUtils.trimToEmpty(nickEntity.getNickname2()));
@@ -352,17 +359,24 @@ public class PenMatchLookupManager {
   }
 
   /**
-   * Evict all match codes cache.
+   * Reload cache.
+   *  - Evict cache every 24 hours and reload again
    */
-//Evict cache every 24 hours and reload again
   @Scheduled(fixedRate = 86400000)
-  public void evictAllMatchCodesCache() {
+  public void reloadCache() {
     log.info("Evicting match codes cache");
     if (matchCodesMap != null) {
       matchCodesMap.clear();
     }
     matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
     log.info("Reloaded match codes into cache. {} entries", matchCodesMap.size());
+
+    log.info("Reloading nicknames cache");
+    if (nicknamesMap != null) {
+      nicknamesMap.clear();
+    }
+    this.setNicknames();
+    log.info("Reloaded nicknames into cache");
   }
 
   /**
@@ -370,9 +384,49 @@ public class PenMatchLookupManager {
    */
   @PostConstruct
   public void init() {
-    log.info("Load Match codes during startup.");
+    log.info("Loading Match codes during startup.");
     matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
     log.info("Loaded Match codes during startup. {} entries", matchCodesMap.size());
+
+    log.info("Loading Nicknames during startup.");
+    this.setNicknames();
+    log.info("Loaded Nicknames during startup.");
+  }
+
+  public List<NicknamesEntity> getNicknames(String givenName) {
+    String givenNameUpper = givenName.toUpperCase();
+    if (!this.nicknamesMap.containsKey(givenNameUpper)) {
+      this.setNicknames();
+    }
+    List<NicknamesEntity> results = this.nicknamesMap.get(givenNameUpper);
+    return results == null ? new ArrayList<>() : results;
+  }
+
+  private void setNicknames() {
+    Lock writeLock = nicknamesLock.writeLock();
+    try {
+      writeLock.lock();
+      getNicknamesRepository().findAll().forEach(e -> mapNickname(e.getNickname1(), e));
+      log.info("loaded {} entries into nicknames map ", nicknamesMap.values().size());
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  // map as (givenName, list of Nicknames entity)
+  private void mapNickname(String givenName, NicknamesEntity nickName) {
+    List<NicknamesEntity> nicknames;
+    String key = StringUtils.trimToNull(givenName);
+    if (this.nicknamesMap.containsKey(key)) {
+      nicknames = this.nicknamesMap.get(key);
+    } else {
+      nicknames = new ArrayList<>();
+    }
+
+    if (!nicknames.contains(nickName)) {
+      nicknames.add(nickName);
+      this.nicknamesMap.put(key, nicknames);
+    }
   }
 
 }

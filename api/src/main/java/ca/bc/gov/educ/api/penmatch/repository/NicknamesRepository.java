@@ -20,4 +20,6 @@ public interface NicknamesRepository extends CrudRepository<NicknamesEntity, Str
    */
   List<NicknamesEntity> findAllByNickname1OrNickname2(String nickname1, String nickname2);
 
+  List<NicknamesEntity> findAll();
+
 }
