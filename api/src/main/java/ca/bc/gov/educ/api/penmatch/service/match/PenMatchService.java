@@ -377,7 +377,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
     CheckForMatchResult result = new CheckForMatchResult();
     result.setMatchFound(matchFound);
-    result.setType5F1(false);
     result.setAlgorithmUsed(algorithmUsed);
     if (log.isDebugEnabled()) {
       log.debug(" output :: CheckForMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
@@ -547,7 +546,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} penFoundOnMaster={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), penFoundOnMaster, masterRecord);
     }
-    boolean type5F1 = false;
 
     boolean useGivenInitial = setPartials(student);
 
@@ -577,7 +575,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     // the list of possible students who match.
     if (session.getPenStatus().equals(PenStatus.B.getValue()) && penFoundOnMaster) {
       session.setReallyGoodMasterRecord(null);
-      type5F1 = true;
+      session.setType5F1(true);
       mergeNewMatchIntoList(student, masterRecord, masterRecord.getPen(), session, PenAlgorithm.ALG_00, 0);
     }
 
@@ -595,7 +593,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       session.setPenStatus(session.getPenStatus().trim() + "0");
     } else if (session.getMatchingRecords().size() == 1) {
       // 1 match only
-      if (type5F1) {
+      if (session.isType5F1()) {
         session.setPenStatus(PenStatus.F.getValue());
       } else {
         // one solid match, put in t_stud_no
@@ -637,8 +635,9 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         if (student.getSurname() != null) {
           student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
         }
-        if (student.getGivenName() != null && student.getGivenName().length() >= 2) {
-          student.setPartialStudentGiven(student.getGivenName().substring(0, 2));
+        if (student.getGivenName() != null) {
+          int givenLength = student.getGivenName().length() >= 2 ? 2: 1;
+          student.setPartialStudentGiven(student.getGivenName().substring(0, givenLength));
         }
       }
     }
@@ -718,8 +717,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), JsonUtil.getJsonPrettyStringFromObject(master));
     }
     boolean matchFound = false;
-    boolean type5F1 = false;
-    boolean type5Match = false;
     PenAlgorithm algorithmUsed = null;
 
     PenMatchUtils.normalizeLocalIDsFromMaster(master);
@@ -783,8 +780,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       }
 
       if (matchFound) {
-        type5F1 = true;
-        type5Match = true;
+        session.setType5F1(true);
         algorithmUsed = PenAlgorithm.ALG_SP;
       }
     }
@@ -855,8 +851,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         } else if (bonusPoints >= 60 || localIDMatchResult.getLocalIDPoints() >= 20) {
           session.setPrettyGoodMatchRecord(master);
         }
-        type5F1 = true;
-        type5Match = true;
+        session.setType5F1(true);
       }
     }
 
@@ -873,8 +868,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         session.setPrettyGoodMatchRecord(master);
         totalPoints = 55;
       }
-      type5F1 = true;
-      type5Match = true;
+      session.setType5F1(true);
     }
 
     if (matchFound) {
@@ -883,8 +877,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
     CheckForMatchResult result = new CheckForMatchResult();
     result.setMatchFound(matchFound);
-    result.setType5F1(type5F1);
-    result.setType5Match(type5Match);
     result.setAlgorithmUsed(algorithmUsed);
     result.setTotalPoints(totalPoints);
     if (log.isDebugEnabled()) {
@@ -924,13 +916,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
           CheckForMatchResult result = checkForMatch(student, masterRecord, session);
 
           if (result.isMatchFound()) {
-            String matchingPEN;
-            if (result.isType5Match()) {
-              matchingPEN = masterRecord.getPen().trim() + "?";
-            } else {
-              matchingPEN = masterRecord.getPen().trim();
-            }
-            mergeNewMatchIntoList(student, masterRecord, matchingPEN, session, result.getAlgorithmUsed(), result.getTotalPoints());
+            mergeNewMatchIntoList(student, masterRecord, masterRecord.getPen().trim(), session, result.getAlgorithmUsed(), result.getTotalPoints());
           }
         }
       }

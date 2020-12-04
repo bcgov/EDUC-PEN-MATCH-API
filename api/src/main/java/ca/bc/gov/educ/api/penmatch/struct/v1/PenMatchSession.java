@@ -31,4 +31,9 @@ public class PenMatchSession {
    * The Pen status message.
    */
   private String penStatusMessage;
+  /**
+   * The Pen status message.
+   */
+  private boolean type5F1;
+
 }

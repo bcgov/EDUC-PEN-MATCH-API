@@ -5,10 +5,7 @@ import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenConfirmationResult;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.*;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
@@ -274,18 +271,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private void findMatchesByDemog(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
-    boolean useGiven = true;
-
-    if (student.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
-      student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
-      useGiven = false;
-    } else if (student.getPartialSurnameFrequency() <= VERY_FREQUENT) {
-      student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
-      student.setPartialStudentGiven(student.getGivenName().substring(0, 1));
-    } else {
-      student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
-      student.setPartialStudentGiven(student.getGivenName().substring(0, 2));
-    }
+    boolean useGiven = setPartials(student);
 
     if (useGiven) {
       lookupByDobSurnameGiven(student, session);
@@ -306,6 +292,41 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     stopwatch.stop();
     log.debug("Completed new PEN match :: findMatchesByDemog :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
+
+  /**
+   * Sets partials.
+   *
+   * @param student the student
+   * @return the partials
+   */
+  private boolean setPartials(NewPenMatchStudentDetail student) {
+    boolean useGivenInitial = true;
+    if (student.getPartialSurnameFrequency() <= NOT_VERY_FREQUENT) {
+      if (student.getSurname() != null) {
+        student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
+      }
+      useGivenInitial = false;
+    } else {
+      if (student.getPartialSurnameFrequency() <= VERY_FREQUENT) {
+        if (student.getSurname() != null) {
+          student.setPartialStudentSurname(student.getSurname().substring(0, student.getMinSurnameSearchSize()));
+        }
+        if (StringUtils.isNotBlank(student.getGivenName())) {
+          student.setPartialStudentGiven(student.getGivenName().substring(0, 1));
+        }
+      } else {
+        if (student.getSurname() != null) {
+          student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
+        }
+        if (student.getGivenName() != null) {
+          int givenLength = student.getGivenName().length() >= 2 ? 2: 1;
+          student.setPartialStudentGiven(student.getGivenName().substring(0, givenLength));
+        }
+      }
+    }
+    return useGivenInitial;
+  }
+
 
   /**
    * !---------------------------------------------------------------------------

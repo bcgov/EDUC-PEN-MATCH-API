@@ -15,9 +15,6 @@ public class PenMatchComparator implements Comparator<OldPenMatchRecord> {
     if (x.getMatchingAlgorithmResult() == null) {
       return 0;
     }
-    if (!StringUtils.contains(x.getMatchingPEN(), "?")  && StringUtils.contains(y.getMatchingPEN(), "?") ) {
-      return -1;
-    }
     if (!(x.getMatchingAlgorithmResult() < y.getMatchingAlgorithmResult()
         || (x.getMatchingAlgorithmResult().equals(y.getMatchingAlgorithmResult()) && x.getMatchingScore() > y.getMatchingScore()))) {
       return -1;
