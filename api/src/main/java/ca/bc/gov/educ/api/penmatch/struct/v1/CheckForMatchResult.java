@@ -20,10 +20,6 @@ public class CheckForMatchResult {
    */
   private boolean type5Match;
   /**
-   * The Type 5 f 1.
-   */
-  private boolean type5F1;
-  /**
    * The Total points.
    */
   private Integer totalPoints;
