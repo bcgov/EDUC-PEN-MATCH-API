@@ -395,11 +395,11 @@ public class PenMatchLookupManager {
 
   public List<NicknamesEntity> getNicknames(String givenName) {
     String givenNameUpper = givenName.toUpperCase();
-    if (!this.nicknamesMap.containsKey(givenNameUpper)) {
-      this.setNicknames();
+    if (this.nicknamesMap.containsKey(givenNameUpper)) {
+      return this.nicknamesMap.get(givenNameUpper);
     }
-    List<NicknamesEntity> results = this.nicknamesMap.get(givenNameUpper);
-    return results == null ? new ArrayList<>() : results;
+
+    return new ArrayList<>();
   }
 
   private void setNicknames() {

@@ -35,13 +35,13 @@ public class PenMatchStudent {
   /**
    * The Surname.
    */
-  @Size(min = 2, max = 255)
+  @Size(min = 1, max = 255)
   @NotNull(message = "Surname can not be null.")
   protected String surname;
   /**
    * The Given name.
    */
-  @Size(min = 2, max = 255)
+  @Size(min = 1, max = 255)
   @NotNull(message = "Given name can not be null.")
   protected String givenName;
   /**

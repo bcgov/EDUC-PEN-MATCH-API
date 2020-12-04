@@ -637,8 +637,9 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         if (student.getSurname() != null) {
           student.setPartialStudentSurname(student.getSurname().substring(0, student.getMaxSurnameSearchSize()));
         }
-        if (student.getGivenName() != null && student.getGivenName().length() >= 2) {
-          student.setPartialStudentGiven(student.getGivenName().substring(0, 2));
+        if (student.getGivenName() != null) {
+          int givenLength = student.getGivenName().length() >= 2 ? 2: 1;
+          student.setPartialStudentGiven(student.getGivenName().substring(0, givenLength));
         }
       }
     }
