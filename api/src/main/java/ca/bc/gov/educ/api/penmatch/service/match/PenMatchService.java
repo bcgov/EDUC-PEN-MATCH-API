@@ -717,7 +717,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       log.debug(" input :: PenMatchStudentDetail={} PenMatchSession={} PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(session), JsonUtil.getJsonPrettyStringFromObject(master));
     }
     boolean matchFound = false;
-    boolean type5Match = false;
     PenAlgorithm algorithmUsed = null;
 
     PenMatchUtils.normalizeLocalIDsFromMaster(master);
@@ -782,7 +781,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
       if (matchFound) {
         session.setType5F1(true);
-        type5Match = true;
         algorithmUsed = PenAlgorithm.ALG_SP;
       }
     }
@@ -854,7 +852,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
           session.setPrettyGoodMatchRecord(master);
         }
         session.setType5F1(true);
-        type5Match = true;
       }
     }
 
@@ -872,7 +869,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         totalPoints = 55;
       }
       session.setType5F1(true);
-      type5Match = true;
     }
 
     if (matchFound) {
@@ -881,7 +877,6 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
     CheckForMatchResult result = new CheckForMatchResult();
     result.setMatchFound(matchFound);
-    result.setType5Match(type5Match);
     result.setAlgorithmUsed(algorithmUsed);
     result.setTotalPoints(totalPoints);
     if (log.isDebugEnabled()) {
@@ -921,13 +916,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
           CheckForMatchResult result = checkForMatch(student, masterRecord, session);
 
           if (result.isMatchFound()) {
-            String matchingPEN;
-            if (result.isType5Match()) {
-              matchingPEN = masterRecord.getPen().trim() + "?";
-            } else {
-              matchingPEN = masterRecord.getPen().trim();
-            }
-            mergeNewMatchIntoList(student, masterRecord, matchingPEN, session, result.getAlgorithmUsed(), result.getTotalPoints());
+            mergeNewMatchIntoList(student, masterRecord, masterRecord.getPen().trim(), session, result.getAlgorithmUsed(), result.getTotalPoints());
           }
         }
       }
