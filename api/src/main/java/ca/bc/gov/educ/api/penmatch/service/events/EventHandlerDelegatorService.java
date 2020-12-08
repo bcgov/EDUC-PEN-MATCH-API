@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.service.events;
 
+import ca.bc.gov.educ.api.penmatch.constants.EventType;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -39,20 +40,12 @@ public class EventHandlerDelegatorService {
    */
   public void handleEvent(Event event) {
     try {
-      switch (event.getEventType()) {
-        case PEN_MATCH_EVENT_OUTBOX_PROCESSED:
-          log.info("received outbox processed event :: ");
-          log.info(PAYLOAD_LOG + event.getEventPayload());
-          getEventHandlerService().handlePenMatchEventOutboxProcessedEvent(event.getEventPayload());
-          break;
-        case PROCESS_PEN_MATCH:
-          log.info("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
-          log.trace(PAYLOAD_LOG + event.getEventPayload());
-          getEventHandlerService().handleProcessPenMatchEvent(event);
-          break;
-        default:
-          log.info("silently ignoring other events.");
-          break;
+      if (event.getEventType() == EventType.PROCESS_PEN_MATCH) {
+        log.info("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
+        log.debug(PAYLOAD_LOG + event.getEventPayload());
+        getEventHandlerService().handleProcessPenMatchEvent(event);
+      } else {
+        log.info("silently ignoring other events {}", event);
       }
     } catch (final Exception e) {
       log.error("Exception", e);
