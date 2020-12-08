@@ -49,12 +49,11 @@ public class MessageSubscriber extends MessagePubSub {
   private MessageHandler onMessage() {
     return (Message message) -> {
       if (message != null) {
-        log.info("Message received is :: {} ", message);
+        log.info("Message received subject :: {},  replyTo :: {}, subscriptionID :: {}", message.getSubject(), message.getReplyTo(), message.getSID());
         try {
           var eventString = new String(message.getData());
           var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
           eventHandlerDelegatorService.handleEvent(event);
-          log.debug("Event is :: {}", event);
         } catch (final Exception e) {
           log.error("Exception ", e);
         }
