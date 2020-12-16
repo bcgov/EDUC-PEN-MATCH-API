@@ -574,16 +574,16 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     // on PEN-MASTER with that PEN, then add the student on PEN-MASTER to
     // the list of possible students who match.
     if (session.getPenStatus().equals(PenStatus.B.getValue()) && penFoundOnMaster) {
-      session.setReallyGoodMasterRecord(null);
+      session.setReallyGoodMasterMatchRecord(null);
       session.setType5F1(true);
       mergeNewMatchIntoList(student, masterRecord, masterRecord.getPen(), session, PenAlgorithm.ALG_00, 0);
     }
 
     // If only one really good match, and no pretty good matches,
     // just send the one PEN back
-    if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getReallyGoodMasterRecord() != null && session.getPrettyGoodMatchRecord() == null) {
+    if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null) {
       session.getMatchingRecords().clear();
-      session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterRecord().getPen(), session.getReallyGoodMasterRecord().getStudentID()));
+      session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterMatchRecord().getMasterRecord().getPen(), session.getReallyGoodMasterMatchRecord().getMasterRecord().getStudentID()));
       session.setPenStatus(PenStatus.D1.getValue());
       return;
     }
@@ -801,8 +801,8 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
       if (sexPoints >= 5 && birthdayPoints >= 20 && surnameMatchResult.getSurnamePoints() >= 20 && bonusPoints >= 25) {
         matchFound = true;
-        session.setReallyGoodMasterRecord(master);
         totalPoints = sexPoints + birthdayPoints + surnameMatchResult.getSurnamePoints() + bonusPoints;
+        setReallyGoodMasterRecord(master, session, totalPoints);
         algorithmUsed = PenAlgorithm.ALG_20;
       }
     }
@@ -813,8 +813,8 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       bonusPoints = sexPoints + givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints() + addressPoints;
       if (bonusPoints >= 25) {
         matchFound = true;
-        session.setReallyGoodMasterRecord(master);
         totalPoints = localIDMatchResult.getLocalIDPoints() + surnameMatchResult.getSurnamePoints() + bonusPoints;
+        setReallyGoodMasterRecord(master, session, totalPoints);
         algorithmUsed = PenAlgorithm.ALG_30;
       }
     }
@@ -825,8 +825,8 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       bonusPoints = surnameMatchResult.getSurnamePoints() + givenNameMatchResult.getGivenNamePoints() + middleNameMatchResult.getMiddleNamePoints() + addressPoints;
       if (bonusPoints >= 20) {
         matchFound = true;
-        session.setReallyGoodMasterRecord(master);
         totalPoints = localIDMatchResult.getLocalIDPoints() + sexPoints + birthdayPoints + bonusPoints;
+        setReallyGoodMasterRecord(master, session, totalPoints);
         algorithmUsed = PenAlgorithm.ALG_40;
       }
     }
@@ -847,9 +847,9 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         algorithmUsed = PenAlgorithm.ALG_50;
         totalPoints = bonusPoints;
         if (bonusPoints >= 70) {
-          session.setReallyGoodMasterRecord(master);
+          setReallyGoodMasterRecord(master, session, totalPoints);
         } else if (bonusPoints >= 60 || localIDMatchResult.getLocalIDPoints() >= 20) {
-          session.setPrettyGoodMatchRecord(master);
+          setReallyGoodMasterRecord(master, session, totalPoints);
         }
         session.setType5F1(true);
       }
@@ -865,8 +865,8 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       // Identify a pretty good match - needs to be better than the Questionable Match
       // but not a full 60 points as above
       if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15 && birthdayPoints >= 15) {
-        session.setPrettyGoodMatchRecord(master);
         totalPoints = 55;
+        setReallyGoodMasterRecord(master, session, totalPoints);
       }
       session.setType5F1(true);
     }
@@ -885,6 +885,18 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     stopwatch.stop();
     log.debug("Completed old PEN match :: checkForMatch :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
+  }
+
+  private void setReallyGoodMasterRecord(PenMasterRecord masterRecord, PenMatchSession session, int totalScore){
+    if(session.getReallyGoodMasterMatchRecord() != null){
+     PenMasterMatchedRecord curMasterMatchedRecord = session.getReallyGoodMasterMatchRecord();
+     if(curMasterMatchedRecord.getTotalScore() < totalScore){
+       PenMasterMatchedRecord rec = new PenMasterMatchedRecord(masterRecord, totalScore);
+       session.setReallyGoodMasterMatchRecord(rec);
+     }
+    }else{
+      session.setReallyGoodMasterMatchRecord(new PenMasterMatchedRecord(masterRecord, totalScore));
+    }
   }
 
   /**

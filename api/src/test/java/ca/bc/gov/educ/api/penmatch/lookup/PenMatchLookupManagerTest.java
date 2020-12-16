@@ -86,7 +86,7 @@ public class PenMatchLookupManagerTest {
   @Test
   public void testLookupNicknames_ShouldReturn4Names() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
-
+    lookupManager.init();
     lookupManager.lookupNicknames(penMatchTransactionNames, "JAMES");
 
     assertNotNull(penMatchTransactionNames.getNickname1());

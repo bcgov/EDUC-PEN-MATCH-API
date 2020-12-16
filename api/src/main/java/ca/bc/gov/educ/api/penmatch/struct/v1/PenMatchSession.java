@@ -22,7 +22,7 @@ public class PenMatchSession {
   /**
    * The Really good master record.
    */
-  private PenMasterRecord reallyGoodMasterRecord;
+  private PenMasterMatchedRecord reallyGoodMasterMatchRecord;
   /**
    * The Pen status.
    */
