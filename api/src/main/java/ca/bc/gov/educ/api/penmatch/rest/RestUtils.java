@@ -4,17 +4,16 @@ import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.model.StudentMergeEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
-import ca.bc.gov.educ.api.penmatch.struct.Condition;
-import ca.bc.gov.educ.api.penmatch.struct.Search;
-import ca.bc.gov.educ.api.penmatch.struct.SearchCriteria;
-import ca.bc.gov.educ.api.penmatch.struct.ValueType;
+import ca.bc.gov.educ.api.penmatch.struct.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -25,10 +24,18 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_PAGINATED_STUDENT_BY_CRITERIA;
+import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_STUDENT;
 import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.EQUAL;
 import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.STARTS_WITH;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
@@ -98,12 +105,20 @@ public class RestUtils {
   private final ApplicationProperties props;
 
   /**
+   * The Connection.
+   */
+  private final Connection connection;
+
+
+  /**
    * Instantiates a new Rest utils.
    *
-   * @param props the props
+   * @param props      the props
+   * @param connection the connection
    */
-  public RestUtils(@Autowired final ApplicationProperties props) {
+  public RestUtils(final ApplicationProperties props, Connection connection) {
     this.props = props;
+    this.connection = connection;
   }
 
   /**
@@ -136,11 +151,15 @@ public class RestUtils {
   /**
    * Gets pen master record by pen.
    *
-   * @param pen the pen
+   * @param pen           the pen
+   * @param correlationID the correlation id
    * @return the pen master record by pen
+   * @throws IOException          the io exception
+   * @throws InterruptedException the interrupted exception
    */
-  public Optional<PenMasterRecord> getPenMasterRecordByPen(String pen) {
-    RestTemplate restTemplate = getRestTemplate();
+  public Optional<PenMasterRecord> getPenMasterRecordByPen(String pen, UUID correlationID) {
+    var obMapper = new ObjectMapper();
+   /* RestTemplate restTemplate = getRestTemplate();
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     ParameterizedTypeReference<List<StudentEntity>> type = new ParameterizedTypeReference<>() {
@@ -150,21 +169,36 @@ public class RestUtils {
     if (studentResponse.hasBody() && !Objects.requireNonNull(studentResponse.getBody()).isEmpty()) {
       return Optional.of(PenMatchUtils.convertStudentEntityToPenMasterRecord(studentResponse.getBody().get(0)));
     }
+    return Optional.empty();*/
+    try {
+      Event event = Event.builder().sagaId(UUID.randomUUID()).eventType(GET_STUDENT).eventPayload(pen).build();
+      var responseMessage = connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      if (responseMessage.getData() != null && responseMessage.getData().length > 0) {
+        val student = obMapper.readValue(responseMessage.getData(), StudentEntity.class);
+        if (student == null || student.getPen() == null) {
+          return Optional.empty();
+        }
+        return Optional.of(PenMatchUtils.convertStudentEntityToPenMasterRecord(student));
+      }
+    } catch (final Exception ex) {
+      log.error("exception", ex);
+    }
     return Optional.empty();
   }
 
   /**
    * Lookup with all parts list.
    *
-   * @param dob       the dob
-   * @param surname   the surname
-   * @param givenName the given name
-   * @param mincode   the mincode
-   * @param localID   the local id
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param givenName     the given name
+   * @param mincode       the mincode
+   * @param localID       the local id
+   * @param correlationID the correlation id
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) throws JsonProcessingException {
+  public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID, UUID correlationID) throws JsonProcessingException {
     LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
     SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
@@ -187,22 +221,23 @@ public class RestUtils {
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + PAGINATED).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-
-    return getPaginatedStudentFromStudentAPI(builder);
+    return getStudentsByCriteria(criteriaJSON, correlationID);
+    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
+    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
    * Lookup no init list.
    *
-   * @param dob     the dob
-   * @param surname the surname
-   * @param mincode the mincode
-   * @param localID the local id
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param mincode       the mincode
+   * @param localID       the local id
+   * @param correlationID the correlation id
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID) throws JsonProcessingException {
+  public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID, UUID correlationID) throws JsonProcessingException {
 
     LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
     SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
@@ -225,21 +260,22 @@ public class RestUtils {
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + PAGINATED).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-
-    return getPaginatedStudentFromStudentAPI(builder);
+    return getStudentsByCriteria(criteriaJSON, correlationID);
+    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
+    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
    * Lookup no local id list.
    *
-   * @param dob       the dob
-   * @param surname   the surname
-   * @param givenName the given name
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param givenName     the given name
+   * @param correlationID the correlation id
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName) throws JsonProcessingException {
+  public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName, UUID correlationID) throws JsonProcessingException {
     LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
     SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
@@ -256,9 +292,9 @@ public class RestUtils {
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL() + PAGINATED).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-
-    return getPaginatedStudentFromStudentAPI(builder);
+    return getStudentsByCriteria(criteriaJSON, correlationID);
+    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
+    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
@@ -314,12 +350,13 @@ public class RestUtils {
   /**
    * Lookup with no initial or local ID
    *
-   * @param dob     the dob
-   * @param surname the surname
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param correlationID the correlation id
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname) throws JsonProcessingException {
+  public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname, UUID correlationID) throws JsonProcessingException {
     LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
     SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
@@ -333,9 +370,9 @@ public class RestUtils {
     searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
-
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-    return getPaginatedStudentFromStudentAPI(builder);
+    return getStudentsByCriteria(criteriaJSON, correlationID);
+    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
+    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
@@ -357,4 +394,55 @@ public class RestUtils {
     }
     return Optional.empty();
   }
+
+  /**
+   * Get students by criteria list.
+   *
+   * @param criteria      the criteria
+   * @param correlationID
+   * @return the list
+   */
+  public List<StudentEntity> getStudentsByCriteria(String criteria, UUID correlationID) {
+    try {
+      TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
+      };
+      var obMapper = new ObjectMapper();
+      Event event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
+      var responseMessage = connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      if (null != responseMessage) {
+        return obMapper.readValue(responseMessage.getData(), ref).getContent();
+      } else {
+        log.error("Either NATS timed out or the response is null");
+      }
+
+    } catch (final Exception ex) {
+      log.error("exception", ex);
+    }
+    return new ArrayList<>();
+  }
+
+  /*@Scheduled(fixedRate = 90000)
+  public void scheduled() throws JsonProcessingException {
+    executor.execute(()->{
+      try {
+        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    });
+    executor.execute(()->{
+      try {
+        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    });
+    executor.execute(()->{
+      try {
+        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    });
+  }*/
 }

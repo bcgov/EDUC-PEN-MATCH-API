@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.penmatch.controller;
 
 import ca.bc.gov.educ.api.penmatch.controller.v1.PenMatchController;
 import ca.bc.gov.educ.api.penmatch.exception.RestExceptionHandler;
+import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
@@ -29,10 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -64,7 +62,10 @@ public class PenMatchControllerTest {
 
   @Autowired
   PenMatchController controller;
+  @Autowired
+  PenMatchLookupManager penMatchLookupManager;
   private MockMvc mockMvc;
+  UUID correlationID = UUID.randomUUID();
 
   public static String asJsonString(final Object obj) {
     try {
@@ -76,18 +77,18 @@ public class PenMatchControllerTest {
 
   @Before
   public void setUp() throws Exception {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler()).build();
 
     final File fileNick = new File(
-            Objects.requireNonNull(getClass().getClassLoader().getResource("mock_nicknames.json")).getFile()
+        Objects.requireNonNull(getClass().getClassLoader().getResource("mock_nicknames.json")).getFile()
     );
     List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
     });
     nicknamesRepository.saveAll(nicknameEntities);
 
     final File fileSurnameFrequency = new File(
-            Objects.requireNonNull(getClass().getClassLoader().getResource("mock_surname_frequency.json")).getFile()
+        Objects.requireNonNull(getClass().getClassLoader().getResource("mock_surname_frequency.json")).getFile()
     );
     List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
     });
@@ -105,8 +106,8 @@ public class PenMatchControllerTest {
   public void testCreateStudent_GivenValidPayload_ShouldReturnStatusCreated() throws Exception {
     PenMatchStudent entity = createPenMatchStudent();
     when(restUtils.getRestTemplate()).thenReturn(restTemplate);
-    when(restUtils.lookupWithAllParts("19991201", "LORD", "CLAYTON", "00501007", "285261")).thenReturn(new ArrayList<>());
-    when(restUtils.getPenMasterRecordByPen(PEN)).thenReturn(Optional.of(new PenMasterRecord()));
+    when(restUtils.lookupWithAllParts("19991201", "LORD", "CLAYTON", "00501007", "285261", correlationID)).thenReturn(new ArrayList<>());
+    when(restUtils.getPenMasterRecordByPen(PEN, correlationID)).thenReturn(Optional.of(new PenMasterRecord()));
 
     MvcResult result = mockMvc
         .perform(post("/api/v1/pen-match").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity)))
@@ -119,7 +120,7 @@ public class PenMatchControllerTest {
   @WithMockOAuth2Scope(scope = "READ_NICKNAMES")
   public void testNicknames_ForGivenName_ShouldReturnListOfNicknames() throws Exception {
     when(restUtils.getRestTemplate()).thenReturn(restTemplate);
-
+    penMatchLookupManager.reloadCache();
     this.mockMvc
         .perform(get("/api/v1/pen-match/nicknames/ALEXANDER").contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));

@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -54,6 +55,7 @@ public class PenMatchLookupManagerTest {
   MatchCodesRepository matchCodesRepository;
   @Autowired
   SurnameFrequencyRepository surnameFrequencyRepository;
+  UUID correlationID = UUID.randomUUID();
 
   @Before
   public void before() throws Exception {
@@ -97,8 +99,8 @@ public class PenMatchLookupManagerTest {
 
   @Test
   public void testLookupStudentByPEN() {
-    when(restUtils.getPenMasterRecordByPen("108999400")).thenReturn(Optional.of(new PenMasterRecord()));
-    var masterRecord = lookupManager.lookupStudentByPEN("108999400");
+    when(restUtils.getPenMasterRecordByPen("108999400", correlationID)).thenReturn(Optional.of(new PenMasterRecord()));
+    var masterRecord = lookupManager.lookupStudentByPEN("108999400", correlationID);
 
     assertThat(masterRecord).isPresent();
   }
@@ -107,8 +109,8 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentWithAllParts() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19981102", "ODLUS", "VICTORIA", "00501007", "239661"));
-    when(restUtils.lookupWithAllParts("19981102", "ODLUS", "VICTORIA", "00501007", "239661")).thenReturn(students);
-    List<StudentEntity> studentEntities = lookupManager.lookupWithAllParts("19981102", "ODLUS", "VICTORIA", "00501007", "239661");
+    when(restUtils.lookupWithAllParts("19981102", "ODLUS", "VICTORIA", "00501007", "239661", correlationID)).thenReturn(students);
+    List<StudentEntity> studentEntities = lookupManager.lookupWithAllParts("19981102", "ODLUS", "VICTORIA", "00501007", "239661", correlationID);
 
     assertNotNull(studentEntities);
     assertTrue(studentEntities.size() > 0);
@@ -118,9 +120,9 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentNoInitLargeData() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19981102", "ODLUS", null, "VICTORIA", "00501007"));
-    when(restUtils.lookupNoInit("19981102", "ODLUS", "VICTORIA", "00501007")).thenReturn(students);
+    when(restUtils.lookupNoInit("19981102", "ODLUS", "VICTORIA", "00501007", correlationID)).thenReturn(students);
 
-    List<StudentEntity> studentEntities = lookupManager.lookupNoInit("19981102", "ODLUS", "VICTORIA", "00501007");
+    List<StudentEntity> studentEntities = lookupManager.lookupNoInit("19981102", "ODLUS", "VICTORIA", "00501007", correlationID);
     assertNotNull(studentEntities);
     assertTrue(studentEntities.size() > 0);
   }
@@ -129,9 +131,9 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentNoInit() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19791018", "VANDERLEEK", null, "JAKE", "08288006"));
-    when(restUtils.lookupNoInit("19791018", "VANDERLEEK", "JAKE", "08288006")).thenReturn(students);
+    when(restUtils.lookupNoInit("19791018", "VANDERLEEK", "JAKE", "08288006", correlationID)).thenReturn(students);
 
-    List<StudentEntity> studentEntities = lookupManager.lookupNoInit("19791018", "VANDERLEEK", "JAKE", "08288006");
+    List<StudentEntity> studentEntities = lookupManager.lookupNoInit("19791018", "VANDERLEEK", "JAKE", "08288006", correlationID);
 
     assertNotNull(studentEntities);
     assertTrue(studentEntities.size() > 0);
@@ -141,8 +143,8 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentNoLocalIDLargeData() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19981102", "ODLUS", "VICTORIA", null, null));
-    when(restUtils.lookupNoLocalID("19981102", "ODLUS", "VICTORIA")).thenReturn(students);
-    List<StudentEntity> studentEntities = lookupManager.lookupNoLocalID("19981102", "ODLUS", "VICTORIA");
+    when(restUtils.lookupNoLocalID("19981102", "ODLUS", "VICTORIA", correlationID)).thenReturn(students);
+    List<StudentEntity> studentEntities = lookupManager.lookupNoLocalID("19981102", "ODLUS", "VICTORIA", correlationID);
 
     assertNotNull(studentEntities);
     assertTrue(studentEntities.size() > 0);
@@ -152,8 +154,8 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentNoLocalID() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19791018", "VANDERLEEK", "JAKE", null, null));
-    when(restUtils.lookupNoLocalID("19791018", "VANDERLEEK", "JAKE")).thenReturn(students);
-    List<StudentEntity> studentEntities = lookupManager.lookupNoLocalID("19791018", "VANDERLEEK", "JAKE");
+    when(restUtils.lookupNoLocalID("19791018", "VANDERLEEK", "JAKE", correlationID)).thenReturn(students);
+    List<StudentEntity> studentEntities = lookupManager.lookupNoLocalID("19791018", "VANDERLEEK", "JAKE", correlationID);
 
     assertNotNull(studentEntities);
     assertTrue(studentEntities.size() > 0);
@@ -163,8 +165,8 @@ public class PenMatchLookupManagerTest {
   public void testLookupStudentNoInitNoLocalID() throws JsonProcessingException {
     var students = new ArrayList<StudentEntity>();
     students.add(createStudent("19791018", "VANDERLEEK", null, null, null));
-    when(restUtils.lookupNoInitNoLocalID("19791018", "VANDERLEEK")).thenReturn(students);
-    List<StudentEntity> studentEntities = lookupManager.lookupNoInitNoLocalID("19791018", "VANDERLEEK");
+    when(restUtils.lookupNoInitNoLocalID("19791018", "VANDERLEEK", correlationID)).thenReturn(students);
+    List<StudentEntity> studentEntities = lookupManager.lookupNoInitNoLocalID("19791018", "VANDERLEEK", correlationID);
 
     assertNotNull(studentEntities);
   }

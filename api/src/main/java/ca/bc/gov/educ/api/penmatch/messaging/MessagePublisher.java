@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 public class MessagePublisher extends MessagePubSub {
 
 
+  /**
+   * Instantiates a new Message publisher.
+   *
+   * @param con the con
+   */
   @Autowired
   public MessagePublisher(final Connection con) {
     super.connection = con;

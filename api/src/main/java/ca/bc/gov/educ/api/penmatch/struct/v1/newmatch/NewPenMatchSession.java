@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.UUID;
 
 /**
  * The type New pen match session.
@@ -34,4 +35,9 @@ public class NewPenMatchSession {
    * The Is psi.
    */
   private boolean isPSI;
+
+  /**
+   * correlation id to pass to different events for easy tracking.
+   */
+  private UUID correlationID;
 }

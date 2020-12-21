@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.PriorityQueue;
+import java.util.UUID;
 
 /**
  * The type Pen match session.
@@ -35,5 +36,11 @@ public class PenMatchSession {
    * The Pen status message.
    */
   private boolean type5F1;
+
+  /**
+   * correlation id to pass to different events for easy tracking.
+   */
+  private UUID correlationID;
+
 
 }

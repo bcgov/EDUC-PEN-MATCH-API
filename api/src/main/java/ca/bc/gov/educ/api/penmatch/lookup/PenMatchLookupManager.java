@@ -86,6 +86,9 @@ public class PenMatchLookupManager {
    */
   private final Map<String, List<NicknamesEntity>> nicknamesMap = new ConcurrentHashMap<>();
 
+  /**
+   * The Nicknames lock.
+   */
   private final ReadWriteLock nicknamesLock = new ReentrantReadWriteLock();
 
   /**
@@ -111,16 +114,17 @@ public class PenMatchLookupManager {
   /**
    * Local ID is not blank, lookup with all parts
    *
-   * @param dob       the dob
-   * @param surname   the surname
-   * @param givenName the given name
-   * @param mincode   the mincode
-   * @param localID   the local id
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param givenName     the given name
+   * @param mincode       the mincode
+   * @param localID       the local id
+   * @param correlationID the correlation id
    * @return the list
    */
-  public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID) {
+  public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID, UUID correlationID) {
     try {
-      return restUtils.lookupWithAllParts(dob, surname, givenName, mincode, localID);
+      return restUtils.lookupWithAllParts(dob, surname, givenName, mincode, localID, correlationID);
     } catch (JsonProcessingException e) {
       log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
       return new ArrayList<>();
@@ -131,15 +135,16 @@ public class PenMatchLookupManager {
   /**
    * Looking using local ID but don't use initial
    *
-   * @param dob     the dob
-   * @param surname the surname
-   * @param mincode the mincode
-   * @param localID the local id
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param mincode       the mincode
+   * @param localID       the local id
+   * @param correlationID the correlation id
    * @return the list
    */
-  public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID) {
+  public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID, UUID correlationID) {
     try {
-      return restUtils.lookupNoInit(dob, surname, mincode, localID);
+      return restUtils.lookupNoInit(dob, surname, mincode, localID, correlationID);
     } catch (JsonProcessingException e) {
       log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
       return new ArrayList<>();
@@ -149,14 +154,15 @@ public class PenMatchLookupManager {
   /**
    * Perform lookup with no local ID
    *
-   * @param dob       the dob
-   * @param surname   the surname
-   * @param givenName the given name
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param givenName     the given name
+   * @param correlationID the correlation id
    * @return the list
    */
-  public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName) {
+  public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName, UUID correlationID) {
     try {
-      return restUtils.lookupNoLocalID(dob, surname, givenName);
+      return restUtils.lookupNoLocalID(dob, surname, givenName, correlationID);
     } catch (JsonProcessingException e) {
       log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
       return new ArrayList<>();
@@ -166,13 +172,14 @@ public class PenMatchLookupManager {
   /**
    * Lookup with no initial or local ID
    *
-   * @param dob     the dob
-   * @param surname the surname
+   * @param dob           the dob
+   * @param surname       the surname
+   * @param correlationID the correlation id
    * @return the list
    */
-  public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname) {
+  public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname, UUID correlationID) {
     try {
-      return restUtils.lookupNoInitNoLocalID(dob, surname);
+      return restUtils.lookupNoInitNoLocalID(dob, surname, correlationID);
     } catch (JsonProcessingException e) {
       log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
       return new ArrayList<>();
@@ -182,12 +189,13 @@ public class PenMatchLookupManager {
   /**
    * Fetches a PEN Master Record given a student number
    *
-   * @param pen the pen
+   * @param pen           the pen
+   * @param correlationID the correlation id
    * @return the optional
    */
-  public Optional<PenMasterRecord> lookupStudentByPEN(String pen) {
+  public Optional<PenMasterRecord> lookupStudentByPEN(String pen, UUID correlationID) {
     if (StringUtils.isNotBlank(pen)) {
-      return restUtils.getPenMasterRecordByPen(pen);
+      return restUtils.getPenMasterRecordByPen(pen, correlationID);
     }
     return Optional.empty();
   }
@@ -360,7 +368,7 @@ public class PenMatchLookupManager {
 
   /**
    * Reload cache.
-   *  - Evict cache every 24 hours and reload again
+   * - Evict cache every 24 hours and reload again
    */
   @Scheduled(fixedRate = 86400000)
   public void reloadCache() {
@@ -372,9 +380,7 @@ public class PenMatchLookupManager {
     log.info("Reloaded match codes into cache. {} entries", matchCodesMap.size());
 
     log.info("Reloading nicknames cache");
-    if (nicknamesMap != null) {
-      nicknamesMap.clear();
-    }
+    nicknamesMap.clear();
     this.setNicknames();
     log.info("Reloaded nicknames into cache");
   }
@@ -393,6 +399,12 @@ public class PenMatchLookupManager {
     log.info("Loaded Nicknames during startup.");
   }
 
+  /**
+   * Gets nicknames.
+   *
+   * @param givenName the given name
+   * @return the nicknames
+   */
   public List<NicknamesEntity> getNicknames(String givenName) {
     String givenNameUpper = givenName.toUpperCase();
     if (this.nicknamesMap.containsKey(givenNameUpper)) {
@@ -402,6 +414,9 @@ public class PenMatchLookupManager {
     return new ArrayList<>();
   }
 
+  /**
+   * Sets nicknames.
+   */
   private void setNicknames() {
     Lock writeLock = nicknamesLock.writeLock();
     try {
@@ -413,7 +428,13 @@ public class PenMatchLookupManager {
     }
   }
 
-  // map as (givenName, list of Nicknames entity)
+  /**
+   * Map nickname.
+   *
+   * @param givenName the given name
+   * @param nickName  the nick name
+   */
+// map as (givenName, list of Nicknames entity)
   private void mapNickname(String givenName, NicknamesEntity nickName) {
     List<NicknamesEntity> nicknames;
     String key = StringUtils.trimToNull(givenName);

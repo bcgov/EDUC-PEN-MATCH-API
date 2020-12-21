@@ -1,5 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.service.match;
 
+import java.util.UUID;
+
 /**
  * The interface Match service.
  *
@@ -11,8 +13,9 @@ public interface MatchService<T, R> {
   /**
    * Match student r.
    *
-   * @param t the payload
+   * @param t             the payload
+   * @param correlationID the correlation id to track each call uniquely
    * @return R the result
    */
-  R matchStudent(T t);
+  R matchStudent(T t, UUID correlationID);
 }

@@ -11,5 +11,13 @@ public enum EventType {
   /**
    * Pen match event outbox processed event type.
    */
-  PEN_MATCH_EVENT_OUTBOX_PROCESSED
+  PEN_MATCH_EVENT_OUTBOX_PROCESSED,
+  /**
+   * Get student event type.
+   */
+  GET_STUDENT,
+  /**
+   * Get paginated student by criteria event type.
+   */
+  GET_PAGINATED_STUDENT_BY_CRITERIA
 }

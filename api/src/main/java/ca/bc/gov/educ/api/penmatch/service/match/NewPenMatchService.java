@@ -15,10 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -154,13 +151,13 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
   /**
    * This is the main method to match a student
    */
-  public PenMatchResult matchStudent(NewPenMatchStudentDetail student) {
+  public PenMatchResult matchStudent(NewPenMatchStudentDetail student, UUID correlationID) {
     var stopwatch = Stopwatch.createStarted();
     log.info("Started new match");
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
-    NewPenMatchSession session = initialize(student);
+    NewPenMatchSession session = initialize(student, correlationID);
 
     PenConfirmationResult confirmationResult = new PenConfirmationResult();
     confirmationResult.setDeceased(false);
@@ -338,7 +335,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
-    List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
+    List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), session.getCorrelationID());
     for (StudentEntity entity : penDemogList) {
       determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
     }
@@ -396,7 +393,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private void lookupByDobSurname(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
-    List<StudentEntity> penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname());
+    List<StudentEntity> penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname(), session.getCorrelationID());
     for (StudentEntity entity : penDemogList) {
       determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
     }
@@ -437,15 +434,17 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
   /**
    * Initialize the student record and variables (will be refactored)
    *
-   * @param student the student
+   * @param student       the student
+   * @param correlationID the correlation id
    * @return the new pen match session
    */
-  private NewPenMatchSession initialize(NewPenMatchStudentDetail student) {
+  private NewPenMatchSession initialize(NewPenMatchStudentDetail student, UUID correlationID) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
     NewPenMatchSession session = new NewPenMatchSession();
+    session.setCorrelationID(correlationID);
 
     if (StringUtils.length(student.getMincode()) > 2 && student.getMincode().startsWith("102")) {
       session.setPSI(true);
@@ -546,7 +545,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     String localStudentNumber = student.getPen();
     result.setDeceased(false);
 
-    var masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber);
+    var masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber, session.getCorrelationID());
 
     String studentTrueNumber = null;
 
@@ -559,7 +558,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       if (masterRecordOptional.get().getStatus() != null && masterRecordOptional.get().getStatus().equals(MERGED) && studentTrueNumber != null) {
         student.setStudentTrueNumber(studentTrueNumber);
         result.setMergedPEN(studentTrueNumber);
-        masterRecordOptional = lookupManager.lookupStudentByPEN(studentTrueNumber);
+        masterRecordOptional = lookupManager.lookupStudentByPEN(studentTrueNumber, session.getCorrelationID());
         if (masterRecordOptional.isPresent() && masterRecordOptional.get().getPen() != null && masterRecordOptional.get().getPen().trim().equals(studentTrueNumber)) {
           result.setPenConfirmationResultCode(PenConfirmationResult.PEN_ON_FILE);
         }

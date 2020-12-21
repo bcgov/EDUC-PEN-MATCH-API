@@ -18,10 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,6 +75,12 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     this.newPenMatchService = newPenMatchService;
   }
 
+  /**
+   * Gets nicknames.
+   *
+   * @param givenName the given name
+   * @return the nicknames
+   */
   public List<NicknamesEntity> getNicknames(String givenName) {
     return lookupManager.lookupNicknamesOnly(givenName);
   }
@@ -86,13 +89,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
    * This is the main method to match a student
    */
   @Override
-  public PenMatchResult matchStudent(PenMatchStudentDetail student) {
+  public PenMatchResult matchStudent(PenMatchStudentDetail student, UUID correlationID) {
     var stopwatch = Stopwatch.createStarted();
     log.info("Started old PEN match");
     if (log.isDebugEnabled()) {
       log.debug(INPUT_PEN_MATCH_STUDENT_DETAIL, JsonUtil.getJsonPrettyStringFromObject(student));
     }
-    PenMatchSession session = initialize(student);
+    PenMatchSession session = initialize(student, correlationID);
 
     PenConfirmationResult confirmationResult = new PenConfirmationResult();
     confirmationResult.setDeceased(false);
@@ -130,7 +133,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       }
       stopwatch.stop();
       log.info("Completed old PEN match in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-      return newPenMatchService.matchStudent(newStudentDetail);
+      return newPenMatchService.matchStudent(newStudentDetail, session.getCorrelationID());
     } else {
       result = new PenMatchResult(PenMatchUtils.convertOldMatchPriorityQueueToList(session.getMatchingRecords()), session.getPenStatus(), session.getPenStatusMessage());
     }
@@ -144,9 +147,15 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
   }
 
 
+  /**
+   * Check for f 1 status and process.
+   *
+   * @param student the student
+   * @param session the session
+   */
   private void checkForF1StatusAndProcess(PenMatchStudentDetail student, PenMatchSession session) {
     if (session.getPenStatus().equals(PenStatus.AA.getValue()) || session.getPenStatus().equals(PenStatus.B1.getValue()) || session.getPenStatus().equals(PenStatus.C1.getValue()) || session.getPenStatus().equals(PenStatus.D1.getValue())) {
-      Optional<PenMasterRecord> masterRecord = lookupManager.lookupStudentByPEN(student.getPen());
+      Optional<PenMasterRecord> masterRecord = lookupManager.lookupStudentByPEN(student.getPen(), session.getCorrelationID());
       if (masterRecord.isPresent() && !StringUtils.equals(masterRecord.get().getDob(), student.getDob())) {
         session.setPenStatusMessage("Birthdays are suspect: " + masterRecord.get().getDob() + " vs " + student.getDob());
         session.setPenStatus(PenStatus.F1.getValue());
@@ -165,6 +174,12 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     }
   }
 
+  /**
+   * Update status to g 0 based on conditions.
+   *
+   * @param student the student
+   * @param session the session
+   */
   private void updateStatusToG0BasedOnConditions(PenMatchStudentDetail student, PenMatchSession session) {
     if ((session.getPenStatus().equals(PenStatus.C0.getValue()) || session.getPenStatus().equals(PenStatus.D0.getValue()))
         && (student.getUpdateCode() != null
@@ -173,6 +188,14 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     }
   }
 
+  /**
+   * Sets pen status by pen.
+   *
+   * @param student            the student
+   * @param session            the session
+   * @param confirmationResult the confirmation result
+   * @return the pen status by pen
+   */
   private PenConfirmationResult setPenStatusByPen(PenMatchStudentDetail student, PenMatchSession session, PenConfirmationResult confirmationResult) {
     if (student.getPen() != null) {
       boolean validCheckDigit = PenMatchUtils.penCheckDigit(student.getPen());
@@ -190,6 +213,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     return confirmationResult;
   }
 
+  /**
+   * Gets pen confirmation result.
+   *
+   * @param student the student
+   * @param session the session
+   * @return the pen confirmation result
+   */
   private PenConfirmationResult getPenConfirmationResult(PenMatchStudentDetail student, PenMatchSession session) {
     PenConfirmationResult confirmationResult;
     confirmationResult = confirmPEN(student, session);
@@ -216,15 +246,17 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
   /**
    * Initialize the student record and variables (will be refactored)
    *
-   * @param student the student
+   * @param student       the student
+   * @param correlationID the correlation id
    * @return the pen match session
    */
-  private PenMatchSession initialize(PenMatchStudentDetail student) {
+  private PenMatchSession initialize(PenMatchStudentDetail student, UUID correlationID) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(INPUT_PEN_MATCH_STUDENT_DETAIL, JsonUtil.getJsonPrettyStringFromObject(student));
     }
     PenMatchSession session = new PenMatchSession();
+    session.setCorrelationID(correlationID);
     session.setPenStatusMessage(null);
     session.setMatchingRecords(new PriorityQueue<>(new PenMatchComparator()));
 
@@ -472,7 +504,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
    * @param localStudentNumber the local student number
    */
   private void checkMatchFoundAndSetResult(PenMatchStudentDetail student, PenMatchSession session, PenConfirmationResult result, String localStudentNumber) {
-    var masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber);
+    var masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber, session.getCorrelationID());
     PenMasterRecord masterRecord = null;
     boolean matchFound = false;
 
@@ -486,7 +518,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
       if (MERGED.equals(masterRecord.getStatus()) && StringUtils.isNotBlank(studentTrueNumber)) {
         localStudentNumber = studentTrueNumber.trim();
         result.setMergedPEN(localStudentNumber);
-        masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber);
+        masterRecordOptional = lookupManager.lookupStudentByPEN(localStudentNumber, session.getCorrelationID());
         if (masterRecordOptional.isPresent()
             && StringUtils.equals(StringUtils.trimToEmpty(masterRecordOptional.get().getPen()), localStudentNumber)) {
           masterRecord = masterRecordOptional.get();
@@ -552,15 +584,15 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     List<StudentEntity> studentEntityList;
     if (student.getLocalID() == null) {
       if (useGivenInitial) {
-        studentEntityList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven());
+        studentEntityList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), session.getCorrelationID());
       } else {
-        studentEntityList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname());
+        studentEntityList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname(), session.getCorrelationID());
       }
     } else {
       if (useGivenInitial) {
-        studentEntityList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), student.getMincode(), student.getLocalID());
+        studentEntityList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), student.getMincode(), student.getLocalID(), session.getCorrelationID());
       } else {
-        studentEntityList = lookupManager.lookupNoInit(student.getDob(), student.getPartialStudentSurname(), student.getMincode(), student.getLocalID());
+        studentEntityList = lookupManager.lookupNoInit(student.getDob(), student.getPartialStudentSurname(), student.getMincode(), student.getLocalID(), session.getCorrelationID());
       }
     }
 
@@ -887,6 +919,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     return result;
   }
 
+  /**
+   * Set really good master record.
+   *
+   * @param masterRecord the master record
+   * @param session      the session
+   * @param totalScore   the total score
+   */
   private void setReallyGoodMasterRecord(PenMasterRecord masterRecord, PenMatchSession session, int totalScore){
     if(session.getReallyGoodMasterMatchRecord() != null){
      PenMasterMatchedRecord curMasterMatchedRecord = session.getReallyGoodMasterMatchRecord();

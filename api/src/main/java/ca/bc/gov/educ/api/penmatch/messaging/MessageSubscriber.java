@@ -17,13 +17,25 @@ import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_API_TOPIC;
 import static lombok.AccessLevel.PRIVATE;
 
 
+/**
+ * The type Message subscriber.
+ */
 @Component
 @Slf4j
 public class MessageSubscriber extends MessagePubSub {
 
+  /**
+   * The Event handler delegator service.
+   */
   @Getter(PRIVATE)
   private final EventHandlerDelegatorService eventHandlerDelegatorService;
 
+  /**
+   * Instantiates a new Message subscriber.
+   *
+   * @param con                          the con
+   * @param eventHandlerDelegatorService the event handler delegator service
+   */
   @Autowired
   public MessageSubscriber(final Connection con, EventHandlerDelegatorService eventHandlerDelegatorService) {
     this.eventHandlerDelegatorService = eventHandlerDelegatorService;
@@ -53,7 +65,7 @@ public class MessageSubscriber extends MessagePubSub {
         try {
           var eventString = new String(message.getData());
           var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
-          eventHandlerDelegatorService.handleEvent(event);
+          eventHandlerDelegatorService.handleEvent(event, message);
         } catch (final Exception e) {
           log.error("Exception ", e);
         }

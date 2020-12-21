@@ -2,7 +2,6 @@ package ca.bc.gov.educ.api.penmatch.service.events;
 
 import ca.bc.gov.educ.api.penmatch.constants.EventOutcome;
 import ca.bc.gov.educ.api.penmatch.mappers.PenMatchStudentMapper;
-import ca.bc.gov.educ.api.penmatch.messaging.MessagePublisher;
 import ca.bc.gov.educ.api.penmatch.service.match.PenMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
@@ -11,10 +10,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -37,32 +38,29 @@ public class EventHandlerService {
   @Getter(PRIVATE)
   private final PenMatchService penMatchService;
 
-  @Getter(PRIVATE)
-  private final MessagePublisher messagePublisher;
 
   /**
    * Instantiates a new Event handler service.
    *
-   * @param penMatchService         the pen match service
-   * @param messagePublisher        the message publisher
+   * @param penMatchService the pen match service
    */
-  public EventHandlerService(PenMatchService penMatchService, MessagePublisher messagePublisher) {
+  public EventHandlerService(PenMatchService penMatchService) {
     this.penMatchService = penMatchService;
-    this.messagePublisher = messagePublisher;
   }
 
   /**
    * Handle process pen match event.
    * return response as soon as processing is done.
+   *
    * @param event the event
+   * @return the byte [ ]
+   * @throws IOException the io exception
    */
-  @Async("subscriberExecutor")
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handleProcessPenMatchEvent(@NonNull Event event) {
-    try {
+  public byte[] handleProcessPenMatchEvent(@NonNull Event event) throws IOException {
       var obMapper = new ObjectMapper();
-      var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())));
-      log.debug("PEN Match Result for saga id :: {} , is:: {} ", event.getSagaId(), result);
+      var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())), event.getSagaId());
+      log.info("PEN Match Result for event :: {} , is:: {} ", event, result);
       event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
       event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
       Event newEvent = Event.builder()
@@ -70,10 +68,7 @@ public class EventHandlerService {
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.PEN_MATCH_PROCESSED)
         .eventPayload(JsonUtil.getJsonStringFromObject(result)).build();
-      getMessagePublisher().dispatchMessage(event.getReplyTo(), obMapper.writeValueAsBytes(newEvent));
-    } catch (final Exception jsonProcessingException) {
-      log.error("JSON processing exception for :: {} , {}", event.getSagaId(), jsonProcessingException);
-    }
+      return obMapper.writeValueAsBytes(newEvent);
   }
 
 }

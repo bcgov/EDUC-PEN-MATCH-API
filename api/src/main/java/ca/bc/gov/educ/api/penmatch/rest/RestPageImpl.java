@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.rest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.PageImpl;
@@ -29,9 +30,11 @@ public class RestPageImpl<T> extends PageImpl<T> {
    * @param totalPages       the total pages
    * @param sort             the sort
    * @param first            the first
+   * @param empty            the empty
    * @param numberOfElements the number of elements
    */
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public RestPageImpl(@JsonProperty("content") List<T> content,
                       @JsonProperty("number") int number,
                       @JsonProperty("size") int size,
@@ -41,6 +44,7 @@ public class RestPageImpl<T> extends PageImpl<T> {
                       @JsonProperty("totalPages") int totalPages,
                       @JsonProperty("sort") JsonNode sort,
                       @JsonProperty("first") boolean first,
+                      @JsonProperty("empty") boolean empty,
                       @JsonProperty("numberOfElements") int numberOfElements) {
 
     super(content, PageRequest.of(number, size), totalElements);
