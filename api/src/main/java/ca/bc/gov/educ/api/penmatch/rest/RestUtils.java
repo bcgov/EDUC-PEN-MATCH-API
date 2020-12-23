@@ -21,18 +21,13 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_PAGINATED_STUDENT_BY_CRITERIA;
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_STUDENT;
@@ -154,22 +149,9 @@ public class RestUtils {
    * @param pen           the pen
    * @param correlationID the correlation id
    * @return the pen master record by pen
-   * @throws IOException          the io exception
-   * @throws InterruptedException the interrupted exception
    */
   public Optional<PenMasterRecord> getPenMasterRecordByPen(String pen, UUID correlationID) {
     var obMapper = new ObjectMapper();
-   /* RestTemplate restTemplate = getRestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    ParameterizedTypeReference<List<StudentEntity>> type = new ParameterizedTypeReference<>() {
-    };
-    ResponseEntity<List<StudentEntity>> studentResponse = restTemplate.exchange(props.getStudentApiURL() + "?pen=" + pen, HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), type);
-
-    if (studentResponse.hasBody() && !Objects.requireNonNull(studentResponse.getBody()).isEmpty()) {
-      return Optional.of(PenMatchUtils.convertStudentEntityToPenMasterRecord(studentResponse.getBody().get(0)));
-    }
-    return Optional.empty();*/
     try {
       Event event = Event.builder().sagaId(correlationID).eventType(GET_STUDENT).eventPayload(pen).build();
       var responseMessage = connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
@@ -204,26 +186,34 @@ public class RestUtils {
 
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    SearchCriteria criteriaSurname = getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING);
-    SearchCriteria criteriaGiven = getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND);
+    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
+    if(StringUtils.isNotBlank(surname)) {
+      criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+    }
+    if(StringUtils.isNotBlank(givenName)) {
+      criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }
 
-    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>(Arrays.asList(criteriaSurname, criteriaGiven));
-
-    SearchCriteria criteriaMincode = getCriteria(MINCODE, EQUAL, mincode, STRING);
-    SearchCriteria criteriaLocalID = getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND);
-
-    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>(Arrays.asList(criteriaMincode, criteriaLocalID));
+    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
+    if(StringUtils.isNotBlank(mincode)){
+      criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
+    }
+    if(StringUtils.isNotBlank(localID)){
+      criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
+    }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
+    if(!criteriaListSurnameGiven.isEmpty()){
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
+    }
+    if(!criteriaListMincodeLocalID.isEmpty()) {
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
+    }
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
     return getStudentsByCriteria(criteriaJSON, correlationID);
-    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
@@ -244,25 +234,31 @@ public class RestUtils {
 
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    SearchCriteria criteriaSurname = getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING);
+    List<SearchCriteria> criteriaListSurname = new LinkedList<>();
+    if(StringUtils.isNotBlank(surname)) {
+      criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+    }
 
-    List<SearchCriteria> criteriaListSurname = new LinkedList<>(Collections.singletonList(criteriaSurname));
-
-    SearchCriteria criteriaMincode = getCriteria(MINCODE, EQUAL, mincode, STRING);
-    SearchCriteria criteriaLocalID = getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND);
-
-    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>(Arrays.asList(criteriaMincode, criteriaLocalID));
+    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
+    if(StringUtils.isNotBlank(mincode)){
+      criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
+    }
+    if(StringUtils.isNotBlank(localID)){
+      criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
+    }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
+    if(!criteriaListSurname.isEmpty()){
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
+    }
+    if(!criteriaListMincodeLocalID.isEmpty()) {
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
+    }
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
     return getStudentsByCriteria(criteriaJSON, correlationID);
-    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
@@ -281,44 +277,25 @@ public class RestUtils {
 
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    SearchCriteria criteriaSurname = getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING);
-    SearchCriteria criteriaGiven = getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND);
-
-    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>(Arrays.asList(criteriaSurname, criteriaGiven));
+    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
+    if(StringUtils.isNotBlank(surname)) {
+      criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+    }
+    if(StringUtils.isNotBlank(givenName)) {
+      criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
+    if(!criteriaListSurnameGiven.isEmpty()){
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
+    }
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
 
     return getStudentsByCriteria(criteriaJSON, correlationID);
-    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
-  /**
-   * Gets paginated student from student api.
-   *
-   * @param builder the builder
-   * @return the paginated student from student api
-   */
-  private List<StudentEntity> getPaginatedStudentFromStudentAPI(UriComponentsBuilder builder) {
-    RestTemplate restTemplate = getRestTemplate();
-    DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
-    defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-    restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
-
-    ParameterizedTypeReference<RestPageImpl<StudentEntity>> responseType = new ParameterizedTypeReference<>() {
-    };
-
-    ResponseEntity<RestPageImpl<StudentEntity>> studentResponse = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, responseType);
-
-    if (studentResponse.hasBody()) {
-      return Objects.requireNonNull(studentResponse.getBody()).getContent();
-    }
-    return new ArrayList<>();
-  }
 
   /**
    * Gets criteria.
@@ -362,17 +339,19 @@ public class RestUtils {
 
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    SearchCriteria criteriaSurname = getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING);
-    List<SearchCriteria> criteriaListSurname = new LinkedList<>(Collections.singletonList(criteriaSurname));
+    List<SearchCriteria> criteriaListSurname = new LinkedList<>();
+    if(StringUtils.isNotBlank(surname)) {
+      criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+    }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
+    if(!criteriaListSurname.isEmpty()){
+      searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
+    }
 
     String criteriaJSON = objectMapper.writeValueAsString(searches);
     return getStudentsByCriteria(criteriaJSON, correlationID);
-    /*UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(props.getStudentApiURL().concat(PAGINATED)).queryParam(SEARCH_CRITERIA_LIST, criteriaJSON).queryParam(PAGE_SIZE, 100000);
-    return getPaginatedStudentFromStudentAPI(builder);*/
   }
 
   /**
@@ -399,7 +378,7 @@ public class RestUtils {
    * Get students by criteria list.
    *
    * @param criteria      the criteria
-   * @param correlationID
+   * @param correlationID the correlation id
    * @return the list
    */
   public List<StudentEntity> getStudentsByCriteria(String criteria, UUID correlationID) {
@@ -421,28 +400,4 @@ public class RestUtils {
     return new ArrayList<>();
   }
 
-  /*@Scheduled(fixedRate = 90000)
-  public void scheduled() throws JsonProcessingException {
-    executor.execute(()->{
-      try {
-        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
-      }
-    });
-    executor.execute(()->{
-      try {
-        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
-      }
-    });
-    executor.execute(()->{
-      try {
-        lookupNoInitNoLocalID("19730125","ZHU").forEach(studentEntity -> log.info(studentEntity.toString()));
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
-      }
-    });
-  }*/
 }
