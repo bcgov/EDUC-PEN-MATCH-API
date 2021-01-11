@@ -1,6 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.messaging;
 
-import ca.bc.gov.educ.api.penmatch.service.events.EventHandlerDelegatorService;
+import ca.bc.gov.educ.api.penmatch.service.v1.events.EventHandlerDelegatorService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import io.nats.client.Connection;

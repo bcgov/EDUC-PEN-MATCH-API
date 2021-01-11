@@ -1,11 +1,11 @@
 package ca.bc.gov.educ.api.penmatch.service;
 
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
+import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
-import ca.bc.gov.educ.api.penmatch.service.match.NewPenMatchService;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.NewPenMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchSession;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchStudentDetail;
@@ -31,6 +31,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * The type New pen match service test.
+ */
 @RunWith(JUnitParamsRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -46,19 +49,36 @@ public class NewPenMatchServiceTest {
    */
   @Autowired
   private NewPenMatchService service;
+  /**
+   * The constant dataLoaded.
+   */
   private static boolean dataLoaded = false;
   /**
    * The Smr.
    */
   @Rule
   public final SpringMethodRule smr = new SpringMethodRule();
+  /**
+   * The Nicknames repository.
+   */
   @Autowired
   NicknamesRepository nicknamesRepository;
+  /**
+   * The Surname freq repository.
+   */
   @Autowired
   SurnameFrequencyRepository surnameFreqRepository;
+  /**
+   * The Rest utils.
+   */
   @MockBean
   RestUtils restUtils;
 
+  /**
+   * Sets .
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setup() throws Exception {
     if (!dataLoaded) {
@@ -76,6 +96,9 @@ public class NewPenMatchServiceTest {
     }
   }
 
+  /**
+   * Test change result from qto f.
+   */
   @Test
   public void testChangeResultFromQtoF() {
     NewPenMatchStudentDetail student = createNewPenMatchStudentDetail();
@@ -87,26 +110,43 @@ public class NewPenMatchServiceTest {
     assertEquals(0, session.getMatchingRecordsList().size());
   }
 
+  /**
+   * Test sum of int match codes.
+   */
   @Test
   public void testSumOfIntMatchCodes() {
     assertEquals(10, service.getSumOfMatchCode("1111222"));
   }
 
+  /**
+   * Test one char typo true.
+   */
   @Test
   public void testOneCharTypoTrue() {
     assertTrue(service.oneCharTypo("MARCO", "MAARCO"));
   }
 
+  /**
+   * Test one char typo length false.
+   */
   @Test
   public void testOneCharTypoLengthFalse() {
     assertFalse(service.oneCharTypo("MARCO", "MAAARCO"));
   }
 
+  /**
+   * Test one char typo false.
+   */
   @Test
   public void testOneCharTypoFalse() {
     assertFalse(service.oneCharTypo("MARCO", "JAMES"));
   }
 
+  /**
+   * Create new pen match student detail new pen match student detail.
+   *
+   * @return the new pen match student detail
+   */
   private NewPenMatchStudentDetail createNewPenMatchStudentDetail() {
     NewPenMatchStudentDetail student = new NewPenMatchStudentDetail();
     student.setPen("122740046");

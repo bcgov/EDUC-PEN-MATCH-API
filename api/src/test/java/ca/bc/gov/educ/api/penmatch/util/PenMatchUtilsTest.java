@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchSession;
@@ -17,16 +17,25 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
+/**
+ * The type Pen match utils test.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class PenMatchUtilsTest {
 
-	@Before
+  /**
+   * Before.
+   */
+  @Before
 	public void before() {
 	}
 
-	@Test
+  /**
+   * Test set nicknames should return contain names.
+   */
+  @Test
 	public void testSetNicknames_ShouldReturnContainNames() {
 
 		PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -53,7 +62,10 @@ public class PenMatchUtilsTest {
 		assertNotNull(penMatchTransactionNames.getNickname4());
 	}
 
-	@Test
+  /**
+   * Test check for core data should not set status.
+   */
+  @Test
 	public void testCheckForCoreData_ShouldNotSetStatus() {
 		PenMatchStudent student = createPenMatchStudent();
 		PenMatchSession session = new PenMatchSession();
@@ -62,7 +74,10 @@ public class PenMatchUtilsTest {
 		assertNull(session.getPenStatus());
 	}
 
-	@Test
+  /**
+   * Test check for core data should set g 0 status.
+   */
+  @Test
 	public void testCheckForCoreData_ShouldSetG0Status() {
 		PenMatchStudent student = createPenMatchStudent();
 		PenMatchSession session = new PenMatchSession();
@@ -72,7 +87,10 @@ public class PenMatchUtilsTest {
     assertEquals(session.getPenStatus(), PenStatus.G0.getValue());
 	}
 
-	@Test
+  /**
+   * Test normalize local i ds from master should set mmm.
+   */
+  @Test
 	public void testNormalizeLocalIDsFromMaster_ShouldSetMMM() {
 		PenMasterRecord master = new PenMasterRecord();
 		PenMatchUtils.normalizeLocalIDsFromMaster(master);
@@ -80,7 +98,10 @@ public class PenMatchUtilsTest {
     assertEquals("MMM", master.getAlternateLocalId());
 	}
 
-	@Test
+  /**
+   * Test normalize local i ds from master should set local id.
+   */
+  @Test
 	public void testNormalizeLocalIDsFromMaster_ShouldSetLocalID() {
 		PenMasterRecord master = new PenMasterRecord();
 		master.setLocalId("123456");
@@ -89,40 +110,58 @@ public class PenMatchUtilsTest {
     assertEquals(master.getAlternateLocalId(), master.getLocalId());
 	}
 
-	@Test
+  /**
+   * Test store names from master should create match master names.
+   */
+  @Test
 	public void testStoreNamesFromMaster_ShouldCreateMatchMasterNames() {
 		assertNotNull(PenMatchUtils.storeNamesFromMaster(createPenMasterRecord()));
 	}
 
-	@Test
+  /**
+   * Test store names from master with space should create match master names.
+   */
+  @Test
 	public void testStoreNamesFromMasterWithSpace_ShouldCreateMatchMasterNames() {
 		PenMasterRecord master = createPenMasterRecord();
 		master.setGiven("Billy Joe");
 		assertNotNull(PenMatchUtils.storeNamesFromMaster(master));
 	}
 
-	@Test
+  /**
+   * Test store names from master with dash should create match master names.
+   */
+  @Test
 	public void testStoreNamesFromMasterWithDash_ShouldCreateMatchMasterNames() {
 		PenMasterRecord master = createPenMasterRecord();
 		master.setGiven("Billy-Joe");
 		assertNotNull(PenMatchUtils.storeNamesFromMaster(master));
 	}
 
-	@Test
+  /**
+   * Test usual store names from master with space should create match master names.
+   */
+  @Test
 	public void testUsualStoreNamesFromMasterWithSpace_ShouldCreateMatchMasterNames() {
 		PenMasterRecord master = createPenMasterRecord();
 		master.setUsualGivenName("Billy Joe");
 		assertNotNull(PenMatchUtils.storeNamesFromMaster(master));
 	}
 
-	@Test
+  /**
+   * Test usual store names from master with dash should create match master names.
+   */
+  @Test
 	public void testUsualStoreNamesFromMasterWithDash_ShouldCreateMatchMasterNames() {
 		PenMasterRecord master = createPenMasterRecord();
 		master.setUsualGivenName("Billy-Joe");
 		assertNotNull(PenMatchUtils.storeNamesFromMaster(master));
 	}
 
-	@Test
+  /**
+   * Test convert to pen master record should assert ok.
+   */
+  @Test
 	public void testConvertToPenMasterRecord_ShouldAssertOk() {
 
 		StudentEntity entity = new StudentEntity();
@@ -157,7 +196,12 @@ public class PenMatchUtilsTest {
 		assertNotNull(masterRecord.getLocalId());
 	}
 
-	public PenMasterRecord createPenMasterRecord() {
+  /**
+   * Create pen master record pen master record.
+   *
+   * @return the pen master record
+   */
+  public PenMasterRecord createPenMasterRecord() {
 		PenMasterRecord masterRecord = new PenMasterRecord();
 
 		masterRecord.setPen("12345647");
@@ -178,7 +222,12 @@ public class PenMatchUtilsTest {
 		return masterRecord;
 	}
 
-	private PenMatchStudent createPenMatchStudent() {
+  /**
+   * Create pen match student pen match student.
+   *
+   * @return the pen match student
+   */
+  private PenMatchStudent createPenMatchStudent() {
 		PenMatchStudent student = new PenMatchStudent();
 		student.setPen(null);
 		student.setSurname("JACKSON");

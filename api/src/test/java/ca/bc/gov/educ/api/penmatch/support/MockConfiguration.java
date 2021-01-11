@@ -9,27 +9,50 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * The type Mock configuration.
+ */
 @Profile("test")
 @Configuration
 public class MockConfiguration {
+  /**
+   * Message publisher message publisher.
+   *
+   * @return the message publisher
+   */
   @Bean
   @Primary
   public MessagePublisher messagePublisher() {
     return Mockito.mock(MessagePublisher.class);
   }
 
+  /**
+   * Message subscriber message subscriber.
+   *
+   * @return the message subscriber
+   */
   @Bean
   @Primary
   public MessageSubscriber messageSubscriber() {
     return Mockito.mock(MessageSubscriber.class);
   }
 
+  /**
+   * Rest utils rest utils.
+   *
+   * @return the rest utils
+   */
   @Bean
   @Primary
   public RestUtils restUtils() {
     return Mockito.mock(RestUtils.class);
   }
 
+  /**
+   * Connection connection.
+   *
+   * @return the connection
+   */
   @Bean
   @Primary
   public Connection connection() {

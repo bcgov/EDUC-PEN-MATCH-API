@@ -1,10 +1,10 @@
-package ca.bc.gov.educ.api.penmatch.service.match;
+package ca.bc.gov.educ.api.penmatch.service.v1.match;
 
 import ca.bc.gov.educ.api.penmatch.compare.NewPenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.*;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;

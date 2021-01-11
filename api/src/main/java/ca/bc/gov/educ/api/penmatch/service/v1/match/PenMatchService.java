@@ -1,11 +1,11 @@
-package ca.bc.gov.educ.api.penmatch.service.match;
+package ca.bc.gov.educ.api.penmatch.service.v1.match;
 
 import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.NewPenMatchStudentDetail;
@@ -608,6 +608,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
     if (session.getPenStatus().equals(PenStatus.B.getValue()) && penFoundOnMaster) {
       session.setReallyGoodMasterMatchRecord(null);
       session.setType5F1(true);
+      assert masterRecord != null;
       mergeNewMatchIntoList(student, masterRecord, masterRecord.getPen(), session, PenAlgorithm.ALG_00, 0);
     }
 

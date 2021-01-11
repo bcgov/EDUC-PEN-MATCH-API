@@ -18,10 +18,16 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
+/**
+ * The type Scoring utils test.
+ */
 @RunWith(JUnitParamsRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class ScoringUtilsTest {
+  /**
+   * The constant scr.
+   */
   @ClassRule
   public static final SpringClassRule scr = new SpringClassRule();
   /**
@@ -30,10 +36,20 @@ public class ScoringUtilsTest {
   @Rule
   public final SpringMethodRule smr = new SpringMethodRule();
 
+  /**
+   * Before.
+   */
   @Before
   public void before() {
   }
 
+  /**
+   * Test match address given different inputs should return expected score.
+   *
+   * @param studentPostal  the student postal
+   * @param masterPostal   the master postal
+   * @param expectedPoints the expected points
+   */
   @Test
   @Parameters({
       ",,0",
@@ -55,6 +71,13 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match birthday given different inputs should return expected results.
+   *
+   * @param studentBirthday the student birthday
+   * @param masterBirthday  the master birthday
+   * @param expectedScore   the expected score
+   */
   @Test
   @Parameters({
       "null,null,0",
@@ -78,6 +101,14 @@ public class ScoringUtilsTest {
     assertEquals(expectedScore, ScoringUtils.matchBirthday(student, master));
   }
 
+  /**
+   * Test match local id given different inputs should return expected results.
+   *
+   * @param student       the student
+   * @param master        the master
+   * @param session       the session
+   * @param expectedScore the expected score
+   */
   @Test
   @Parameters(method = "testMatchLocalID_AlternateLocalIdScore20," +
       "testMatchLocalID_ShouldScore20," +
@@ -88,6 +119,15 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match local id with demerits given different inputs should return expected results.
+   *
+   * @param student          the student
+   * @param master           the master
+   * @param session          the session
+   * @param expectedLocalId  the expected local id
+   * @param expectedDemerits the expected demerits
+   */
   @Test
   @Parameters(method = "testMatchLocalIDWithDemerits_ShouldScore10Demerits," +
       "testMatchLocalIDWithDemerits_ShouldScore10DemeritsWithAlternate")
@@ -98,6 +138,9 @@ public class ScoringUtilsTest {
     assertEquals(expectedLocalId, result.getLocalIDPoints());
   }
 
+  /**
+   * Test match sex should score 5.
+   */
   @Test
   public void testMatchSex_ShouldScore5() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -108,6 +151,14 @@ public class ScoringUtilsTest {
     assertEquals(5, ScoringUtils.matchSex(student, master));
   }
 
+  /**
+   * Test match given names given different inputs should return expected results.
+   *
+   * @param penMatchTransactionNames the pen match transaction names
+   * @param penMatchMasterNames      the pen match master names
+   * @param expectedPoints           the expected points
+   * @param isGivenNameFlip          the is given name flip
+   */
   @Test
   @Parameters(method = "testMatchGivenNameLegal_FullShouldScore20," +
       "testMatchGivenNameUsual_FullShouldScore20," +
@@ -146,6 +197,14 @@ public class ScoringUtilsTest {
     assertThat(result.isGivenNameFlip()).isEqualTo(isGivenNameFlip);
   }
 
+  /**
+   * Test match middle names given different inputs should return expected results.
+   *
+   * @param penMatchTransactionNames the pen match transaction names
+   * @param penMatchMasterNames      the pen match master names
+   * @param expectedPoints           the expected points
+   * @param isMiddleNameFlip         the is middle name flip
+   */
   @Test
   @Parameters(method = "testMatchMiddleNameLegal_FullShouldScore20," +
       "testMatchMiddleNameUsual_FullShouldScore20," +
@@ -181,6 +240,14 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match surname given different inputs should return expected results.
+   *
+   * @param student            the student
+   * @param master             the master
+   * @param expectedScore      the expected score
+   * @param isLegalSurnameUsed the is legal surname used
+   */
   @Test
   @Parameters(method = "testMatchSurnameLegal_ShouldScore20," +
       "testMatchSurnameUsual_ShouldScore20," +
@@ -197,6 +264,9 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match legal surname soundex should score 10.
+   */
   @Test
   public void testMatchLegalSurnameSoundex_ShouldScore10() {
 
@@ -208,6 +278,9 @@ public class ScoringUtilsTest {
     assertEquals(10, (int) result.getSurnamePoints());
   }
 
+  /**
+   * Test match usual surname soundex should score 10.
+   */
   @Test
   public void testMatchUsualSurnameSoundex_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -220,6 +293,9 @@ public class ScoringUtilsTest {
     assertEquals(10, (int) result.getSurnamePoints());
   }
 
+  /**
+   * Test match usual to legal surname soundex should score 10.
+   */
   @Test
   public void testMatchUsualToLegalSurnameSoundex_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -232,6 +308,9 @@ public class ScoringUtilsTest {
     assertEquals(10, (int) result.getSurnamePoints());
   }
 
+  /**
+   * Test match legal to usual surname soundex should score 10.
+   */
   @Test
   public void testMatchLegalToUsualSurnameSoundex_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -244,6 +323,9 @@ public class ScoringUtilsTest {
     assertEquals(10, (int) result.getSurnamePoints());
   }
 
+  /**
+   * Test match sex should score 0.
+   */
   @Test
   public void testMatchSex_ShouldScore0() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -254,6 +336,11 @@ public class ScoringUtilsTest {
     assertEquals(0, ScoringUtils.matchSex(student, master));
   }
 
+  /**
+   * Create pen master record pen master record.
+   *
+   * @return the pen master record
+   */
   public PenMasterRecord createPenMasterRecord() {
     PenMasterRecord masterRecord = new PenMasterRecord();
 
@@ -275,6 +362,11 @@ public class ScoringUtilsTest {
     return masterRecord;
   }
 
+  /**
+   * Create pen match student detail pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetail() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen(null);
@@ -297,6 +389,11 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match local id alternate local id score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalID_AlternateLocalIdScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -311,6 +408,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalID_ShouldScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -327,6 +429,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id same school should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalIDSameSchool_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -341,6 +448,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id same district should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalIDSameDistrict_ShouldScore5() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -356,6 +468,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id same district 102 should score 0 object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalIDSameDistrict102_ShouldScore0() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -370,6 +487,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id with demerits should score 10 demerits object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalIDWithDemerits_ShouldScore10Demerits() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -384,6 +506,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match local id with demerits should score 10 demerits with alternate object.
+   *
+   * @return the object
+   */
   public Object testMatchLocalIDWithDemerits_ShouldScore10DemeritsWithAlternate() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -399,6 +526,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name legal full should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegal_FullShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -409,6 +541,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual full should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_FullShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -419,6 +556,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual alternate legal should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_AlternateLegalShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -430,6 +572,11 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match given name usual alternate usual should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_AlternateUsualShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -440,6 +587,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name legal 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegal_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -451,6 +603,11 @@ public class ScoringUtilsTest {
   }
 
 
+  /**
+   * Test match given name usual 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_4CharShouldScore15() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -461,6 +618,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 15, false
     };
   }
+
+  /**
+   * Test match given name alternate usual 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateUsual_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -471,6 +634,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegal_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -480,6 +648,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 15, false
     };
   }
+
+  /**
+   * Test match given name legal 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegal_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -490,6 +664,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_1CharShouldScore5() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -501,6 +680,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate usual 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateUsual_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -510,6 +694,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 5, false
     };
   }
+
+  /**
+   * Test match given name alternate legal 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegal_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -520,6 +710,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name legal 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegal_10CharShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -530,6 +725,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_10CharShouldScore20() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -540,6 +740,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 20, false
     };
   }
+
+  /**
+   * Test match given name alternate usual 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateUsual_10CharShouldScore20() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -551,6 +757,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegal_10CharShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -561,6 +772,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name legal subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegal_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -571,6 +787,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsual_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -581,6 +802,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate usual subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateUsual_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -591,6 +817,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegal_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -601,6 +832,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name legal to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameLegalToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -611,6 +847,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name usual to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameUsualToGiven_SubsetShouldScore10() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -622,6 +863,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate usual to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateUsualToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -632,6 +878,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegalToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -642,6 +893,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal to usual given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegalToUsualGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -652,6 +908,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal to alt legal given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegalToAltLegalGiven_SubsetShouldScore10() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -663,6 +924,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name alternate legal to alt usual given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameAlternateLegalToAltUsualGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -673,6 +939,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name nickname 1 subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameNickname1_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -682,6 +953,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 10, false
     };
   }
+
+  /**
+   * Test match given name nickname 2 subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameNickname2_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -692,6 +969,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name nickname 3 subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameNickname3_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -702,6 +984,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match given name nickname 4 subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchGivenNameNickname4_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -712,6 +999,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name legal full should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegal_FullShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -721,6 +1013,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 20, false
     };
   }
+
+  /**
+   * Test match middle name usual full should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_FullShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -730,6 +1028,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 20, false
     };
   }
+
+  /**
+   * Test match middle name usual alternate legal should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_AlternateLegalShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -740,6 +1044,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name usual alternate usual should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_AlternateUsualShouldScore20() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -750,6 +1059,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 20, false
     };
   }
+
+  /**
+   * Test match middle name legal 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegal_4CharShouldScore15() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -761,6 +1076,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name usual 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -771,6 +1091,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate usual 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateUsual_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -781,6 +1106,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal 4 char should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegal_4CharShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -791,6 +1121,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name legal 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegal_1CharShouldScore5() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -802,6 +1137,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name usual 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -812,6 +1152,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate usual 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateUsual_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -822,6 +1167,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal 1 char should score 5 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegal_1CharShouldScore5() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -832,6 +1182,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name legal 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegal_10CharShouldScore20() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -843,6 +1198,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name usual 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_10CharShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -853,6 +1213,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate usual 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateUsual_10CharShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -863,6 +1228,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal 10 char should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegal_10CharShouldScore20() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -873,6 +1243,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name legal subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegal_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -883,6 +1258,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name usual subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsual_SubsetShouldScore15() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -893,6 +1273,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate usual subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateUsual_SubsetShouldScore15() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -904,6 +1289,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal subset should score 15 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegal_SubsetShouldScore15() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -915,6 +1305,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name legal to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameLegalToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -924,6 +1319,12 @@ public class ScoringUtilsTest {
         penMatchTransactionNames, penMatchMasterNames, 10, true
     };
   }
+
+  /**
+   * Test match middle name usual to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameUsualToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -934,6 +1335,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate usual to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateUsualToGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -944,6 +1350,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal to given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegalToGiven_SubsetShouldScore10() {
 
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
@@ -955,6 +1366,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal to usual given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegalToUsualGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -965,6 +1381,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal to alt legal given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegalToAltLegalGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -975,6 +1396,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match middle name alternate legal to alt usual given subset should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchMiddleNameAlternateLegalToAltUsualGiven_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
@@ -985,6 +1411,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname legal should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameLegal_ShouldScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -995,6 +1426,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname usual should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameUsual_ShouldScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -1007,6 +1443,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname legal to usual should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameLegalToUsual_ShouldScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -1019,6 +1460,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname usual to legal should score 20 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameUsualToLegal_ShouldScore20() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -1031,6 +1477,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname legal 4 char should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameLegal4Char_ShouldScore10() {
 
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -1042,6 +1493,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname usual to legal 4 char should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameUsualToLegal4Char_ShouldScore10() {
 
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -1055,6 +1511,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname legal to usual 4 char should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameLegalToUsual4Char_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
@@ -1067,6 +1528,11 @@ public class ScoringUtilsTest {
     };
   }
 
+  /**
+   * Test match surname usual to usual 4 char should score 10 object.
+   *
+   * @return the object
+   */
   public Object testMatchSurnameUsualToUsual4Char_ShouldScore10() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
