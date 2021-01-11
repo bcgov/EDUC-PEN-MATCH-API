@@ -73,10 +73,7 @@ public class RestUtils {
    * The constant DOB.
    */
   public static final String DOB = "dob";
-  /**
-   * The constant PARAMETERS_ATTRIBUTE.
-   */
-  private static final String PARAMETERS_ATTRIBUTE = "parameters";
+
   /**
    * The constant DOB_FORMATTER_SHORT.
    */
