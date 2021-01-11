@@ -30,7 +30,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -173,15 +172,12 @@ public class PenMatchControllerTest {
    * @throws Exception the exception
    */
   @Test
-  public void testCreateStudent_GivenValidPayload_ShouldReturnStatusCreated() throws Exception {
+  public void testPenMatch_GivenValidPayload_ShouldReturnMatchStatusC0() throws Exception {
     PenMatchStudent entity = createPenMatchStudent();
     when(restUtils.lookupWithAllParts("19991201", "LORD", "CLAYTON", "00501007", "285261", correlationID)).thenReturn(new ArrayList<>());
     when(restUtils.getPenMasterRecordByPen(PEN, correlationID)).thenReturn(Optional.of(new PenMasterRecord()));
 
-    MvcResult result = mockMvc
-        .perform(post("/api/v1/pen-match").with(jwt().jwt((jwt) -> jwt.claim("scope", "READ_PEN_MATCH"))).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity)))
-        .andReturn();
-    this.mockMvc.perform(asyncDispatch(result)).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.penStatus", is("C0")));
+    this.mockMvc.perform(post("/api/v1/pen-match").with(jwt().jwt((jwt) -> jwt.claim("scope", "READ_PEN_MATCH"))).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(asJsonString(entity))).andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.penStatus", is("C0")));
 
   }
 
