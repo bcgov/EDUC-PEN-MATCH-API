@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.filter;
 
 
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

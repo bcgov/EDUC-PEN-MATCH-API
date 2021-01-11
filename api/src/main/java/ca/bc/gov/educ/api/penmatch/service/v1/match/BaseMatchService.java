@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.penmatch.service.match;
+package ca.bc.gov.educ.api.penmatch.service.v1.match;
 
 import lombok.extern.slf4j.Slf4j;
 

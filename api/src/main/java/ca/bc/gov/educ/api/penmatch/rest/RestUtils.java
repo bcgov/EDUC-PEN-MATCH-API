@@ -1,8 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.rest;
 
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.model.StudentMergeEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentMergeEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.struct.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
@@ -14,13 +14,8 @@ import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -78,10 +73,7 @@ public class RestUtils {
    * The constant DOB.
    */
   public static final String DOB = "dob";
-  /**
-   * The constant PARAMETERS_ATTRIBUTE.
-   */
-  private static final String PARAMETERS_ATTRIBUTE = "parameters";
+
   /**
    * The constant DOB_FORMATTER_SHORT.
    */
@@ -104,44 +96,24 @@ public class RestUtils {
    */
   private final Connection connection;
 
+  /**
+   * The Web client.
+   */
+  private final WebClient webClient;
 
   /**
    * Instantiates a new Rest utils.
    *
    * @param props      the props
    * @param connection the connection
+   * @param webClient  the web client
    */
-  public RestUtils(final ApplicationProperties props, Connection connection) {
+  public RestUtils(final ApplicationProperties props, Connection connection, WebClient webClient) {
     this.props = props;
     this.connection = connection;
+    this.webClient = webClient;
   }
 
-  /**
-   * Gets rest template.
-   *
-   * @return the rest template
-   */
-  public RestTemplate getRestTemplate() {
-    return getRestTemplate(null);
-  }
-
-  /**
-   * Gets rest template.
-   *
-   * @param scopes the scopes
-   * @return the rest template
-   */
-  public RestTemplate getRestTemplate(List<String> scopes) {
-    log.debug("Calling get token method");
-    ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-    resourceDetails.setClientId(props.getClientID());
-    resourceDetails.setClientSecret(props.getClientSecret());
-    resourceDetails.setAccessTokenUri(props.getTokenURL());
-    if (scopes != null) {
-      resourceDetails.setScope(scopes);
-    }
-    return new OAuth2RestTemplate(resourceDetails, new DefaultOAuth2ClientContext());
-  }
 
   /**
    * Gets pen master record by pen.
@@ -187,27 +159,27 @@ public class RestUtils {
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
-    if(StringUtils.isNotBlank(surname)) {
+    if (StringUtils.isNotBlank(surname)) {
       criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
-    if(StringUtils.isNotBlank(givenName)) {
+    if (StringUtils.isNotBlank(givenName)) {
       criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
     }
 
     List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
-    if(StringUtils.isNotBlank(mincode)){
+    if (StringUtils.isNotBlank(mincode)) {
       criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
     }
-    if(StringUtils.isNotBlank(localID)){
+    if (StringUtils.isNotBlank(localID)) {
       criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
     }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    if(!criteriaListSurnameGiven.isEmpty()){
+    if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
-    if(!criteriaListMincodeLocalID.isEmpty()) {
+    if (!criteriaListMincodeLocalID.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
@@ -235,24 +207,24 @@ public class RestUtils {
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     List<SearchCriteria> criteriaListSurname = new LinkedList<>();
-    if(StringUtils.isNotBlank(surname)) {
+    if (StringUtils.isNotBlank(surname)) {
       criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
 
     List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
-    if(StringUtils.isNotBlank(mincode)){
+    if (StringUtils.isNotBlank(mincode)) {
       criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
     }
-    if(StringUtils.isNotBlank(localID)){
+    if (StringUtils.isNotBlank(localID)) {
       criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
     }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    if(!criteriaListSurname.isEmpty()){
+    if (!criteriaListSurname.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
     }
-    if(!criteriaListMincodeLocalID.isEmpty()) {
+    if (!criteriaListMincodeLocalID.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
@@ -278,16 +250,16 @@ public class RestUtils {
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
-    if(StringUtils.isNotBlank(surname)) {
+    if (StringUtils.isNotBlank(surname)) {
       criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
-    if(StringUtils.isNotBlank(givenName)) {
+    if (StringUtils.isNotBlank(givenName)) {
       criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
     }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    if(!criteriaListSurnameGiven.isEmpty()){
+    if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
 
@@ -340,13 +312,13 @@ public class RestUtils {
     List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     List<SearchCriteria> criteriaListSurname = new LinkedList<>();
-    if(StringUtils.isNotBlank(surname)) {
+    if (StringUtils.isNotBlank(surname)) {
       criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
 
     List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
-    if(!criteriaListSurname.isEmpty()){
+    if (!criteriaListSurname.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
     }
 
@@ -361,15 +333,10 @@ public class RestUtils {
    * @return the optional
    */
   public Optional<String> lookupStudentTruePENNumberByStudentID(String studentID) {
-    RestTemplate restTemplate = getRestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    ParameterizedTypeReference<List<StudentMergeEntity>> type = new ParameterizedTypeReference<>() {
-    };
-    ResponseEntity<List<StudentMergeEntity>> studentResponse = restTemplate.exchange(props.getStudentApiURL() + "/" + studentID + "/merges?mergeDirection=TO", HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), type);
+    List<StudentMergeEntity> studentResponse = webClient.get().uri(props.getStudentApiURL() + "/" + studentID + "/merges?mergeDirection=TO").header("Content-Type", "application/json").retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
 
-    if (studentResponse.hasBody()) {
-      return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse.getBody()).get(0).getMergeStudent().getPen()));
+    if (studentResponse != null && !studentResponse.isEmpty()) {
+      return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse).get(0).getMergeStudent().getPen()));
     }
     return Optional.empty();
   }
@@ -399,5 +366,6 @@ public class RestUtils {
     }
     return new ArrayList<>();
   }
+
 
 }

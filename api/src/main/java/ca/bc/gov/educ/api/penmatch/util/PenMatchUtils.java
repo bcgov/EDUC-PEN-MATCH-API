@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.util;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.BestMatchRecord;

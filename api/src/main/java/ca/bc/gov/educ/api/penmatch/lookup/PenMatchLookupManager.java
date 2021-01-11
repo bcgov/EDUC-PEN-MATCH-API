@@ -1,11 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import ca.bc.gov.educ.api.penmatch.model.*;
-import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
-import ca.bc.gov.educ.api.penmatch.repository.ForeignSurnameRepository;
-import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
+import ca.bc.gov.educ.api.penmatch.model.v1.*;
+import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
@@ -16,10 +15,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
@@ -46,10 +43,6 @@ public class PenMatchLookupManager {
    */
   public static final String ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON = "Error occurred while writing criteria as JSON: ";
   /**
-   * The constant PARAMETERS_ATTRIBUTE.
-   */
-  private static final String PARAMETERS_ATTRIBUTE = "parameters";
-  /**
    * The Foreign surname repository.
    */
   @Getter(AccessLevel.PRIVATE)
@@ -74,10 +67,6 @@ public class PenMatchLookupManager {
    */
   private final RestUtils restUtils;
   /**
-   * The Props.
-   */
-  private final ApplicationProperties props;
-  /**
    * The Match codes map.
    */
   private Map<String, String> matchCodesMap;
@@ -99,16 +88,14 @@ public class PenMatchLookupManager {
    * @param surnameFrequencyRepository the surname frequency repository
    * @param matchCodesRepository       the match codes repository
    * @param restUtils                  the rest utils
-   * @param props                      the props
    */
   @Autowired
-  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final ApplicationProperties props) {
+  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils) {
     this.foreignSurnameRepository = foreignSurnameRepository;
     this.nicknamesRepository = nicknamesRepository;
     this.surnameFrequencyRepository = surnameFrequencyRepository;
     this.matchCodesRepository = matchCodesRepository;
     this.restUtils = restUtils;
-    this.props = props;
   }
 
   /**
@@ -217,26 +204,6 @@ public class PenMatchLookupManager {
     return null;
   }
 
-  /**
-   * Fetches the student's merge to record
-   *
-   * @param studentNumber the student number
-   * @return the pen master record
-   */
-  public PenMasterRecord lookupStudentMergeToRecord(String studentNumber) {
-    if (studentNumber != null) {
-      RestTemplate restTemplate = restUtils.getRestTemplate();
-      HttpHeaders headers = new HttpHeaders();
-      headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-      ResponseEntity<StudentEntity> studentResponse;
-      studentResponse = restTemplate.exchange(props.getStudentApiURL() + "?pen=" + studentNumber, HttpMethod.GET, new HttpEntity<>(PARAMETERS_ATTRIBUTE, headers), StudentEntity.class);
-
-      if (studentResponse.hasBody()) {
-        return PenMatchUtils.convertStudentEntityToPenMasterRecord(studentResponse.getBody());
-      }
-    }
-    return null;
-  }
 
   /**
    * Look up nicknames Nickname1 (by convention) is the "base" nickname. For

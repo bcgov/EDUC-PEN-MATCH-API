@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.penmatch.model;
+package ca.bc.gov.educ.api.penmatch.model.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

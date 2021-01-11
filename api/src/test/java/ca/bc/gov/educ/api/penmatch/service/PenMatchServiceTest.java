@@ -2,16 +2,15 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.MatchCodesEntity;
-import ca.bc.gov.educ.api.penmatch.model.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.model.SurnameFrequencyEntity;
-import ca.bc.gov.educ.api.penmatch.repository.MatchCodesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.SurnameFrequencyRepository;
-import ca.bc.gov.educ.api.penmatch.rest.RestPageImpl;
+import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
+import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
+import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
-import ca.bc.gov.educ.api.penmatch.service.match.PenMatchService;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.PenMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
@@ -31,7 +30,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
@@ -43,7 +41,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static ca.bc.gov.educ.api.penmatch.constants.PenStatus.AA;
-import static ca.bc.gov.educ.api.penmatch.constants.PenStatus.F1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,6 +59,9 @@ public class PenMatchServiceTest {
    */
   @ClassRule
   public static final SpringClassRule scr = new SpringClassRule();
+  /**
+   * The constant dataLoaded.
+   */
   private static boolean dataLoaded = false;
   /**
    * The Smr.
@@ -83,14 +83,26 @@ public class PenMatchServiceTest {
    */
   @Autowired
   SurnameFrequencyRepository surnameFreqRepository;
+  /**
+   * The Service.
+   */
   @Autowired
   private PenMatchService service;
 
+  /**
+   * The Lookup manager.
+   */
   @Autowired
   private PenMatchLookupManager lookupManager;
+  /**
+   * The Match codes repository.
+   */
   @Autowired
   MatchCodesRepository matchCodesRepository;
 
+  /**
+   * The Correlation id.
+   */
   UUID correlationID = UUID.randomUUID();
 
   /**
@@ -122,6 +134,14 @@ public class PenMatchServiceTest {
    * below are parameters are in order
    * pen, given name, middle name, postal code, sex, expected pen status
    *
+   * @param pen                 the pen
+   * @param givenName           the given name
+   * @param middleName          the middle name
+   * @param postalCode          the postal code
+   * @param sex                 the sex
+   * @param dob                 the dob
+   * @param localID             the local id
+   * @param expectedMatchStatus the expected match status
    * @throws JsonProcessingException the json processing exception
    */
   @Test
@@ -175,6 +195,8 @@ public class PenMatchServiceTest {
 
   /**
    * Test match student when payload is valid alg 51 should return d 1 match.
+   *
+   * @throws JsonProcessingException the json processing exception
    */
   @Test
   public void testMatchStudent_WhenPayloadIsValidAlg51_ShouldReturnD1Match() throws JsonProcessingException {
@@ -197,6 +219,8 @@ public class PenMatchServiceTest {
 
   /**
    * Test match student without pen should return d 1 match.
+   *
+   * @throws JsonProcessingException the json processing exception
    */
   @Test
   public void testMatchStudentWithoutPEN_ShouldReturnD1Match() throws JsonProcessingException {
@@ -215,6 +239,8 @@ public class PenMatchServiceTest {
 
   /**
    * Test match student without pen no local id should return d 1 match.
+   *
+   * @throws JsonProcessingException the json processing exception
    */
   @Test
   public void testMatchStudentWithoutPENNoLocalID_ShouldReturnD1Match() throws JsonProcessingException {
@@ -282,6 +308,9 @@ public class PenMatchServiceTest {
 
   /**
    * Test match student in valid pen should return c 1 match.
+   *
+   * @param pen the pen
+   * @throws JsonProcessingException the json processing exception
    */
   @Test
   @Parameters({
@@ -389,6 +418,11 @@ public class PenMatchServiceTest {
     assertThat(result.getPenStatus()).isEqualTo(PenStatus.C0.toString());
   }
 
+  /**
+   * Test match student with merged valid given old match returns f 1 should execute new pen match.
+   *
+   * @throws JsonProcessingException the json processing exception
+   */
   @Test
   public void testMatchStudentWithMergedValid_givenOldMatchReturnsF1_shouldExecuteNewPenMatch() throws JsonProcessingException {
     PenMatchStudentDetail student = createPenMatchStudentDetailMergedValid();
@@ -407,6 +441,11 @@ public class PenMatchServiceTest {
     assertThat(result.getPenStatus()).isEqualTo(AA.toString());
   }
 
+  /**
+   * Create pen match student detail pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetail() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen("122740046");
@@ -421,6 +460,11 @@ public class PenMatchServiceTest {
     return student;
   }
 
+  /**
+   * Create pen match full student pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchFullStudent() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen("122740046");
@@ -436,6 +480,11 @@ public class PenMatchServiceTest {
     return student;
   }
 
+  /**
+   * Create pen match student detail without pen pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetailWithoutPEN() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setSurname("LORD");
@@ -449,6 +498,11 @@ public class PenMatchServiceTest {
   }
 
 
+  /**
+   * Create pen match student detail merged deceased pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetailMergedDeceased() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen("108999400");
@@ -466,6 +520,11 @@ public class PenMatchServiceTest {
   }
 
 
+  /**
+   * Create pen match student detail for core check pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetailForCoreCheck() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen("113874041");
@@ -485,6 +544,16 @@ public class PenMatchServiceTest {
     return student;
   }
 
+  /**
+   * Create student student entity.
+   *
+   * @param dob       the dob
+   * @param surname   the surname
+   * @param givenName the given name
+   * @param mincode   the mincode
+   * @param localID   the local id
+   * @return the student entity
+   */
   private StudentEntity createStudent(String dob, String surname, String givenName, String mincode, String localID) {
     return StudentEntity.builder()
         .dob(dob.substring(0, 4).concat("-").concat(dob.substring(4, 6).concat("-").concat(dob.substring(6, 8))))
@@ -501,10 +570,21 @@ public class PenMatchServiceTest {
         .build();
   }
 
+  /**
+   * Create pen master record optional.
+   *
+   * @param student the student
+   * @return the optional
+   */
   private Optional<PenMasterRecord> createPenMasterRecord(StudentEntity student) {
     return Optional.of(PenMatchUtils.convertStudentEntityToPenMasterRecord(student));
   }
 
+  /**
+   * Create pen match student detail merged valid pen match student detail.
+   *
+   * @return the pen match student detail
+   */
   private PenMatchStudentDetail createPenMatchStudentDetailMergedValid() {
     PenMatchStudentDetail student = new PenMatchStudentDetail();
     student.setPen("113874044");
@@ -520,6 +600,12 @@ public class PenMatchServiceTest {
     return student;
   }
 
+  /**
+   * Gets match codes.
+   *
+   * @return the match codes
+   * @throws JsonProcessingException the json processing exception
+   */
   private List<MatchCodesEntity> getMatchCodes() throws JsonProcessingException {
     String matchCodesJson = "[\n" +
         "  {\n" +

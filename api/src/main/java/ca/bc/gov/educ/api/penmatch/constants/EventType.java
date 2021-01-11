@@ -19,5 +19,17 @@ public enum EventType {
   /**
    * Get paginated student by criteria event type.
    */
-  GET_PAGINATED_STUDENT_BY_CRITERIA
+  GET_PAGINATED_STUDENT_BY_CRITERIA,
+  /**
+   * Add possible match event type.
+   */
+  ADD_POSSIBLE_MATCH,
+  /**
+   * Get possible match event type.
+   */
+  GET_POSSIBLE_MATCH,
+  /**
+   * Delete possible match event type.
+   */
+  DELETE_POSSIBLE_MATCH
 }

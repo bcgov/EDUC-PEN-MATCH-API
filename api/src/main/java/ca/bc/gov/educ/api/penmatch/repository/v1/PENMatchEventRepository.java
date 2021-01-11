@@ -1,6 +1,6 @@
-package ca.bc.gov.educ.api.penmatch.repository;
+package ca.bc.gov.educ.api.penmatch.repository.v1;
 
-import ca.bc.gov.educ.api.penmatch.model.PENMatchEvent;
+import ca.bc.gov.educ.api.penmatch.model.v1.PENMatchEvent;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
