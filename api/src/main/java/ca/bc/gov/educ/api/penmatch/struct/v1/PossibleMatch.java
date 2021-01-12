@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * The type Possible match.
@@ -47,4 +48,16 @@ public class PossibleMatch {
    */
   @NotNull
   String updateUser;
+
+  /**
+   * The Create date.
+   */
+  @Null
+  String createDate;
+
+  /**
+   * The Update date.
+   */
+  @Null
+  String updateDate;
 }
