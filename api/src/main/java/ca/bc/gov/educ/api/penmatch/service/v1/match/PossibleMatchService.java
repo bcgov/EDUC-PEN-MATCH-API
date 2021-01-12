@@ -52,7 +52,10 @@ public class PossibleMatchService {
   @Transactional
   public List<PossibleMatchEntity> savePossibleMatches(List<PossibleMatchEntity> possibleMatchEntities) {
     var updatedList = populateTwoWayAssociationOfEntities(possibleMatchEntities);
-    return possibleMatchRepository.saveAll(updatedList);
+    if (!updatedList.isEmpty()) {
+      return possibleMatchRepository.saveAll(updatedList);
+    }
+    return new ArrayList<>();
   }
 
   /**
@@ -103,16 +106,22 @@ public class PossibleMatchService {
   private List<PossibleMatchEntity> populateTwoWayAssociationOfEntities(List<PossibleMatchEntity> possibleMatchEntities) {
     List<PossibleMatchEntity> possibleMatchEntitiesList = new CopyOnWriteArrayList<>();
     for (var possibleMatch : possibleMatchEntities) {
-      possibleMatchEntitiesList.add(possibleMatch);
-      possibleMatchEntitiesList.add(PossibleMatchEntity.builder()
-          .createDate(possibleMatch.getCreateDate())
-          .updateDate(possibleMatch.getUpdateDate())
-          .createUser(possibleMatch.getCreateUser())
-          .updateUser(possibleMatch.getUpdateUser())
-          .matchReasonCode(possibleMatch.getMatchReasonCode())
-          .studentID(possibleMatch.getMatchedStudentID())
-          .matchedStudentID(possibleMatch.getStudentID())
-          .build());
+      var possibleMatchFromStudentOptional = possibleMatchRepository.findByStudentIDAndMatchedStudentID(possibleMatch.getStudentID(), possibleMatch.getMatchedStudentID());
+      var possibleMatchFromMatchedStudentOptional = possibleMatchRepository.findByStudentIDAndMatchedStudentID(possibleMatch.getMatchedStudentID(), possibleMatch.getStudentID());
+      if (possibleMatchFromStudentOptional.isEmpty()) {
+        possibleMatchEntitiesList.add(possibleMatch);
+      }
+      if (possibleMatchFromMatchedStudentOptional.isEmpty()) {
+        possibleMatchEntitiesList.add(PossibleMatchEntity.builder()
+            .createDate(possibleMatch.getCreateDate())
+            .updateDate(possibleMatch.getUpdateDate())
+            .createUser(possibleMatch.getCreateUser())
+            .updateUser(possibleMatch.getUpdateUser())
+            .matchReasonCode(possibleMatch.getMatchReasonCode())
+            .studentID(possibleMatch.getMatchedStudentID())
+            .matchedStudentID(possibleMatch.getStudentID())
+            .build());
+      }
     }
     return possibleMatchEntitiesList;
   }

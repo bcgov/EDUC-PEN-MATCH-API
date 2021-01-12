@@ -208,6 +208,17 @@ public class PenMatchControllerTest {
         .andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("$", hasSize(20)));
   }
 
+  @Test
+  public void testSavePossibleMatches_givenSamePayloadTwice_ShouldReturnEmptyList() throws Exception {
+    var payload = asJsonString(getPossibleMatchesPlaceHolderData());
+    this.mockMvc
+        .perform(post("/api/v1/pen-match/possible-match").with(jwt().jwt((jwt) -> jwt.claim("scope", "WRITE_POSSIBLE_MATCH"))).content(payload).contentType(MediaType.APPLICATION_JSON))
+        .andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("$", hasSize(20)));
+    this.mockMvc
+        .perform(post("/api/v1/pen-match/possible-match").with(jwt().jwt((jwt) -> jwt.claim("scope", "WRITE_POSSIBLE_MATCH"))).content(payload).contentType(MediaType.APPLICATION_JSON))
+        .andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("$", hasSize(0)));
+  }
+
   /**
    * Test get possible matches given valid student id should return list.
    *
