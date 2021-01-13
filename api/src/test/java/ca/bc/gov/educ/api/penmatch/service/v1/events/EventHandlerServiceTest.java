@@ -104,16 +104,22 @@ public class EventHandlerServiceTest {
    */
   @Test
   public void testHandleDeletePossibleMatchEvent_givenValidPayload_shouldDeleteDataFromDB() throws JsonProcessingException {
-    Map<String, UUID> deletePossibleMatchMap = new HashMap<>();
 
+    List<Map<String, UUID>> payload = new ArrayList<>();
     var savedMatches = possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(matchMapper::toModel).collect(Collectors.toList()));
-    deletePossibleMatchMap.put("studentID",savedMatches.get(0).getStudentID());
-    deletePossibleMatchMap.put("matchedStudentID",savedMatches.get(0).getMatchedStudentID());
-    Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(deletePossibleMatchMap)).eventType(EventType.GET_POSSIBLE_MATCH).replyTo("BATCH_API").build();
+    Map<String, UUID> deletePossibleMatchMap = new HashMap<>();
+    deletePossibleMatchMap.put("studentID", savedMatches.get(0).getStudentID());
+    deletePossibleMatchMap.put("matchedStudentID", savedMatches.get(0).getMatchedStudentID());
+    payload.add(deletePossibleMatchMap);
+    Map<String, UUID> deletePossibleMatchMap1 = new HashMap<>();
+    deletePossibleMatchMap1.put("studentID", savedMatches.get(2).getStudentID());
+    deletePossibleMatchMap1.put("matchedStudentID", savedMatches.get(2).getMatchedStudentID());
+    payload.add(deletePossibleMatchMap1);
+    Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(payload)).eventType(EventType.DELETE_POSSIBLE_MATCH).replyTo("BATCH_API").build();
     var response = eventHandlerService.handleDeletePossibleMatchEvent(event);
     assertThat(response).hasSizeGreaterThan(0);
     assertThat(new String(response)).contains(EventOutcome.POSSIBLE_MATCH_DELETED.toString());
-    assertThat(possibleMatchRepository.findAll()).hasSize(18);
+    assertThat(possibleMatchRepository.findAll()).hasSize(16);
   }
 
   /**
