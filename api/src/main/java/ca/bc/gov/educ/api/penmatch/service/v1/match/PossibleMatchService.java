@@ -99,6 +99,7 @@ public class PossibleMatchService {
 
   /**
    * Populate two way association of entities list.
+   * this method will check in DB if association already exist it will ignore. this makes the call idempotent.
    *
    * @param possibleMatchEntities the possible match entities
    * @return the list

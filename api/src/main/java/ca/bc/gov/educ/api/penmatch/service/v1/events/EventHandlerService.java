@@ -10,6 +10,7 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PossibleMatch;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -151,8 +152,12 @@ public class EventHandlerService {
    */
   @Transactional(propagation = REQUIRES_NEW)
   public byte[] handleDeletePossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
-    final Map<String, UUID> payload = obMapper.readValue(event.getEventPayload(), obMapper.getTypeFactory().constructMapType(Map.class, String.class, UUID.class));
-    getPossibleMatchService().deletePossibleMatches(payload.get("studentID"), payload.get("matchedStudentID"));
+    final List<Map<String, UUID>> payload = obMapper.readValue(event.getEventPayload(), new TypeReference<>() {
+    });
+    if (!payload.isEmpty()) {
+      payload.forEach(item -> getPossibleMatchService().deletePossibleMatches(item.get("studentID"), item.get("matchedStudentID")));
+    }
+
     Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
