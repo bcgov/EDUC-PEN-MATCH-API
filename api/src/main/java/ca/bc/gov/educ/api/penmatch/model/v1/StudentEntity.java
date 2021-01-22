@@ -119,4 +119,6 @@ public class StudentEntity {
    * The Update date.
    */
   String updateDate;
+
+  String trueStudentID;
 }
