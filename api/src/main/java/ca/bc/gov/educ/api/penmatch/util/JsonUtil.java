@@ -50,4 +50,15 @@ public class JsonUtil {
       return "";
     }
   }
+
+  /**
+   * Get json bytes from object byte [ ].
+   *
+   * @param payload the payload
+   * @return the byte [ ]
+   * @throws JsonProcessingException the json processing exception
+   */
+  public static byte[] getJsonBytesFromObject(Object payload) throws JsonProcessingException {
+    return new ObjectMapper().writeValueAsBytes(payload);
+  }
 }

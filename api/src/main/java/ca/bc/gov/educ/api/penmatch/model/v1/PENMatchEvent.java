@@ -11,6 +11,7 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -60,8 +61,9 @@ public class PENMatchEvent {
    * The Event payload.
    */
   @NotNull(message = "eventPayload cannot be null")
+  @Lob
   @Column(name = "EVENT_PAYLOAD")
-  private String eventPayload;
+  private byte[] eventPayloadBytes;
   /**
    * The Event status.
    */
@@ -90,4 +92,43 @@ public class PENMatchEvent {
    */
   @Column(name = "REPLY_CHANNEL")
   private String replyChannel;
+
+  /**
+   * Gets event payload.
+   *
+   * @return the event payload
+   */
+  public String getEventPayload() {
+    return new String(getEventPayloadBytes(), StandardCharsets.UTF_8);
+  }
+
+  /**
+   * Sets event payload.
+   *
+   * @param eventPayload the event payload
+   */
+  public void setEventPayload(String eventPayload) {
+    setEventPayloadBytes(eventPayload.getBytes(StandardCharsets.UTF_8));
+  }
+
+  /**
+   * The type Student event builder.
+   */
+  public static class PENMatchEventBuilder {
+    /**
+     * The Event payload bytes.
+     */
+    byte[] eventPayloadBytes;
+
+    /**
+     * Event payload student event . student event builder.
+     *
+     * @param eventPayload the event payload
+     * @return the student event . student event builder
+     */
+    public PENMatchEvent.PENMatchEventBuilder eventPayload(String eventPayload) {
+      this.eventPayloadBytes = eventPayload.getBytes(StandardCharsets.UTF_8);
+      return this;
+    }
+  }
 }
