@@ -10,17 +10,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class MessagePublisher extends MessagePubSub {
+public class MessagePublisher {
 
+  /**
+   * The Connection.
+   */
+  private final Connection connection;
 
   /**
    * Instantiates a new Message publisher.
    *
-   * @param con the con
+   * @param natsConnection the nats connection
    */
   @Autowired
-  public MessagePublisher(final Connection con) {
-    super.connection = con;
+  public MessagePublisher(final NatsConnection natsConnection) {
+    this.connection = natsConnection.getNatsCon();
   }
 
   /**
@@ -30,6 +34,6 @@ public class MessagePublisher extends MessagePubSub {
    * @param message the message
    */
   public void dispatchMessage(String subject, byte[] message) {
-      connection.publish(subject, message);
+    connection.publish(subject, message);
   }
 }

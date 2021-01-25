@@ -4,12 +4,14 @@ import ca.bc.gov.educ.api.penmatch.endpoint.v1.PenMatchEndpoint;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.MatchReasonCodeMapper;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.PenMatchStudentMapper;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.PossibleMatchMapper;
+import ca.bc.gov.educ.api.penmatch.messaging.stan.Publisher;
 import ca.bc.gov.educ.api.penmatch.service.v1.match.PenMatchService;
-import ca.bc.gov.educ.api.penmatch.service.v1.match.PossibleMatchService;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.PossibleMatchWrapperService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.MatchReasonCode;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PossibleMatch;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ public class PenMatchController implements PenMatchEndpoint {
    * The Possible match service.
    */
   @Getter(AccessLevel.PRIVATE)
-  private final PossibleMatchService possibleMatchService;
+  private final PossibleMatchWrapperService possibleMatchWrapperService;
 
   /**
    * The constant possibleMatchMapper.
@@ -47,15 +49,22 @@ public class PenMatchController implements PenMatchEndpoint {
   private static final PossibleMatchMapper possibleMatchMapper = PossibleMatchMapper.mapper;
 
   /**
+   * The Publisher.
+   */
+  private final Publisher publisher; // STAN publisher for choreography
+
+  /**
    * Instantiates a new Pen match controller.
    *
-   * @param penMatchService      the pen match service
-   * @param possibleMatchService the possible match service
+   * @param penMatchService             the pen match service
+   * @param possibleMatchWrapperService the possible match service
+   * @param publisher                   the publisher
    */
   @Autowired
-  public PenMatchController(final PenMatchService penMatchService, PossibleMatchService possibleMatchService) {
+  public PenMatchController(final PenMatchService penMatchService, PossibleMatchWrapperService possibleMatchWrapperService, Publisher publisher) {
     this.penMatchService = penMatchService;
-    this.possibleMatchService = possibleMatchService;
+    this.possibleMatchWrapperService = possibleMatchWrapperService;
+    this.publisher = publisher;
   }
 
   @Override
@@ -64,20 +73,23 @@ public class PenMatchController implements PenMatchEndpoint {
   }
 
   @Override
-  public List<PossibleMatch> savePossibleMatches(List<PossibleMatch> possibleMatches) {
+  public List<PossibleMatch> savePossibleMatches(List<PossibleMatch> possibleMatches) throws JsonProcessingException {
     var convertedList = possibleMatches.stream().map(possibleMatchMapper::toModel).collect(Collectors.toList());
-    return getPossibleMatchService().savePossibleMatches(convertedList).stream().map(possibleMatchMapper::toStruct).collect(Collectors.toList());
+    var pairedResult = getPossibleMatchWrapperService().savePossibleMatches(convertedList);
+    pairedResult.getRight().ifPresent(publisher::dispatchChoreographyEvent);
+    return pairedResult.getLeft().stream().map(possibleMatchMapper::toStruct).collect(Collectors.toList());
   }
 
   @Override
   public List<PossibleMatch> getPossibleMatchesByStudentID(UUID studentID) {
-    return getPossibleMatchService().getPossibleMatches(studentID).stream().map(possibleMatchMapper::toStruct).collect(Collectors.toList());
+    return getPossibleMatchWrapperService().getPossibleMatches(studentID).stream().map(possibleMatchMapper::toStruct).collect(Collectors.toList());
 
   }
 
   @Override
-  public ResponseEntity<Void> deletePossibleMatchesByStudentIDAndMatchedStudentID(UUID studentID, UUID matchedStudentID) {
-    getPossibleMatchService().deletePossibleMatches(studentID, matchedStudentID);
+  public ResponseEntity<Void> deletePossibleMatchesByStudentIDAndMatchedStudentID(List<PossibleMatch> possibleMatches) throws JsonProcessingException {
+    getPossibleMatchWrapperService().deletePossibleMatches(possibleMatches)
+        .ifPresent(publisher::dispatchChoreographyEvent);
     return ResponseEntity.noContent().build();
   }
 
@@ -88,7 +100,7 @@ public class PenMatchController implements PenMatchEndpoint {
 
   @Override
   public List<MatchReasonCode> getAllMatchReasonCodes() {
-    return getPossibleMatchService().getAllMatchReasonCodes().stream().map(MatchReasonCodeMapper.mapper::toStruct).collect(Collectors.toList());
+    return getPossibleMatchWrapperService().getAllMatchReasonCodes().stream().map(MatchReasonCodeMapper.mapper::toStruct).collect(Collectors.toList());
   }
 
 }

@@ -4,6 +4,7 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.MatchReasonCode;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PossibleMatch;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,15 +48,15 @@ public interface PenMatchEndpoint {
    *
    * @param possibleMatches the possible matches
    * @return the list
+   * @throws JsonProcessingException the json processing exception
    */
   @PostMapping("/possible-match")
   @PreAuthorize("hasAuthority('SCOPE_WRITE_POSSIBLE_MATCH')")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "CREATED."), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
-  @Transactional
   @Tag(name = "Endpoint to store possible matches.", description = "Endpoint to store possible matches.")
   @Schema(name = "possible match", implementation = PossibleMatch.class)
   @ResponseStatus(HttpStatus.CREATED)
-  List<PossibleMatch> savePossibleMatches(@Validated @RequestBody List<PossibleMatch> possibleMatches);
+  List<PossibleMatch> savePossibleMatches(@Validated @RequestBody List<PossibleMatch> possibleMatches) throws JsonProcessingException;
 
   /**
    * Gets possible matches by student id.
@@ -74,17 +75,16 @@ public interface PenMatchEndpoint {
   /**
    * Delete possible matches by student id and matched student id response entity.
    *
-   * @param studentID        the student id
-   * @param matchedStudentID the matched student id
+   * @param possibleMatches the possible matches to be deleted.
    * @return the response entity
+   * @throws JsonProcessingException the json processing exception
    */
-  @DeleteMapping("/possible-match/{studentID}/{matchedStudentID}")
+  @DeleteMapping("/possible-match")
   @PreAuthorize("hasAuthority('SCOPE_DELETE_POSSIBLE_MATCH')")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "CREATED."), @ApiResponse(responseCode = "404", description = "NOT FOUND.")})
-  @Transactional
-  @Tag(name = "Endpoint to delete possible matches by student id.", description = "Endpoint to delete possible matches by student id.")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK.")})
+  @Tag(name = "Endpoint to delete possible matches.", description = "Endpoint to delete possible matches.")
   @Schema(name = "possible match", implementation = PossibleMatch.class)
-  ResponseEntity<Void> deletePossibleMatchesByStudentIDAndMatchedStudentID(@PathVariable UUID studentID, @PathVariable UUID matchedStudentID);
+  ResponseEntity<Void> deletePossibleMatchesByStudentIDAndMatchedStudentID(@Validated @RequestBody List<PossibleMatch> possibleMatches) throws JsonProcessingException;
 
   /**
    * Retrieve nicknames for a given name

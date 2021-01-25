@@ -10,10 +10,11 @@ import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.PossibleMatchRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
-import ca.bc.gov.educ.api.penmatch.service.v1.match.PossibleMatchService;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.PossibleMatchWrapperService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PossibleMatch;
+import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -111,7 +112,7 @@ public class PenMatchControllerTest {
    * The Possible match service.
    */
   @Autowired
-  private PossibleMatchService possibleMatchService;
+  private PossibleMatchWrapperService possibleMatchService;
 
   /**
    * The Correlation id.
@@ -228,7 +229,7 @@ public class PenMatchControllerTest {
   public void testGetPossibleMatches_givenValidStudentID_ShouldReturnList() throws Exception {
     var savedList = possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()));
     this.mockMvc
-        .perform(get("/api/v1/pen-match/possible-match/" + savedList.get(0).getStudentID().toString()).with(jwt().jwt((jwt) -> jwt.claim("scope", "READ_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
+        .perform(get("/api/v1/pen-match/possible-match/" + savedList.getLeft().get(0).getStudentID().toString()).with(jwt().jwt((jwt) -> jwt.claim("scope", "READ_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(10)));
   }
 
@@ -240,11 +241,17 @@ public class PenMatchControllerTest {
   @Test
   public void testDeletePossibleMatches_givenValidStudentID_ShouldReturnNoContent() throws Exception {
     var savedList = possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()));
+    List<PossibleMatch> payload = new ArrayList<>();
+    payload.add(PossibleMatch.builder().studentID(savedList.getLeft().get(0).getStudentID())
+        .matchedStudentID(savedList.getLeft().get(0).getMatchedStudentID())
+        .createUser("TEST")
+        .updateUser("TEST").build());
+    payload.add(PossibleMatch.builder().studentID(savedList.getLeft().get(2).getStudentID())
+        .matchedStudentID(savedList.getLeft().get(2).getMatchedStudentID())
+        .createUser("TEST")
+        .updateUser("TEST").build());
     this.mockMvc
-        .perform(delete("/api/v1/pen-match/possible-match/" + savedList.get(0).getStudentID().toString() + "/" + savedList.get(0).getMatchedStudentID().toString()).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
-        .andDo(print()).andExpect(status().isNoContent());
-    this.mockMvc
-        .perform(delete("/api/v1/pen-match/possible-match/" + savedList.get(2).getStudentID().toString() + "/" + savedList.get(2).getMatchedStudentID().toString()).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
+        .perform(delete("/api/v1/pen-match/possible-match/").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isNoContent());
     assertThat(possibleMatchRepository.findAll().size()).isEqualTo(16);
   }
@@ -257,8 +264,13 @@ public class PenMatchControllerTest {
   @Test
   public void testDeletePossibleMatches_givenInvalidStudentID_ShouldReturnNoContent() throws Exception {
     possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()));
+    List<PossibleMatch> payload = new ArrayList<>();
+    payload.add(PossibleMatch.builder().studentID(UUID.randomUUID())
+        .matchedStudentID(UUID.randomUUID())
+        .createUser("TEST")
+        .updateUser("TEST").build());
     this.mockMvc
-        .perform(delete("/api/v1/pen-match/possible-match/" + UUID.randomUUID().toString() + "/" + UUID.randomUUID().toString()).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
+        .perform(delete("/api/v1/pen-match/possible-match/").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isNoContent());
     assertThat(possibleMatchRepository.findAll().size()).isEqualTo(20);
   }
@@ -290,9 +302,9 @@ public class PenMatchControllerTest {
    */
   private List<PossibleMatch> getPossibleMatchesPlaceHolderData() {
     List<PossibleMatch> possibleMatches = new ArrayList<>();
-    var studentID = UUID.randomUUID().toString();
+    var studentID = UUID.randomUUID();
     for (int i = 0; i++ < 10; ) {
-      possibleMatches.add(PossibleMatch.builder().studentID(studentID).matchedStudentID(UUID.randomUUID().toString()).matchReasonCode(MatchReasonCodes.PENMATCH).build());
+      possibleMatches.add(PossibleMatch.builder().studentID(studentID).matchedStudentID(UUID.randomUUID()).matchReasonCode(MatchReasonCodes.PENMATCH).build());
     }
     return possibleMatches;
   }

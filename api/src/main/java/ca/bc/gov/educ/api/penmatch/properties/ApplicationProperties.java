@@ -42,4 +42,22 @@ public class ApplicationProperties {
    */
   @Value("${student.api.url}")
   private String studentApiURL;
+
+  /**
+   * The Stan url.
+   */
+  @Value("${stan.url}")
+  String stanUrl;
+
+  /**
+   * The Stan cluster.
+   */
+  @Value("${stan.cluster}")
+  String stanCluster;
+
+  /**
+   * The Nats max reconnect.
+   */
+  @Value("${nats.maxReconnect}")
+  Integer natsMaxReconnect;
 }

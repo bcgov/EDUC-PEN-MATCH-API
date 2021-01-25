@@ -120,5 +120,8 @@ public class StudentEntity {
    */
   String updateDate;
 
+  /**
+   * The True student id.
+   */
   String trueStudentID;
 }

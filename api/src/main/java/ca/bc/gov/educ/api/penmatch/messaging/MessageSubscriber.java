@@ -22,8 +22,11 @@ import static lombok.AccessLevel.PRIVATE;
  */
 @Component
 @Slf4j
-public class MessageSubscriber extends MessagePubSub {
-
+public class MessageSubscriber {
+  /**
+   * The Connection.
+   */
+  private final Connection connection;
   /**
    * The Event handler delegator service.
    */
@@ -33,13 +36,13 @@ public class MessageSubscriber extends MessagePubSub {
   /**
    * Instantiates a new Message subscriber.
    *
-   * @param con                          the con
+   * @param natsConnection               the nats connection
    * @param eventHandlerDelegatorService the event handler delegator service
    */
   @Autowired
-  public MessageSubscriber(final Connection con, EventHandlerDelegatorService eventHandlerDelegatorService) {
+  public MessageSubscriber(final NatsConnection natsConnection, EventHandlerDelegatorService eventHandlerDelegatorService) {
     this.eventHandlerDelegatorService = eventHandlerDelegatorService;
-    super.connection = con;
+    this.connection = natsConnection.getNatsCon();
   }
 
   /**

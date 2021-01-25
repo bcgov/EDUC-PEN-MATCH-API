@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.UUID;
 
 /**
  * The type Possible match.
@@ -22,17 +23,17 @@ public class PossibleMatch {
   /**
    * The Possible match id.
    */
-  String possibleMatchID;
+  UUID possibleMatchID;
   /**
    * The Student id.
    */
   @NotNull
-  String studentID;
+  UUID studentID;
   /**
    * The Matched student id.
    */
   @NotNull
-  String matchedStudentID;
+  UUID matchedStudentID;
   /**
    * The Match reason code.
    */

@@ -1,8 +1,11 @@
 package ca.bc.gov.educ.api.penmatch.support;
+
 import ca.bc.gov.educ.api.penmatch.messaging.MessagePublisher;
 import ca.bc.gov.educ.api.penmatch.messaging.MessageSubscriber;
+import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
+import ca.bc.gov.educ.api.penmatch.messaging.stan.Publisher;
+import ca.bc.gov.educ.api.penmatch.messaging.stan.Subscriber;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
-import io.nats.client.Connection;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,7 +58,21 @@ public class MockConfiguration {
    */
   @Bean
   @Primary
-  public Connection connection() {
-    return Mockito.mock(Connection.class);
+  public NatsConnection natsConnection() {
+    return Mockito.mock(NatsConnection.class);
   }
+
+  @Bean
+  @Primary
+  public Publisher publisher() {
+    return Mockito.mock(Publisher.class);
+  }
+
+  @Bean
+  @Primary
+  public Subscriber subscriber() {
+    return Mockito.mock(Subscriber.class);
+  }
+
+
 }

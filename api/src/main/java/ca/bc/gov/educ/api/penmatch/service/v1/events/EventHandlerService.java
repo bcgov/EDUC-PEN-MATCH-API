@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.penmatch.service.v1.events;
 import ca.bc.gov.educ.api.penmatch.constants.EventOutcome;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.PenMatchStudentMapper;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.PossibleMatchMapper;
+import ca.bc.gov.educ.api.penmatch.model.v1.PENMatchEvent;
 import ca.bc.gov.educ.api.penmatch.service.v1.match.PenMatchService;
 import ca.bc.gov.educ.api.penmatch.service.v1.match.PossibleMatchService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
@@ -16,13 +17,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -100,20 +102,20 @@ public class EventHandlerService {
    * @throws JsonProcessingException the json processing exception
    */
   @Transactional(propagation = REQUIRES_NEW)
-  public byte[] handleAddPossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
+  public Pair<byte[], Optional<PENMatchEvent>> handleAddPossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
     JavaType type = obMapper.getTypeFactory().
         constructCollectionType(List.class, PossibleMatch.class);
 
     List<PossibleMatch> possibleMatches = obMapper.readValue(event.getEventPayload(), type);
-    var result = getPossibleMatchService().savePossibleMatches(possibleMatches
-        .stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()))
-        .stream().map(PossibleMatchMapper.mapper::toStruct).collect(Collectors.toList());
+    var pair = getPossibleMatchService().savePossibleMatches(possibleMatches
+        .stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()));
+    var savedItems = pair.getLeft().stream().map(PossibleMatchMapper.mapper::toStruct).collect(Collectors.toList());
     Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.POSSIBLE_MATCH_ADDED)
-        .eventPayload(JsonUtil.getJsonStringFromObject(result)).build();
-    return obMapper.writeValueAsBytes(newEvent);
+        .eventPayload(JsonUtil.getJsonStringFromObject(savedItems)).build();
+    return Pair.of(obMapper.writeValueAsBytes(newEvent), pair.getRight());
   }
 
   /**
@@ -151,11 +153,12 @@ public class EventHandlerService {
    * @throws JsonProcessingException the json processing exception
    */
   @Transactional(propagation = REQUIRES_NEW)
-  public byte[] handleDeletePossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
-    final List<Map<String, UUID>> payload = obMapper.readValue(event.getEventPayload(), new TypeReference<>() {
+  public Pair<byte[], List<PENMatchEvent>> handleDeletePossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
+    final List<PENMatchEvent> penMatchEvents = new ArrayList<>();
+    final List<PossibleMatch> payload = obMapper.readValue(event.getEventPayload(), new TypeReference<>() {
     });
     if (!payload.isEmpty()) {
-      payload.forEach(item -> getPossibleMatchService().deletePossibleMatches(item.get("studentID"), item.get("matchedStudentID")));
+      getPossibleMatchService().deletePossibleMatches(payload).ifPresent(penMatchEvents::add);
     }
 
     Event newEvent = Event.builder()
@@ -163,6 +166,6 @@ public class EventHandlerService {
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.POSSIBLE_MATCH_DELETED)
         .eventPayload(EventOutcome.POSSIBLE_MATCH_DELETED.toString()).build();
-    return obMapper.writeValueAsBytes(newEvent);
+    return Pair.of(obMapper.writeValueAsBytes(newEvent), penMatchEvents);
   }
 }
