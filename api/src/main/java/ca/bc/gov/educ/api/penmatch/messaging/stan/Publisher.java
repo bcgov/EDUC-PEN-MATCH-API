@@ -74,7 +74,10 @@ public class Publisher implements Closeable {
       choreographedEvent.setEventOutcome(EventOutcome.valueOf(event.getEventOutcome()));
       choreographedEvent.setEventPayload(event.getEventPayload());
       choreographedEvent.setEventID(event.getEventId().toString());
+      choreographedEvent.setCreateUser(event.getCreateUser());
+      choreographedEvent.setUpdateUser(event.getUpdateUser());
       try {
+        log.info("Broadcasting event :: {}", choreographedEvent);
         connection.publish(PEN_MATCH_EVENTS_TOPIC.toString(), JsonUtil.getJsonBytesFromObject(choreographedEvent));
       } catch (IOException | TimeoutException e) {
         log.error("exception while broadcasting message to STAN", e);

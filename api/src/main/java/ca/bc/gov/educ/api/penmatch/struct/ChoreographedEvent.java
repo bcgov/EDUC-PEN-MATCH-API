@@ -19,6 +19,15 @@ public class ChoreographedEvent extends Event {
   String eventID; // the primary key of event table.
 
   /**
+   * The Create user.
+   */
+  String createUser;
+  /**
+   * The Update user.
+   */
+  String updateUser;
+
+  /**
    * Choreographed event builder choreographed event . choreographed event builder.
    *
    * @return the choreographed event . choreographed event builder
