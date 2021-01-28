@@ -52,7 +52,6 @@ public class Subscriber implements Closeable {
   public Subscriber(ApplicationProperties applicationProperties, NatsConnection natsConnection, STANEventHandlerService stanEventHandlerService) throws IOException, InterruptedException {
     this.stanEventHandlerService = stanEventHandlerService;
     Options options = new Options.Builder()
-        .natsUrl(applicationProperties.getStanUrl())
         .clusterId(applicationProperties.getStanCluster())
         .connectionLostHandler(this::connectionLostHandler)
         .natsConn(natsConnection.getNatsCon())

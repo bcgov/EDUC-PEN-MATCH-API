@@ -50,7 +50,6 @@ public class Publisher implements Closeable {
   @Autowired
   public Publisher(ApplicationProperties applicationProperties, NatsConnection natsConnection) throws IOException, InterruptedException {
     Options options = new Options.Builder()
-        .natsUrl(applicationProperties.getStanUrl())
         .clusterId(applicationProperties.getStanCluster())
         .connectionLostHandler(this::connectionLostHandler)
         .natsConn(natsConnection.getNatsCon())
