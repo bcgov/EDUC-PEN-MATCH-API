@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.rest;
 
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
+import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentMergeEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
@@ -108,9 +109,9 @@ public class RestUtils {
    * @param connection the connection
    * @param webClient  the web client
    */
-  public RestUtils(final ApplicationProperties props, Connection connection, WebClient webClient) {
+  public RestUtils(final ApplicationProperties props, NatsConnection connection, WebClient webClient) {
     this.props = props;
-    this.connection = connection;
+    this.connection = connection.getNatsCon();
     this.webClient = webClient;
   }
 
