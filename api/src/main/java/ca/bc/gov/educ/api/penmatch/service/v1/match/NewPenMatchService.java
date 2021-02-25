@@ -799,7 +799,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       yearMatchCode = "1";
       monthMatchCode = "1";
       dayMatchCode = "1";
-    } else if (studentDob != null && studentDob.length() >= 4 && studentDob.substring(0, 4).equals(masterDob.substring(0, 1))) {
+    } else if (studentDob != null && studentDob.length() >= 4 && studentDob.substring(0, 4).equals(masterDob.substring(0, 4))) {
       // !   submitted year matches master
       yearMatchCode = "1";
     } else {
