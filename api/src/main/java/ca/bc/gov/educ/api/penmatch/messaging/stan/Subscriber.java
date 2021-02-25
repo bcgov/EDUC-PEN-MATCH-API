@@ -29,7 +29,7 @@ public class Subscriber implements Closeable {
   /**
    * The Connection factory.
    */
-  private final StreamingConnectionFactory connectionFactory;
+  private StreamingConnectionFactory connectionFactory;
   /**
    * The Stan event handler service.
    */
@@ -51,15 +51,17 @@ public class Subscriber implements Closeable {
   @Autowired
   public Subscriber(ApplicationProperties applicationProperties, NatsConnection natsConnection, STANEventHandlerService stanEventHandlerService) throws IOException, InterruptedException {
     this.stanEventHandlerService = stanEventHandlerService;
-    Options options = new Options.Builder()
-        .clusterId(applicationProperties.getStanCluster())
-        .connectionLostHandler(this::connectionLostHandler)
-        .natsConn(natsConnection.getNatsCon())
-        .maxPingsOut(30)
-        .pingInterval(Duration.ofSeconds(2))
-        .clientId("pen-match-api-subscriber" + UUID.randomUUID().toString()).build();
-    connectionFactory = new StreamingConnectionFactory(options);
-    connection = connectionFactory.createConnection();
+    if(applicationProperties.getIsSTANEnabled()){
+      Options options = new Options.Builder()
+          .clusterId(applicationProperties.getStanCluster())
+          .connectionLostHandler(this::connectionLostHandler)
+          .natsConn(natsConnection.getNatsCon())
+          .maxPingsOut(30)
+          .pingInterval(Duration.ofSeconds(2))
+          .clientId("pen-match-api-subscriber" + UUID.randomUUID().toString()).build();
+      connectionFactory = new StreamingConnectionFactory(options);
+      connection = connectionFactory.createConnection();
+    }
   }
 
 
@@ -73,9 +75,11 @@ public class Subscriber implements Closeable {
    */
   @PostConstruct
   public void subscribe() throws InterruptedException, TimeoutException, IOException {
-    SubscriptionOptions options = new SubscriptionOptions.Builder()
-        .durableName("pen-match-api-pen-match-event-consumer").build();
-    connection.subscribe(PEN_MATCH_EVENTS_TOPIC.toString(), "pen-match-api-pen-match-event", this::onPenMatchEventsTopicMessage, options);
+    if(connection != null) {
+      SubscriptionOptions options = new SubscriptionOptions.Builder()
+              .durableName("pen-match-api-pen-match-event-consumer").build();
+      connection.subscribe(PEN_MATCH_EVENTS_TOPIC.toString(), "pen-match-api-pen-match-event", this::onPenMatchEventsTopicMessage, options);
+    }
   }
 
   /**

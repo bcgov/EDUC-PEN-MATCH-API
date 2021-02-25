@@ -33,7 +33,7 @@ public class Publisher implements Closeable {
   /**
    * The Connection factory.
    */
-  private final StreamingConnectionFactory connectionFactory;
+  private StreamingConnectionFactory connectionFactory;
   /**
    * The Connection.
    */
@@ -49,15 +49,17 @@ public class Publisher implements Closeable {
    */
   @Autowired
   public Publisher(ApplicationProperties applicationProperties, NatsConnection natsConnection) throws IOException, InterruptedException {
-    Options options = new Options.Builder()
-        .clusterId(applicationProperties.getStanCluster())
-        .connectionLostHandler(this::connectionLostHandler)
-        .natsConn(natsConnection.getNatsCon())
-        .maxPingsOut(30)
-        .pingInterval(Duration.ofSeconds(2))
-        .clientId("pen-match-api-publisher" + UUID.randomUUID().toString()).build();
-    connectionFactory = new StreamingConnectionFactory(options);
-    connection = connectionFactory.createConnection();
+    if(applicationProperties.getIsSTANEnabled()){
+      Options options = new Options.Builder()
+          .clusterId(applicationProperties.getStanCluster())
+          .connectionLostHandler(this::connectionLostHandler)
+          .natsConn(natsConnection.getNatsCon())
+          .maxPingsOut(30)
+          .pingInterval(Duration.ofSeconds(2))
+          .clientId("pen-match-api-publisher" + UUID.randomUUID().toString()).build();
+      connectionFactory = new StreamingConnectionFactory(options);
+      connection = connectionFactory.createConnection();
+    }
   }
 
 

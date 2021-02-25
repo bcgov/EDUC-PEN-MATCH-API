@@ -60,4 +60,10 @@ public class ApplicationProperties {
    */
   @Value("${nats.maxReconnect}")
   Integer natsMaxReconnect;
+
+  /**
+   * Is stan enabled
+   */
+  @Value("${stan.enabled}")
+  Boolean isSTANEnabled;
 }
