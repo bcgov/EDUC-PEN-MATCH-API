@@ -14,10 +14,18 @@ public class NewPenMatchComparator implements Comparator<BestMatchRecord> {
     if (x.getMatchValue() == null) {
       return 0;
     }
-    if (x.getMatchValue() < y.getMatchValue()) {
+
+    if (x.getMatchValue().equals(y.getMatchValue())) {
+      if(Integer.parseInt(x.getMatchPEN()) < Integer.parseInt(y.getMatchPEN())){
+        return -1;
+      }
+      return 1;
+    }
+
+    if (x.getMatchValue().longValue() < y.getMatchValue().longValue()) {
       return -1;
     }
 
-    return 0;
+    return 1;
   }
 }

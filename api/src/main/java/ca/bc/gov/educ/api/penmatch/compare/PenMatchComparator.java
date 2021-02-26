@@ -15,10 +15,10 @@ public class PenMatchComparator implements Comparator<OldPenMatchRecord> {
     if (x.getMatchingAlgorithmResult() == null) {
       return 0;
     }
-    if (!(x.getMatchingAlgorithmResult() < y.getMatchingAlgorithmResult()
-        || (x.getMatchingAlgorithmResult().equals(y.getMatchingAlgorithmResult()) && x.getMatchingScore() > y.getMatchingScore()))) {
+    if (!(x.getMatchingAlgorithmResult().intValue() < y.getMatchingAlgorithmResult().intValue()
+        || (x.getMatchingAlgorithmResult().equals(y.getMatchingAlgorithmResult()) && x.getMatchingScore().intValue() > y.getMatchingScore().intValue()))) {
       return -1;
     }
-    return 0;
+    return 1;
   }
 }

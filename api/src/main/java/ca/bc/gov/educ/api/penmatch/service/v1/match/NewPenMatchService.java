@@ -622,8 +622,8 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       surnameMatchCode = "1";
     } else {
       // !   submitted legal surname is part of master legal surname or vice verse
-      String transactionName = " " + legalSurnameHyphenToSpace + " ";
-      String masterName = " " + masterLegalSurnameHyphenToSpace + " ";
+      String transactionName = legalSurnameHyphenToSpace;
+      String masterName = masterLegalSurnameHyphenToSpace;
       if (PenMatchUtils.checkForPartialName(transactionName, masterName)) {
         surnameMatchCode = "1";
       } else {
@@ -668,8 +668,8 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       givenNameMatchCode = "3";
     } else {
       // !   submitted legal given name is part of master legal given name or vice verse
-      String transactionName = " " + legalGivenHyphenToSpace + " ";
-      String masterName = " " + masterLegalGivenNameHyphenToSpace + " ";
+      String transactionName = legalGivenHyphenToSpace;
+      String masterName = masterLegalGivenNameHyphenToSpace;
       if (PenMatchUtils.checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
         givenNameMatchCode = "1";
       } else {
@@ -741,14 +741,14 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     } else {
       //!   submitted legal middle name differs from master legal middle name by only
       //!   one character and both names are at least 5 characters long
-      String transactionName = " " + legalMiddleNoBlanks + " ";
-      String masterName = " " + masterLegalMiddleNameNoBlanks + " ";
+      String transactionName = legalMiddleNoBlanks;
+      String masterName = masterLegalMiddleNameNoBlanks;
       if (oneCharTypo(transactionName, masterName)) {
         middleNameMatchCode = "3";
       } else {
         // !   submitted legal Middle name is part of master legal Middle name or vice verse
-        transactionName = " " + legalMiddleHyphenToSpace + " ";
-        masterName = " " + masterLegalMiddleNameHyphenToSpace + " ";
+        transactionName = legalMiddleHyphenToSpace;
+        masterName = masterLegalMiddleNameHyphenToSpace;
         if (PenMatchUtils.checkForPartialName(transactionName, masterName) && !reOrganizedNames) {
           middleNameMatchCode = "1";
         } else {
