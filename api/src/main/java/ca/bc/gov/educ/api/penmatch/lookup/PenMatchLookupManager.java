@@ -388,7 +388,8 @@ public class PenMatchLookupManager {
     Lock writeLock = nicknamesLock.writeLock();
     try {
       writeLock.lock();
-      getNicknamesRepository().findAll().forEach(e -> mapNickname(e.getNickname1(), e));
+      mapNicknames(getNicknamesRepository().findAll());
+
       log.info("loaded {} entries into nicknames map ", nicknamesMap.values().size());
     } finally {
       writeLock.unlock();
@@ -398,23 +399,45 @@ public class PenMatchLookupManager {
   /**
    * Map nickname.
    *
-   * @param givenName the given name
-   * @param nickName  the nick name
+   * @param entities the entity list
    */
 // map as (givenName, list of Nicknames entity)
-  private void mapNickname(String givenName, NicknamesEntity nickName) {
-    List<NicknamesEntity> nicknames;
-    String key = StringUtils.trimToNull(givenName);
-    if (this.nicknamesMap.containsKey(key)) {
-      nicknames = this.nicknamesMap.get(key);
-    } else {
-      nicknames = new ArrayList<>();
+  private void mapNicknames(List<NicknamesEntity> entities) {
+    for(NicknamesEntity entity: entities) {
+      String givenName = entity.getNickname1();
+      String key = StringUtils.trimToNull(givenName);
+      List<NicknamesEntity> nicknames;
+
+      if (this.nicknamesMap.containsKey(key)) {
+        nicknames = this.nicknamesMap.get(key);
+      } else {
+        nicknames = new ArrayList<>();
+      }
+
+      if (!nicknames.contains(entity.getNickname2())) {
+        nicknames.add(entity);
+        this.nicknamesMap.put(key, nicknames);
+      }
     }
 
-    if (!nicknames.contains(nickName)) {
-      nicknames.add(nickName);
-      this.nicknamesMap.put(key, nicknames);
+    for(NicknamesEntity entity: entities) {
+      String givenName = entity.getNickname2();
+      String key = StringUtils.trimToNull(givenName);
+      List<NicknamesEntity> nicknames;
+
+      if (this.nicknamesMap.containsKey(key)) {
+        nicknames = this.nicknamesMap.get(key);
+      } else {
+        nicknames = new ArrayList<>();
+      }
+
+      if (!nicknames.contains(entity.getNickname1())) {
+        nicknames.add(entity);
+        this.nicknamesMap.put(key, nicknames);
+      }
     }
+
+
   }
 
 }

@@ -360,6 +360,9 @@ public class PenMatchUtils {
    * @return the boolean
    */
   public static boolean checkForPartialName(String transactionName, String masterName) {
-    return (transactionName.contains(masterName) || masterName.contains(transactionName));
+    String tempTransName = " " + transactionName + " ";
+    String tempMasterName = " " + masterName + " ";
+
+    return (tempTransName.contains(tempMasterName) || tempMasterName.contains(tempTransName));
   }
 }

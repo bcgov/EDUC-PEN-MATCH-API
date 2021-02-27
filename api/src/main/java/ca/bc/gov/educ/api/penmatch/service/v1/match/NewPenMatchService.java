@@ -594,7 +594,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    * @param reOrganizedNames the re organized names
    * @return the string
    */
-  private String determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, boolean reOrganizedNames) {
+  private String  determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, boolean reOrganizedNames) {
     var stopwatch = Stopwatch.createStarted();
     PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
 
@@ -686,7 +686,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
 
         boolean nicknameMasterMatchFound = false;
         for (NicknamesEntity entity : nicknamesEntities) {
-          if (entity.getNickname1().equals(masterLegalGivenNameHyphenToSpace) || entity.getNickname2().equals(masterLegalGivenNameHyphenToSpace)) {
+          if (StringUtils.trim(entity.getNickname1()).equals(masterLegalGivenNameHyphenToSpace) || StringUtils.trim(entity.getNickname2()).equals(masterLegalGivenNameHyphenToSpace)) {
             nicknameMasterMatchFound = true;
             break;
           }
