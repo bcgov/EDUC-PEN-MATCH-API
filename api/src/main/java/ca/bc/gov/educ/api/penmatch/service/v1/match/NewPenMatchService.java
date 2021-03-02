@@ -126,7 +126,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    * @param master the master
    * @return the pen match names
    */
-  public PenMatchNames formatNamesFromMaster(PenMasterRecord master) {
+  public NewPenMatchNames formatNamesFromMaster(PenMasterRecord master) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMasterRecord={}", JsonUtil.getJsonPrettyStringFromObject(master));
@@ -135,14 +135,9 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     String usualSurname = master.getUsualSurname();
     String given = master.getGiven();
     String usualGiven = master.getUsualGivenName();
-    PenMatchNames penMatchTransactionNames;
+    String middle = master.getMiddle();
+    NewPenMatchNames penMatchTransactionNames = formatNames(surname, usualSurname, given, middle, usualGiven);
 
-    penMatchTransactionNames = new PenMatchNames();
-    penMatchTransactionNames.setLegalSurname(PenMatchUtils.dropNonLetters(surname));
-    penMatchTransactionNames.setLegalGiven(PenMatchUtils.dropNonLetters(given));
-    penMatchTransactionNames.setLegalMiddle(PenMatchUtils.dropNonLetters(master.getMiddle()));
-    penMatchTransactionNames.setUsualSurname(PenMatchUtils.dropNonLetters(usualSurname));
-    penMatchTransactionNames.setUsualGiven(PenMatchUtils.dropNonLetters(usualGiven));
     stopwatch.stop();
     log.debug("Completed new PEN match :: formatNamesFromMaster :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return penMatchTransactionNames;
@@ -505,7 +500,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    * @param student the student
    * @return the pen match names
    */
-  private PenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
+  private NewPenMatchNames formatNamesFromTransaction(NewPenMatchStudentDetail student) {
     var stopwatch = Stopwatch.createStarted();
     if (log.isDebugEnabled()) {
       log.debug(" input :: NewPenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
@@ -513,17 +508,34 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     String surname = student.getSurname();
     String usualSurname = student.getUsualSurname();
     String given = student.getGivenName();
+    String middle = student.getMiddleName();
     String usualGiven = student.getUsualGivenName();
-    PenMatchNames penMatchTransactionNames;
+    NewPenMatchNames penMatchTransactionNames = formatNames(surname, usualSurname, given, middle, usualGiven);
 
-    penMatchTransactionNames = new PenMatchNames();
-    penMatchTransactionNames.setLegalSurname(PenMatchUtils.dropNonLetters(surname));
-    penMatchTransactionNames.setLegalGiven(PenMatchUtils.dropNonLetters(given));
-    penMatchTransactionNames.setLegalMiddle(PenMatchUtils.dropNonLetters(student.getMiddleName()));
-    penMatchTransactionNames.setUsualSurname(PenMatchUtils.dropNonLetters(usualSurname));
-    penMatchTransactionNames.setUsualGiven(PenMatchUtils.dropNonLetters(usualGiven));
     stopwatch.stop();
     log.debug("Completed new PEN match :: formatNamesFromTransaction :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    return penMatchTransactionNames;
+  }
+
+  private NewPenMatchNames formatNames(String surname, String usualSurname, String given, String middle, String usualGiven){
+    NewPenMatchNames penMatchTransactionNames = new NewPenMatchNames();
+
+    penMatchTransactionNames.setLegalSurname(surname);
+    penMatchTransactionNames.setLegalGiven(given);
+    penMatchTransactionNames.setLegalMiddle(middle);
+    penMatchTransactionNames.setUsualSurname(usualSurname);
+    penMatchTransactionNames.setUsualGiven(usualGiven);
+
+    penMatchTransactionNames.setLegalSurnameScrubbed(PenMatchUtils.dropNonLetters(surname));
+    penMatchTransactionNames.setLegalGivenScrubbed((PenMatchUtils.dropNonLetters(given)));
+    penMatchTransactionNames.setLegalMiddleScrubbed((PenMatchUtils.dropNonLetters(middle)));
+    penMatchTransactionNames.setUsualSurnameScrubbed((PenMatchUtils.dropNonLetters(usualSurname)));
+    penMatchTransactionNames.setUsualGivenScrubbed((PenMatchUtils.dropNonLetters(usualGiven)));
+
+    penMatchTransactionNames.setLegalMiddleHyphenToBlank((PenMatchUtils.replaceHyphensWithBlank(middle)));
+    penMatchTransactionNames.setLegalSurnameHyphenToBlank((PenMatchUtils.replaceHyphensWithBlank(surname)));
+    penMatchTransactionNames.setLegalGivenHyphenToBlank((PenMatchUtils.replaceHyphensWithBlank(given)));
+
     return penMatchTransactionNames;
   }
 
@@ -596,7 +608,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private String  determineMatchCode(NewPenMatchStudentDetail student, PenMasterRecord masterRecord, boolean reOrganizedNames) {
     var stopwatch = Stopwatch.createStarted();
-    PenMatchNames masterNames = formatNamesFromMaster(masterRecord);
+    NewPenMatchNames masterNames = formatNamesFromMaster(masterRecord);
 
     // ! Match surname
     // ! -------------
@@ -607,12 +619,12 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
 
     String surnameMatchCode;
     String legalSurname = student.getSurname();
-    String usualSurnameNoBlanks = student.getPenMatchTransactionNames().getUsualSurname();
-    String legalSurnameNoBlanks = student.getPenMatchTransactionNames().getLegalSurname();
-    String legalSurnameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(student.getPenMatchTransactionNames().getLegalSurname());
-    String masterLegalSurnameNoBlanks = masterNames.getLegalSurname();
-    String masterUsualSurnameNoBlanks = masterNames.getUsualSurname();
-    String masterLegalSurnameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalSurname());
+    String usualSurnameNoBlanks = student.getPenMatchTransactionNames().getUsualSurnameScrubbed();
+    String legalSurnameNoBlanks = student.getPenMatchTransactionNames().getLegalSurnameScrubbed();
+    String legalSurnameHyphenToSpace = student.getPenMatchTransactionNames().getLegalSurnameHyphenToBlank();
+    String masterLegalSurnameNoBlanks = masterNames.getLegalSurnameScrubbed();
+    String masterUsualSurnameNoBlanks = masterNames.getUsualSurnameScrubbed();
+    String masterLegalSurnameHyphenToSpace = masterNames.getLegalSurnameHyphenToBlank();
 
     // !   submitted legal surname missing (shouldn't happen)
     if (legalSurname == null) {
@@ -649,13 +661,13 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     //!   submitted legal given name missing (shouldn't happen)
     String givenNameMatchCode;
     String legalGiven = PenMatchUtils.checkForValidValue(student.getGivenName());
-    String legalGivenNoBlanks = student.getPenMatchTransactionNames().getLegalGiven();
-    String usualGivenNoBlanks = student.getPenMatchTransactionNames().getUsualGiven();
-    String legalGivenHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(student.getPenMatchTransactionNames().getLegalGiven());
+    String legalGivenNoBlanks = student.getPenMatchTransactionNames().getLegalGivenScrubbed();
+    String usualGivenNoBlanks = student.getPenMatchTransactionNames().getUsualGivenScrubbed();
+    String legalGivenHyphenToSpace = student.getPenMatchTransactionNames().getLegalGivenHyphenToBlank();
     String masterLegalGivenName = PenMatchUtils.checkForValidValue(masterRecord.getGiven());
-    String masterLegalGivenNameNoBlanks = masterNames.getLegalGiven();
-    String masterUsualGivenNameNoBlanks = masterNames.getUsualGiven();
-    String masterLegalGivenNameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalGiven());
+    String masterLegalGivenNameNoBlanks = masterNames.getLegalGivenScrubbed();
+    String masterUsualGivenNameNoBlanks = masterNames.getUsualGivenScrubbed();
+    String masterLegalGivenNameHyphenToSpace = masterNames.getLegalGivenHyphenToBlank();
 
     if (legalGiven == null) {
       givenNameMatchCode = "2";
@@ -719,11 +731,11 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     //!       4       Both missing
     String middleNameMatchCode;
     String legalMiddle = PenMatchUtils.checkForValidValue(student.getMiddleName());
-    String legalMiddleNoBlanks = student.getPenMatchTransactionNames().getLegalMiddle();
-    String legalMiddleHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(student.getPenMatchTransactionNames().getLegalMiddle());
+    String legalMiddleNoBlanks = student.getPenMatchTransactionNames().getLegalMiddleScrubbed();
+    String legalMiddleHyphenToSpace = student.getPenMatchTransactionNames().getLegalMiddleHyphenToBlank();
     String masterLegalMiddleName = PenMatchUtils.checkForValidValue(masterRecord.getMiddle());
-    String masterLegalMiddleNameNoBlanks = masterNames.getLegalMiddle();
-    String masterLegalMiddleNameHyphenToSpace = PenMatchUtils.replaceHyphensWithBlank(masterNames.getLegalMiddle());
+    String masterLegalMiddleNameNoBlanks = masterNames.getLegalMiddleScrubbed();
+    String masterLegalMiddleNameHyphenToSpace = masterNames.getLegalMiddleHyphenToBlank();
 
     // !   submitted legal middle name and master legal middle name are both blank
     if (legalMiddle == null && masterRecord.getMiddle() == null) {
@@ -1081,11 +1093,10 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
             break;
           }
         }
-
-        if (!penF1Found) {
-          if (session.getMatchingRecordsList().size() < 20) {
-            session.getMatchingRecordsList().add(new NewPenMatchRecord("Q", "Old F1", student.getOldMatchF1PEN(), student.getOldMatchF1StudentID()));
-          }
+      }
+      if (!penF1Found) {
+        if (session.getMatchingRecordsList().size() < 20) {
+          session.getMatchingRecordsList().add(new NewPenMatchRecord("Q", "Old F1", student.getOldMatchF1PEN(), student.getOldMatchF1StudentID()));
         }
       }
     }
@@ -1190,25 +1201,25 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private NewPenMatchNameChangeResult concatenateNamesAndRecalc(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
     var stopwatch = Stopwatch.createStarted();
-    String savedGiven = student.getPenMatchTransactionNames().getLegalGiven();
-    String savedMiddle = student.getPenMatchTransactionNames().getLegalMiddle();
+    String savedGiven = student.getGivenName();
+    String savedMiddle = student.getMiddleName();
     String matchResult = null;
     String matchCode = null;
 
     if (student.getMiddleName() != null) {
-      student.getPenMatchTransactionNames().setLegalGiven(savedGiven + savedMiddle);
-      student.getPenMatchTransactionNames().setLegalMiddle(null);
+      student.setGivenName(savedGiven + savedMiddle);
+      student.setMiddleName(null);
       matchCode = determineMatchCode(student, masterRecord, true);
       matchResult = lookupManager.lookupMatchResult(matchCode);
 
       if (!matchResult.equals("P")) {
-        student.getPenMatchTransactionNames().setLegalGiven(savedMiddle + savedGiven);
+        student.setGivenName(savedMiddle + savedGiven);
         matchCode = determineMatchCode(student, masterRecord, true);
         matchResult = lookupManager.lookupMatchResult(matchCode);
       }
 
-      student.getPenMatchTransactionNames().setLegalGiven(savedGiven);
-      student.getPenMatchTransactionNames().setLegalMiddle(savedMiddle);
+      student.setGivenName(savedGiven);
+      student.setMiddleName(savedMiddle);
     }
 
     if (matchResult != null && !matchResult.equals("P") && masterRecord.getMiddle() != null) {
@@ -1250,16 +1261,16 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private NewPenMatchNameChangeResult switchNamesAndRecalc(NewPenMatchStudentDetail student, PenMasterRecord masterRecord) {
     var stopwatch = Stopwatch.createStarted();
-    String legalGiven = student.getPenMatchTransactionNames().getLegalGiven();
-    student.getPenMatchTransactionNames().setLegalGiven(student.getPenMatchTransactionNames().getLegalMiddle());
-    student.getPenMatchTransactionNames().setLegalMiddle(legalGiven);
+    String legalGiven = student.getGivenName();
+    student.setGivenName(student.getMiddleName());
+    student.setMiddleName(legalGiven);
 
     String matchCode = determineMatchCode(student, masterRecord, true);
     String matchResult = lookupManager.lookupMatchResult(matchCode);
 
-    legalGiven = student.getPenMatchTransactionNames().getLegalGiven();
-    student.getPenMatchTransactionNames().setLegalGiven(student.getPenMatchTransactionNames().getLegalMiddle());
-    student.getPenMatchTransactionNames().setLegalMiddle(legalGiven);
+    legalGiven = student.getGivenName();
+    student.setGivenName(student.getMiddleName());
+    student.setMiddleName(legalGiven);
     stopwatch.stop();
     log.debug("Completed new PEN Match :: switchNamesAndRecalc :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     if (!"P".equals(matchResult)) {

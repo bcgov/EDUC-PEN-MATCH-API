@@ -19,6 +19,10 @@ public class OldPenMatchRecord extends PenMatchRecord {
    * The Matching score.
    */
   private Integer matchingScore;
+  /**
+   * The Master record.
+   */
+  private PenMasterRecord masterRecord;
 
   /**
    * Instantiates a new Old pen match record.
@@ -29,9 +33,10 @@ public class OldPenMatchRecord extends PenMatchRecord {
    * @param studentID               the student id
    */
   @Builder
-  public OldPenMatchRecord(Integer matchingAlgorithmResult, Integer matchingScore, String matchingPEN, String studentID) {
+  public OldPenMatchRecord(Integer matchingAlgorithmResult, Integer matchingScore, String matchingPEN, String studentID, PenMasterRecord masterRecord) {
     super(matchingPEN, studentID);
     this.matchingAlgorithmResult = matchingAlgorithmResult;
     this.matchingScore = matchingScore;
+    this.masterRecord = masterRecord;
   }
 }

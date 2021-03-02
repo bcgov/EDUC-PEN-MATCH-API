@@ -24,7 +24,7 @@ public class NewPenMatchStudentDetail extends PenMatchStudent {
    * The Pen match transaction names.
    */
 //These are updated by the match algorithm
-  private PenMatchNames penMatchTransactionNames;
+  private NewPenMatchNames penMatchTransactionNames;
   /**
    * The Student true number.
    */

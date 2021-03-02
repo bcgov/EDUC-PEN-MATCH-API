@@ -155,21 +155,21 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      */
     private void checkForF1StatusAndProcess(PenMatchStudentDetail student, PenMatchSession session) {
         if (session.getPenStatus().equals(PenStatus.AA.getValue()) || session.getPenStatus().equals(PenStatus.B1.getValue()) || session.getPenStatus().equals(PenStatus.C1.getValue()) || session.getPenStatus().equals(PenStatus.D1.getValue())) {
-            Optional<PenMasterRecord> masterRecord = lookupManager.lookupStudentByPEN(student.getPen(), session.getCorrelationID());
-            if (masterRecord.isPresent() && !StringUtils.equals(masterRecord.get().getDob(), student.getDob())) {
-                session.setPenStatusMessage("Birthdays are suspect: " + masterRecord.get().getDob() + " vs " + student.getDob());
+            PenMasterRecord masterRecord = session.getMatchingRecords().peek().getMasterRecord();
+            if (!StringUtils.equals(masterRecord.getDob(), student.getDob())) {
+                session.setPenStatusMessage("Birthdays are suspect: " + masterRecord.getDob() + " vs " + student.getDob());
                 session.setPenStatus(PenStatus.F1.getValue());
-                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.get().getStudentID()));
-            } else if (masterRecord.isPresent() && StringUtils.equals(masterRecord.get().getSurname(), student.getSurname())
-                    && !StringUtils.equals(masterRecord.get().getGiven(), student.getGivenName())
-                    && StringUtils.equals(masterRecord.get().getDob(), student.getDob())
-                    && StringUtils.equals(masterRecord.get().getMincode(), student.getMincode())
-                    && masterRecord.get().getLocalId() != null
+                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.getStudentID(), masterRecord));
+            } else if (StringUtils.equals(masterRecord.getSurname(), student.getSurname())
+                    && !StringUtils.equals(masterRecord.getGiven(), student.getGivenName())
+                    && StringUtils.equals(masterRecord.getDob(), student.getDob())
+                    && StringUtils.equals(masterRecord.getMincode(), student.getMincode())
+                    && masterRecord.getLocalId() != null
                     && student.getLocalID() != null
-                    && StringUtils.equals(masterRecord.get().getLocalId().trim(), student.getLocalID().trim())) {
-                session.setPenStatusMessage("Possible twin: " + masterRecord.get().getGiven().trim() + " vs " + student.getGivenName().trim());
+                    && StringUtils.equals(masterRecord.getLocalId().trim(), student.getLocalID().trim())) {
+                session.setPenStatusMessage("Possible twin: " + masterRecord.getGiven().trim() + " vs " + student.getGivenName().trim());
                 session.setPenStatus(PenStatus.F1.getValue());
-                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.get().getStudentID()));
+                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.getStudentID(),masterRecord));
             }
         }
     }
@@ -225,10 +225,10 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
         if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_CONFIRMED)) {
             if (confirmationResult.getMergedPEN() == null) {
                 session.setPenStatus(PenStatus.AA.getValue());
-                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, confirmationResult.getMasterRecord().getPen().trim(), confirmationResult.getMasterRecord().getStudentID()));
+                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, confirmationResult.getMasterRecord().getPen().trim(), confirmationResult.getMasterRecord().getStudentID(), confirmationResult.getMasterRecord()));
             } else {
                 session.setPenStatus(PenStatus.B1.getValue());
-                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, confirmationResult.getMergedPEN(), confirmationResult.getMasterRecord().getStudentID()));
+                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, confirmationResult.getMergedPEN(), confirmationResult.getMasterRecord().getStudentID(), confirmationResult.getMasterRecord()));
             }
         } else if (confirmationResult.getPenConfirmationResultCode().equals(PenConfirmationResult.PEN_ON_FILE)) {
             session.setPenStatus(PenStatus.B.getValue());
@@ -613,9 +613,9 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
         // If only one really good match, and no pretty good matches,
         // just send the one PEN back
-        if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getMatchingRecords().size() <= 1 && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null) {
+       if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getMatchingRecords().size() <= 1 && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null && !session.isType5F1()) {
             session.getMatchingRecords().clear();
-            session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterMatchRecord().getMasterRecord().getPen(), session.getReallyGoodMasterMatchRecord().getMasterRecord().getStudentID()));
+            session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterMatchRecord().getMasterRecord().getPen(), session.getReallyGoodMasterMatchRecord().getMasterRecord().getStudentID(), session.getReallyGoodMasterMatchRecord().getMasterRecord()));
             session.setPenStatus(PenStatus.D1.getValue());
             return;
         }
@@ -629,9 +629,9 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
                 session.setPenStatus(PenStatus.F.getValue());
             } else {
                 // one solid match, put in t_stud_no
-                PenMatchRecord record = session.getMatchingRecords().peek();
+                OldPenMatchRecord record = session.getMatchingRecords().peek();
                 session.getMatchingRecords().clear();
-                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, record.getMatchingPEN(), record.getStudentID()));
+                session.getMatchingRecords().add(new OldPenMatchRecord(null, null, record.getMatchingPEN(), record.getStudentID(), record.getMasterRecord()));
             }
             session.setPenStatus(session.getPenStatus().trim() + "1");
         } else {
@@ -729,7 +729,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
         if (session.getMatchingRecords().size() < 20) {
             // Add new slot in the array
-            session.getMatchingRecords().add(new OldPenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN, masterRecord.getStudentID()));
+            session.getMatchingRecords().add(new OldPenMatchRecord(matchingAlgorithmResult, matchingScore, matchingPEN, masterRecord.getStudentID(), masterRecord));
         }
         stopwatch.stop();
         log.debug("Completed old PEN match :: mergeNewMatchIntoList :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
