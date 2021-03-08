@@ -15,6 +15,7 @@ import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -33,6 +34,7 @@ import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.DATE;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.STRING;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 /**
  * This class is used for REST calls
@@ -109,7 +111,7 @@ public class RestUtils {
    * @param connection the connection
    * @param webClient  the web client
    */
-  public RestUtils(final ApplicationProperties props, NatsConnection connection, WebClient webClient) {
+  public RestUtils(final ApplicationProperties props, final NatsConnection connection, final WebClient webClient) {
     this.props = props;
     this.connection = connection.getNatsCon();
     this.webClient = webClient;
@@ -123,11 +125,11 @@ public class RestUtils {
    * @param correlationID the correlation id
    * @return the pen master record by pen
    */
-  public Optional<PenMasterRecord> getPenMasterRecordByPen(String pen, UUID correlationID) {
-    var obMapper = new ObjectMapper();
+  public Optional<PenMasterRecord> getPenMasterRecordByPen(final String pen, final UUID correlationID) {
+    final var obMapper = new ObjectMapper();
     try {
-      Event event = Event.builder().sagaId(correlationID).eventType(GET_STUDENT).eventPayload(pen).build();
-      var responseMessage = connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      final Event event = Event.builder().sagaId(correlationID).eventType(GET_STUDENT).eventPayload(pen).build();
+      final var responseMessage = this.connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
       if (responseMessage.getData() != null && responseMessage.getData().length > 0) {
         val student = obMapper.readValue(responseMessage.getData(), StudentEntity.class);
         if (student == null || student.getPen() == null) {
@@ -153,29 +155,29 @@ public class RestUtils {
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID, UUID correlationID) throws JsonProcessingException {
-    LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
-    SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
+  public List<StudentEntity> lookupWithAllParts(final String dob, final String surname, final String givenName, final String mincode, final String localID, final UUID correlationID) throws JsonProcessingException {
+    final LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
+    final SearchCriteria criteriaDob = this.getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
-    List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
+    final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
+    final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
     if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+      criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
     if (StringUtils.isNotBlank(givenName)) {
-      criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
     }
 
-    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
+    final List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
     if (StringUtils.isNotBlank(mincode)) {
-      criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
+      criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
     }
     if (StringUtils.isNotBlank(localID)) {
-      criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
+      criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
     }
 
-    List<Search> searches = new LinkedList<>();
+    final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
@@ -184,9 +186,9 @@ public class RestUtils {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
-    String criteriaJSON = objectMapper.writeValueAsString(searches);
+    final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
-    return getStudentsByCriteria(criteriaJSON, correlationID);
+    return this.getStudentsByCriteria(criteriaJSON, correlationID);
   }
 
   /**
@@ -200,27 +202,27 @@ public class RestUtils {
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID, UUID correlationID) throws JsonProcessingException {
+  public List<StudentEntity> lookupNoInit(final String dob, final String surname, final String mincode, final String localID, final UUID correlationID) throws JsonProcessingException {
 
-    LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
-    SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
+    final LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
+    final SearchCriteria criteriaDob = this.getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
-    List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
+    final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    List<SearchCriteria> criteriaListSurname = new LinkedList<>();
+    final List<SearchCriteria> criteriaListSurname = new LinkedList<>();
     if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+      criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
 
-    List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
+    final List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
     if (StringUtils.isNotBlank(mincode)) {
-      criteriaListMincodeLocalID.add(getCriteria(MINCODE, EQUAL, mincode, STRING));
+      criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
     }
     if (StringUtils.isNotBlank(localID)) {
-      criteriaListMincodeLocalID.add(getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
+      criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
     }
 
-    List<Search> searches = new LinkedList<>();
+    final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurname.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
@@ -229,9 +231,9 @@ public class RestUtils {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
-    String criteriaJSON = objectMapper.writeValueAsString(searches);
+    final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
-    return getStudentsByCriteria(criteriaJSON, correlationID);
+    return this.getStudentsByCriteria(criteriaJSON, correlationID);
   }
 
   /**
@@ -244,29 +246,29 @@ public class RestUtils {
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoLocalID(String dob, String surname, String givenName, UUID correlationID) throws JsonProcessingException {
-    LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
-    SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
+  public List<StudentEntity> lookupNoLocalID(final String dob, final String surname, final String givenName, final UUID correlationID) throws JsonProcessingException {
+    final LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
+    final SearchCriteria criteriaDob = this.getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
-    List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
+    final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
+    final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
     if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurnameGiven.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+      criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
     if (StringUtils.isNotBlank(givenName)) {
-      criteriaListSurnameGiven.add(getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
     }
 
-    List<Search> searches = new LinkedList<>();
+    final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
 
-    String criteriaJSON = objectMapper.writeValueAsString(searches);
+    final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
-    return getStudentsByCriteria(criteriaJSON, correlationID);
+    return this.getStudentsByCriteria(criteriaJSON, correlationID);
   }
 
 
@@ -279,7 +281,7 @@ public class RestUtils {
    * @param valueType the value type
    * @return the criteria
    */
-  private SearchCriteria getCriteria(String key, FilterOperation operation, String value, ValueType valueType) {
+  private SearchCriteria getCriteria(final String key, final FilterOperation operation, final String value, final ValueType valueType) {
     return SearchCriteria.builder().key(key).operation(operation).value(value).valueType(valueType).build();
   }
 
@@ -293,7 +295,7 @@ public class RestUtils {
    * @param condition the condition
    * @return the criteria with condition
    */
-  private SearchCriteria getCriteriaWithCondition(String key, FilterOperation operation, String value, ValueType valueType, Condition condition) {
+  private SearchCriteria getCriteriaWithCondition(final String key, final FilterOperation operation, final String value, final ValueType valueType, final Condition condition) {
     return SearchCriteria.builder().key(key).operation(operation).value(value).valueType(valueType).condition(condition).build();
   }
 
@@ -306,25 +308,25 @@ public class RestUtils {
    * @return the list
    * @throws JsonProcessingException the json processing exception
    */
-  public List<StudentEntity> lookupNoInitNoLocalID(String dob, String surname, UUID correlationID) throws JsonProcessingException {
-    LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
-    SearchCriteria criteriaDob = getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
+  public List<StudentEntity> lookupNoInitNoLocalID(final String dob, final String surname, final UUID correlationID) throws JsonProcessingException {
+    final LocalDate dobDate = LocalDate.parse(dob, DOB_FORMATTER_SHORT);
+    final SearchCriteria criteriaDob = this.getCriteria(DOB, EQUAL, DOB_FORMATTER_LONG.format(dobDate), DATE);
 
-    List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
+    final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
-    List<SearchCriteria> criteriaListSurname = new LinkedList<>();
+    final List<SearchCriteria> criteriaListSurname = new LinkedList<>();
     if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurname.add(getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+      criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
     }
 
-    List<Search> searches = new LinkedList<>();
+    final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurname.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
     }
 
-    String criteriaJSON = objectMapper.writeValueAsString(searches);
-    return getStudentsByCriteria(criteriaJSON, correlationID);
+    final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
+    return this.getStudentsByCriteria(criteriaJSON, correlationID);
   }
 
   /**
@@ -333,8 +335,8 @@ public class RestUtils {
    * @param studentID the student id
    * @return the optional
    */
-  public Optional<String> lookupStudentTruePENNumberByStudentID(String studentID) {
-    List<StudentMergeEntity> studentResponse = webClient.get().uri(props.getStudentApiURL() + "/" + studentID + "/merges?mergeDirection=TO").header("Content-Type", "application/json").retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
+  public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
+    final List<StudentMergeEntity> studentResponse = this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri.path("/".concat(studentID).concat("/merges?mergeDirection=TO")).build()).header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
 
     if (studentResponse != null && !studentResponse.isEmpty()) {
       return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse).get(0).getMergeStudent().getPen()));
@@ -349,13 +351,13 @@ public class RestUtils {
    * @param correlationID the correlation id
    * @return the list
    */
-  public List<StudentEntity> getStudentsByCriteria(String criteria, UUID correlationID) {
+  public List<StudentEntity> getStudentsByCriteria(final String criteria, final UUID correlationID) {
     try {
-      TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
+      final TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
       };
-      var obMapper = new ObjectMapper();
-      Event event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
-      var responseMessage = connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      final var obMapper = new ObjectMapper();
+      final Event event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
+      final var responseMessage = this.connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
       if (null != responseMessage) {
         return obMapper.readValue(responseMessage.getData(), ref).getContent();
       } else {
