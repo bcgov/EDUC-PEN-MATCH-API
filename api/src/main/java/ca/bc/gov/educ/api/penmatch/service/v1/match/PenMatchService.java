@@ -122,12 +122,19 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
         PenMatchResult result;
 
-        if (!session.getPenStatus().contains("1") && !session.getPenStatus().equals(PenStatus.AA.getValue()) || session.getPenStatus().equals(PenStatus.F1.getValue())) {
+        if (!session.getPenStatus().contains("1") && !session.getPenStatus().equals(PenStatus.AA.getValue())) {
             PenMatchRecord record = new PenMatchRecord();
             if (!session.getMatchingRecords().isEmpty()) {
                 record = Objects.requireNonNull(session.getMatchingRecords().peek());
             }
-            NewPenMatchStudentDetail newStudentDetail = new NewPenMatchStudentDetail(student, record.getMatchingPEN(), record.getStudentID());
+
+            NewPenMatchStudentDetail newStudentDetail;
+
+            if(session.getPenStatus().contains(PenStatus.F1.getValue())) {
+                newStudentDetail = new NewPenMatchStudentDetail(student, record.getMatchingPEN(), record.getStudentID());
+            }else{
+                newStudentDetail = new NewPenMatchStudentDetail(student, null, null);
+            }
             if (log.isDebugEnabled()) {
                 log.debug(" Running new PEN match algorithm with payload: {}", JsonUtil.getJsonPrettyStringFromObject(newStudentDetail));
             }
