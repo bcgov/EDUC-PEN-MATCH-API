@@ -915,7 +915,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       int diffCharCount = 0;
       int transactionNamePosition = 0;
       int masterNamePosition = 0;
-      for (int i = 0; i < loopLimit; i++) {
+      for (int i = 0; i < loopLimit-1; i++) {
         if (transactionName.charAt(transactionNamePosition) != masterName.charAt(masterNamePosition)) {
           diffCharCount++;
           if (masterNameLength > transactionNameLength) {
