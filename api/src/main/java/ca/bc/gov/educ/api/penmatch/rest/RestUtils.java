@@ -28,8 +28,7 @@ import java.util.*;
 
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_PAGINATED_STUDENT_BY_CRITERIA;
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_STUDENT;
-import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.EQUAL;
-import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.STARTS_WITH;
+import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.*;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.DATE;
@@ -76,6 +75,21 @@ public class RestUtils {
    * The constant DOB.
    */
   public static final String DOB = "dob";
+
+  /**
+   * The constant status.
+   */
+  public static final String STATUS_CODE = "statusCode";
+
+  /**
+   * The constant deceased.
+   */
+  public static final String DECEASED = "D";
+
+  /**
+   * The constant merged.
+   */
+  public static final String MERGED = "M";
 
   /**
    * The constant DOB_FORMATTER_SHORT.
@@ -186,6 +200,14 @@ public class RestUtils {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
+    final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
+
+    SearchCriteria criteriaMandD =
+            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+
+    criteriaMergedDeceased.add(criteriaMandD);
+    searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
+
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
     return this.getStudentsByCriteria(criteriaJSON, correlationID);
@@ -231,6 +253,14 @@ public class RestUtils {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListMincodeLocalID).build());
     }
 
+    final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
+
+    SearchCriteria criteriaMandD =
+            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+
+    criteriaMergedDeceased.add(criteriaMandD);
+    searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
+
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
     return this.getStudentsByCriteria(criteriaJSON, correlationID);
@@ -260,11 +290,20 @@ public class RestUtils {
       criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
     }
 
-    final List<Search> searches = new LinkedList<>();
+    final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
+
+    SearchCriteria criteriaMandD =
+            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+
+    criteriaMergedDeceased.add(criteriaMandD);
+
+    List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
+    searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
+    ObjectMapper objectMapper = new ObjectMapper();
 
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
@@ -324,6 +363,14 @@ public class RestUtils {
     if (!criteriaListSurname.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurname).build());
     }
+
+    final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
+
+    SearchCriteria criteriaMandD =
+            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+
+    criteriaMergedDeceased.add(criteriaMandD);
+    searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
 
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
     return this.getStudentsByCriteria(criteriaJSON, correlationID);

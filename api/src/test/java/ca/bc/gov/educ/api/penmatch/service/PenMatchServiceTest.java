@@ -146,19 +146,19 @@ public class PenMatchServiceTest {
    */
   @Test
   @Parameters({
-      "null,null,LUKE,V1B1J0,M,19791018,285261,D1", // ALG 30
-      "null,null,null,null,F,19791018,285261,D1", // ALG 40
-      "null,null,null,null,M,19791018,285261,D1", // ALG 50
-      "null,VICTORIA,WILLIAM,null,M,19981102,239661,D1",
-      "null,WILLIAM,VICTORIA,null,M,19981102,239661,D1",
-      "null,PETE,VICTORIA,null,M,19981102,239661,D1",
-      "null,PETE,YARN,null,M,19981102,239661,D1",
-      "null,JAKE,YARN,null,M,19981102,239661,D1",
-      "null,JAKE,YARN,null,F,19981102,239661,D1",
-      "null,JAKE,YARN,V8R4N4,F,19981102,239661,D1",
-      "null,JAKE,YARN,null,F,19920223,239661,D1",
+      "null,null,LUKE,V1B1J0,M,19791018,285261,F1", // ALG 30
+      "null,null,null,null,F,19791018,285261,F1", // ALG 40
+      "null,null,null,null,M,19791018,285261,F1", // ALG 50
+      "null,VICTORIA,WILLIAM,null,M,19981102,239661,F1",
+      "null,WILLIAM,VICTORIA,null,M,19981102,239661,F1",
+      "null,PETE,VICTORIA,null,M,19981102,239661,F1",
+      "null,PETE,YARN,null,M,19981102,239661,F1",
+      "null,JAKE,YARN,null,M,19981102,239661,F1",
+      "null,JAKE,YARN,null,F,19981102,239661,F1",
+      "null,JAKE,YARN,V8R4N4,F,19981102,239661,F1",
+      "null,JAKE,YARN,null,F,19920223,239661,F1",
   })
-  public void testMatchStudent_givenDifferentParameters_ShouldReturnStatusD1Match(String pen, String givenName, String middleName,
+  public void testMatchStudent_givenDifferentParameters_ShouldReturnStatusF1Match(String pen, String givenName, String middleName,
                                                                                   String postalCode, String sex, String dob, String localID, String expectedMatchStatus) throws JsonProcessingException {
 
     PenMatchStudentDetail student = createPenMatchStudentDetail();
@@ -223,7 +223,7 @@ public class PenMatchServiceTest {
    * @throws JsonProcessingException the json processing exception
    */
   @Test
-  public void testMatchStudentWithoutPEN_ShouldReturnD1Match() throws JsonProcessingException {
+  public void testMatchStudentWithoutPEN_ShouldReturnF1Match() throws JsonProcessingException {
     PenMatchStudentDetail student = createPenMatchStudentDetailWithoutPEN();
     var studentEntity = createStudent(student.getDob(), student.getSurname(), student.getGivenName(), student.getMincode(), student.getLocalID());
     List<StudentEntity> students = new ArrayList<>();
@@ -234,7 +234,7 @@ public class PenMatchServiceTest {
     assertNotNull(result);
     assertNotNull(result.getPenStatus());
 
-    assertThat(result.getPenStatus()).isEqualTo(PenStatus.D1.toString());
+    assertThat(result.getPenStatus()).isEqualTo(PenStatus.F1.toString());
   }
 
   /**
