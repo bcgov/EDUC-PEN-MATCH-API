@@ -67,7 +67,7 @@ public class EventHandlerService {
    * @param penMatchService      the pen match service
    * @param possibleMatchService the possible match service
    */
-  public EventHandlerService(PenMatchService penMatchService, PossibleMatchService possibleMatchService) {
+  public EventHandlerService(final PenMatchService penMatchService, final PossibleMatchService possibleMatchService) {
     this.penMatchService = penMatchService;
     this.possibleMatchService = possibleMatchService;
   }
@@ -81,17 +81,17 @@ public class EventHandlerService {
    * @throws IOException the io exception
    */
   @Transactional(propagation = REQUIRES_NEW)
-  public byte[] handleProcessPenMatchEvent(@NonNull Event event) throws IOException {
-    var result = getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())), event.getSagaId());
+  public byte[] handleProcessPenMatchEvent(@NonNull final Event event) throws IOException {
+    final var result = this.getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())), event.getSagaId());
     log.info("PEN Match Result for event :: {} , is:: {} ", event, result);
     event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
     event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
-    Event newEvent = Event.builder()
+    final Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.PEN_MATCH_PROCESSED)
         .eventPayload(JsonUtil.getJsonStringFromObject(result)).build();
-    return obMapper.writeValueAsBytes(newEvent);
+    return this.obMapper.writeValueAsBytes(newEvent);
   }
 
   /**
@@ -103,19 +103,19 @@ public class EventHandlerService {
    */
   @Transactional(propagation = REQUIRES_NEW)
   public Pair<byte[], Optional<PENMatchEvent>> handleAddPossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
-    JavaType type = obMapper.getTypeFactory().
+    final JavaType type = this.obMapper.getTypeFactory().
         constructCollectionType(List.class, PossibleMatch.class);
 
-    List<PossibleMatch> possibleMatches = obMapper.readValue(event.getEventPayload(), type);
-    var pair = getPossibleMatchService().savePossibleMatches(possibleMatches
+    final List<PossibleMatch> possibleMatches = this.obMapper.readValue(event.getEventPayload(), type);
+    final var pair = this.getPossibleMatchService().savePossibleMatches(possibleMatches
         .stream().map(PossibleMatchMapper.mapper::toModel).collect(Collectors.toList()));
-    var savedItems = pair.getLeft().stream().map(PossibleMatchMapper.mapper::toStruct).collect(Collectors.toList());
-    Event newEvent = Event.builder()
+    final var savedItems = pair.getLeft().stream().map(PossibleMatchMapper.mapper::toStruct).collect(Collectors.toList());
+    final Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.POSSIBLE_MATCH_ADDED)
         .eventPayload(JsonUtil.getJsonStringFromObject(savedItems)).build();
-    return Pair.of(obMapper.writeValueAsBytes(newEvent), pair.getRight());
+    return Pair.of(this.obMapper.writeValueAsBytes(newEvent), pair.getRight());
   }
 
   /**
@@ -128,8 +128,8 @@ public class EventHandlerService {
   @Transactional(propagation = REQUIRES_NEW)
   public byte[] handleGetPossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
     final List<PossibleMatch> response;
-    var result = getPossibleMatchService().getPossibleMatches(UUID.fromString(event.getEventPayload()));
-    EventOutcome eventOutcome;
+    final var result = this.getPossibleMatchService().getPossibleMatches(UUID.fromString(event.getEventPayload()));
+    final EventOutcome eventOutcome;
     if (result.isEmpty()) {
       response = new ArrayList<>();
       eventOutcome = EventOutcome.POSSIBLE_MATCH_NOT_FOUND;
@@ -137,12 +137,12 @@ public class EventHandlerService {
       eventOutcome = EventOutcome.POSSIBLE_MATCH_FOUND;
       response = result.stream().map(PossibleMatchMapper.mapper::toStruct).collect(Collectors.toList());
     }
-    Event newEvent = Event.builder()
+    final Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
         .eventOutcome(eventOutcome)
         .eventPayload(JsonUtil.getJsonStringFromObject(response)).build();
-    return obMapper.writeValueAsBytes(newEvent);
+    return this.obMapper.writeValueAsBytes(newEvent);
   }
 
   /**
@@ -153,19 +153,19 @@ public class EventHandlerService {
    * @throws JsonProcessingException the json processing exception
    */
   @Transactional(propagation = REQUIRES_NEW)
-  public Pair<byte[], List<PENMatchEvent>> handleDeletePossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
-    final List<PENMatchEvent> penMatchEvents = new ArrayList<>();
-    final List<PossibleMatch> payload = obMapper.readValue(event.getEventPayload(), new TypeReference<>() {
+  public Pair<byte[], Optional<PENMatchEvent>> handleDeletePossibleMatchEvent(@NonNull final Event event) throws JsonProcessingException {
+    Optional<PENMatchEvent> penMatchEventOptional = Optional.empty();
+    final List<PossibleMatch> payload = this.obMapper.readValue(event.getEventPayload(), new TypeReference<>() {
     });
     if (!payload.isEmpty()) {
-      getPossibleMatchService().deletePossibleMatches(payload).ifPresent(penMatchEvents::add);
+      penMatchEventOptional = this.getPossibleMatchService().deletePossibleMatches(payload);
     }
 
-    Event newEvent = Event.builder()
+    final Event newEvent = Event.builder()
         .sagaId(event.getSagaId())
         .eventType(event.getEventType())
         .eventOutcome(EventOutcome.POSSIBLE_MATCH_DELETED)
         .eventPayload(EventOutcome.POSSIBLE_MATCH_DELETED.toString()).build();
-    return Pair.of(obMapper.writeValueAsBytes(newEvent), penMatchEvents);
+    return Pair.of(this.obMapper.writeValueAsBytes(newEvent), penMatchEventOptional);
   }
 }
