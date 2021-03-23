@@ -66,7 +66,7 @@ public class EventHandlerServiceTest {
    */
   @After
   public void tearDown() throws Exception {
-    possibleMatchRepository.deleteAll();
+    this.possibleMatchRepository.deleteAll();
   }
 
 
@@ -77,11 +77,11 @@ public class EventHandlerServiceTest {
    */
   @Test
   public void testHandleAddPossibleMatchEvent_givenValidPayload_shouldStoreDataInDB() throws JsonProcessingException {
-    Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(getPossibleMatchesPlaceHolderData())).eventType(EventType.ADD_POSSIBLE_MATCH).replyTo("BATCH_API").build();
-    var response = eventHandlerService.handleAddPossibleMatchEvent(event);
+    final Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(this.getPossibleMatchesPlaceHolderData())).eventType(EventType.ADD_POSSIBLE_MATCH).replyTo("BATCH_API").build();
+    final var response = this.eventHandlerService.handleAddPossibleMatchEvent(event);
     assertThat(response.getLeft()).hasSizeGreaterThan(0);
     assertThat(new String(response.getLeft())).contains(EventOutcome.POSSIBLE_MATCH_ADDED.toString());
-    assertThat(possibleMatchRepository.findAll()).hasSize(20);
+    assertThat(this.possibleMatchRepository.findAll()).hasSize(20);
   }
 
   /**
@@ -91,12 +91,12 @@ public class EventHandlerServiceTest {
    */
   @Test
   public void testHandleGetPossibleMatchEvent_givenValidPayload_shouldReturnDataFromDB() throws JsonProcessingException {
-    var savedMatches = possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(matchMapper::toModel).collect(Collectors.toList()));
-    Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(savedMatches.getLeft().get(0).getStudentID().toString()).eventType(EventType.GET_POSSIBLE_MATCH).replyTo("BATCH_API").build();
-    var response = eventHandlerService.handleGetPossibleMatchEvent(event);
+    final var savedMatches = this.possibleMatchService.savePossibleMatches(this.getPossibleMatchesPlaceHolderData().stream().map(this.matchMapper::toModel).collect(Collectors.toList()));
+    final Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(savedMatches.getLeft().get(0).getStudentID().toString()).eventType(EventType.GET_POSSIBLE_MATCH).replyTo("BATCH_API").build();
+    final var response = this.eventHandlerService.handleGetPossibleMatchEvent(event);
     assertThat(response).hasSizeGreaterThan(0);
     assertThat(new String(response)).contains(EventOutcome.POSSIBLE_MATCH_FOUND.toString());
-    assertThat(possibleMatchRepository.findAll()).hasSize(20);
+    assertThat(this.possibleMatchRepository.findAll()).hasSize(20);
   }
 
   /**
@@ -107,8 +107,8 @@ public class EventHandlerServiceTest {
   @Test
   public void testHandleDeletePossibleMatchEvent_givenValidPayload_shouldDeleteDataFromDB() throws JsonProcessingException {
 
-    List<PossibleMatch> payload = new ArrayList<>();
-    var savedMatches = possibleMatchService.savePossibleMatches(getPossibleMatchesPlaceHolderData().stream().map(matchMapper::toModel).collect(Collectors.toList()));
+    final List<PossibleMatch> payload = new ArrayList<>();
+    final var savedMatches = this.possibleMatchService.savePossibleMatches(this.getPossibleMatchesPlaceHolderData().stream().map(this.matchMapper::toModel).collect(Collectors.toList()));
     payload.add(PossibleMatch.builder().studentID(savedMatches.getLeft().get(0).getStudentID())
         .matchedStudentID(savedMatches.getLeft().get(0).getMatchedStudentID())
         .createUser("TEST")
@@ -117,11 +117,12 @@ public class EventHandlerServiceTest {
         .matchedStudentID(savedMatches.getLeft().get(2).getMatchedStudentID())
         .createUser("TEST")
         .updateUser("TEST").build());
-    Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(payload)).eventType(EventType.DELETE_POSSIBLE_MATCH).replyTo("BATCH_API").build();
-    var response = eventHandlerService.handleDeletePossibleMatchEvent(event);
+    final Event event = Event.builder().sagaId(UUID.randomUUID()).eventPayload(JsonUtil.getJsonStringFromObject(payload)).eventType(EventType.DELETE_POSSIBLE_MATCH).replyTo("BATCH_API").build();
+    final var response = this.eventHandlerService.handleDeletePossibleMatchEvent(event);
     assertThat(response.getLeft()).hasSizeGreaterThan(0);
+    assertThat(response.getRight()).isPresent();
     assertThat(new String(response.getLeft())).contains(EventOutcome.POSSIBLE_MATCH_DELETED.toString());
-    assertThat(possibleMatchRepository.findAll()).hasSize(16);
+    assertThat(this.possibleMatchRepository.findAll()).hasSize(16);
   }
 
   /**
@@ -130,8 +131,8 @@ public class EventHandlerServiceTest {
    * @return the possible matches place holder data
    */
   private List<PossibleMatch> getPossibleMatchesPlaceHolderData() {
-    List<PossibleMatch> possibleMatches = new ArrayList<>();
-    var studentID = UUID.randomUUID();
+    final List<PossibleMatch> possibleMatches = new ArrayList<>();
+    final var studentID = UUID.randomUUID();
     for (int i = 0; i++ < 10; ) {
       possibleMatches.add(PossibleMatch.builder().studentID(studentID).matchedStudentID(UUID.randomUUID()).matchReasonCode(MatchReasonCodes.PENMATCH).build());
     }

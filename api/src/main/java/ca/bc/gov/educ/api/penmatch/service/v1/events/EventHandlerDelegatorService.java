@@ -53,7 +53,7 @@ public class EventHandlerDelegatorService {
    * @param publisher           the publisher
    */
   @Autowired
-  public EventHandlerDelegatorService(EventHandlerService eventHandlerService, MessagePublisher messagePublisher, Publisher publisher) {
+  public EventHandlerDelegatorService(final EventHandlerService eventHandlerService, final MessagePublisher messagePublisher, final Publisher publisher) {
     this.eventHandlerService = eventHandlerService;
     this.messagePublisher = messagePublisher;
     this.publisher = publisher;
@@ -66,39 +66,37 @@ public class EventHandlerDelegatorService {
    * @param message the message
    */
   @Async("subscriberExecutor")
-  public void handleEvent(Event event, Message message) {
-    boolean isSynchronous = message.getReplyTo() != null;
+  public void handleEvent(final Event event, final Message message) {
+    final boolean isSynchronous = message.getReplyTo() != null;
     final Pair<byte[], Optional<PENMatchEvent>> pairedResult;
-    byte[] response;
+    final byte[] response;
     try {
       switch (event.getEventType()) {
         case PROCESS_PEN_MATCH:
           log.info("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
-          response = getEventHandlerService().handleProcessPenMatchEvent(event);
-          publishToNATS(event, message, isSynchronous, response);
+          response = this.getEventHandlerService().handleProcessPenMatchEvent(event);
+          this.publishToNATS(event, message, isSynchronous, response);
           break;
         case ADD_POSSIBLE_MATCH:
           log.info("received ADD_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
-          pairedResult = getEventHandlerService().handleAddPossibleMatchEvent(event);
-          publishToNATS(event, message, isSynchronous, pairedResult.getLeft());
+          pairedResult = this.getEventHandlerService().handleAddPossibleMatchEvent(event);
+          this.publishToNATS(event, message, isSynchronous, pairedResult.getLeft());
           pairedResult.getRight().ifPresent(this::publishToSTAN);
           break;
         case GET_POSSIBLE_MATCH:
           log.info("received GET_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
-          response = getEventHandlerService().handleGetPossibleMatchEvent(event);
-          publishToNATS(event, message, isSynchronous, response);
+          response = this.getEventHandlerService().handleGetPossibleMatchEvent(event);
+          this.publishToNATS(event, message, isSynchronous, response);
           break;
         case DELETE_POSSIBLE_MATCH:
           log.info("received DELETE_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
-          var pair = getEventHandlerService().handleDeletePossibleMatchEvent(event);
-          publishToNATS(event, message, isSynchronous, pair.getLeft());
-          if (!pair.getRight().isEmpty()) {
-            pair.getRight().forEach(this::publishToSTAN);
-          }
+          final var pair = this.getEventHandlerService().handleDeletePossibleMatchEvent(event);
+          this.publishToNATS(event, message, isSynchronous, pair.getLeft());
+          pair.getRight().ifPresent(this::publishToSTAN);
           break;
         default:
           log.info("silently ignoring other event :: {}", event);
@@ -115,7 +113,7 @@ public class EventHandlerDelegatorService {
    * @param event the event
    */
   private void publishToSTAN(@NonNull final PENMatchEvent event) {
-    publisher.dispatchChoreographyEvent(event);
+    this.publisher.dispatchChoreographyEvent(event);
   }
 
 
@@ -127,11 +125,11 @@ public class EventHandlerDelegatorService {
    * @param isSynchronous the is synchronous
    * @param response      the response
    */
-  private void publishToNATS(Event event, Message message, boolean isSynchronous, byte[] response) {
+  private void publishToNATS(final Event event, final Message message, final boolean isSynchronous, final byte[] response) {
     if (isSynchronous) { // this is for synchronous request/reply pattern.
-      getMessagePublisher().dispatchMessage(message.getReplyTo(), response);
+      this.getMessagePublisher().dispatchMessage(message.getReplyTo(), response);
     } else { // this is for async.
-      getMessagePublisher().dispatchMessage(event.getReplyTo(), response);
+      this.getMessagePublisher().dispatchMessage(event.getReplyTo(), response);
     }
   }
 
