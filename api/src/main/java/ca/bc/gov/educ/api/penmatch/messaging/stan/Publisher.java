@@ -53,6 +53,7 @@ public class Publisher extends PubSub implements Closeable {
           .clusterId(applicationProperties.getStanCluster())
           .connectionLostHandler(this::connectionLostHandler)
           .natsConn(natsConnection.getNatsCon())
+          .traceConnection()
           .maxPingsOut(30)
           .pingInterval(Duration.ofSeconds(2))
           .clientId("pen-match-api-publisher" + UUID.randomUUID().toString()).build();
