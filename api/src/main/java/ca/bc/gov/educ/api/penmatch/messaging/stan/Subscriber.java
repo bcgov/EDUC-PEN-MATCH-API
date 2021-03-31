@@ -1,18 +1,20 @@
 package ca.bc.gov.educ.api.penmatch.messaging.stan;
 
+import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.service.v1.events.STANEventHandlerService;
 import ca.bc.gov.educ.api.penmatch.struct.ChoreographedEvent;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
-import io.nats.streaming.Message;
-import io.nats.streaming.StreamingConnection;
-import io.nats.streaming.SubscriptionOptions;
+import io.nats.streaming.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.Closeable;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPIC;
@@ -22,8 +24,11 @@ import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPI
  */
 @Component
 @Slf4j
-public class Subscriber {
-
+public class Subscriber extends PubSub implements Closeable {
+  /**
+   * The Connection factory.
+   */
+  private StreamingConnectionFactory connectionFactory;
   /**
    * The Stan event handler service.
    */
@@ -37,15 +42,25 @@ public class Subscriber {
    * Instantiates a new Subscriber.
    *
    * @param applicationProperties   the application properties
-   * @param stanConnection          the stan connection
+   * @param natsConnection          the nats connection
    * @param stanEventHandlerService the stan event handler service
+   * @throws IOException          the io exception
+   * @throws InterruptedException the interrupted exception
    */
   @Autowired
-  public Subscriber(final ApplicationProperties applicationProperties, final StanConnection stanConnection,
-                    final STANEventHandlerService stanEventHandlerService) {
+  public Subscriber(final ApplicationProperties applicationProperties, final NatsConnection natsConnection, final STANEventHandlerService stanEventHandlerService) throws IOException, InterruptedException {
     this.stanEventHandlerService = stanEventHandlerService;
     if (applicationProperties.getIsSTANEnabled() != null && applicationProperties.getIsSTANEnabled()) {
-      this.connection = stanConnection.getConnection();
+      final Options options = new Options.Builder()
+          .clusterId(applicationProperties.getStanCluster())
+          .connectionLostHandler(this::connectionLostHandler)
+          .natsConn(natsConnection.getNatsCon())
+          .traceConnection()
+          .maxPingsOut(30)
+          .pingInterval(Duration.ofSeconds(2))
+          .clientId("pen-match-api-subscriber" + UUID.randomUUID().toString()).build();
+      this.connectionFactory = new StreamingConnectionFactory(options);
+      this.connection = this.connectionFactory.createConnection();
     }
   }
 
@@ -87,4 +102,35 @@ public class Subscriber {
     }
   }
 
+
+  /**
+   * This method will keep retrying for a connection.
+   *
+   * @param streamingConnection the streaming connection
+   * @param e                   the e
+   */
+  private void connectionLostHandler(final StreamingConnection streamingConnection, final Exception e) {
+    this.connection = super.connectionLostHandler(this.connectionFactory);
+    this.retrySubscription();
+  }
+
+  private void retrySubscription() {
+    int numOfRetries = 0;
+    while (true) {
+      try {
+        log.trace("retrying subscription as connection was lost :: retrying ::" + numOfRetries++);
+        this.subscribe();
+        log.info("successfully resubscribed after {} attempts", numOfRetries);
+        break;
+      } catch (final InterruptedException | TimeoutException | IOException exception) {
+        log.error("exception occurred while retrying subscription", exception);
+        Thread.currentThread().interrupt();
+      }
+    }
+  }
+
+  @Override
+  public void close() {
+    super.close(this.connection);
+  }
 }
