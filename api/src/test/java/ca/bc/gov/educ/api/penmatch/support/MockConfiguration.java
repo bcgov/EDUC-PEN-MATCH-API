@@ -4,6 +4,7 @@ import ca.bc.gov.educ.api.penmatch.messaging.MessagePublisher;
 import ca.bc.gov.educ.api.penmatch.messaging.MessageSubscriber;
 import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
 import ca.bc.gov.educ.api.penmatch.messaging.stan.Publisher;
+import ca.bc.gov.educ.api.penmatch.messaging.stan.StanConnection;
 import ca.bc.gov.educ.api.penmatch.messaging.stan.Subscriber;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import org.mockito.Mockito;
@@ -74,5 +75,10 @@ public class MockConfiguration {
     return Mockito.mock(Subscriber.class);
   }
 
+  @Bean
+  @Primary
+  public StanConnection stanConnection() {
+    return Mockito.mock(StanConnection.class);
+  }
 
 }
