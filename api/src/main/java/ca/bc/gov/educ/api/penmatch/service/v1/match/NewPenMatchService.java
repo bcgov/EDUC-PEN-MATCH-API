@@ -330,7 +330,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
-    List<StudentEntity> penDemogList = lookupManager.lookupNoLocalID(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(), session.getCorrelationID());
+    List<StudentEntity> penDemogList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(),student.getMincode(), student.getLocalID(), session.getCorrelationID());
     for (StudentEntity entity : penDemogList) {
       determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
     }
@@ -388,7 +388,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   private void lookupByDobSurname(NewPenMatchStudentDetail student, NewPenMatchSession session) {
     var stopwatch = Stopwatch.createStarted();
-    List<StudentEntity> penDemogList = lookupManager.lookupNoInitNoLocalID(student.getDob(), student.getPartialStudentSurname(), session.getCorrelationID());
+    List<StudentEntity> penDemogList = lookupManager.lookupNoInit(student.getDob(), student.getPartialStudentSurname(),student.getMincode(), student.getLocalID(), session.getCorrelationID());
     for (StudentEntity entity : penDemogList) {
       determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
     }
