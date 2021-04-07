@@ -19,7 +19,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPIC;
@@ -29,7 +28,7 @@ import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPI
  */
 @Component
 @Slf4j
-public class Publisher implements Closeable {
+public class Publisher extends PubSub implements Closeable {
   /**
    * The Connection factory.
    */
@@ -48,20 +47,30 @@ public class Publisher implements Closeable {
    * @throws InterruptedException the interrupted exception
    */
   @Autowired
-  public Publisher(ApplicationProperties applicationProperties, NatsConnection natsConnection) throws IOException, InterruptedException {
-    if(applicationProperties.getIsSTANEnabled()){
-      Options options = new Options.Builder()
+  public Publisher(final ApplicationProperties applicationProperties, final NatsConnection natsConnection) throws IOException, InterruptedException {
+    if (applicationProperties.getIsSTANEnabled() != null && applicationProperties.getIsSTANEnabled()) {
+      final Options options = new Options.Builder()
           .clusterId(applicationProperties.getStanCluster())
           .connectionLostHandler(this::connectionLostHandler)
           .natsConn(natsConnection.getNatsCon())
+          .traceConnection()
           .maxPingsOut(30)
           .pingInterval(Duration.ofSeconds(2))
           .clientId("pen-match-api-publisher" + UUID.randomUUID().toString()).build();
-      connectionFactory = new StreamingConnectionFactory(options);
-      connection = connectionFactory.createConnection();
+      this.connectionFactory = new StreamingConnectionFactory(options);
+      this.connection = this.connectionFactory.createConnection();
     }
   }
 
+  /**
+   * Connection lost handler.
+   *
+   * @param streamingConnection the streaming connection
+   * @param exception           the exception
+   */
+  private void connectionLostHandler(final StreamingConnection streamingConnection, final Exception exception) {
+    this.connection = super.connectionLostHandler(this.connectionFactory);
+  }
 
   /**
    * Dispatch choreography event.
@@ -70,7 +79,7 @@ public class Publisher implements Closeable {
    */
   public void dispatchChoreographyEvent(@NonNull final PENMatchEvent event) {
     if (event.getEventId() != null) {
-      ChoreographedEvent choreographedEvent = new ChoreographedEvent();
+      final ChoreographedEvent choreographedEvent = new ChoreographedEvent();
       choreographedEvent.setEventType(EventType.valueOf(event.getEventType()));
       choreographedEvent.setEventOutcome(EventOutcome.valueOf(event.getEventOutcome()));
       choreographedEvent.setEventPayload(event.getEventPayload());
@@ -79,58 +88,15 @@ public class Publisher implements Closeable {
       choreographedEvent.setUpdateUser(event.getUpdateUser());
       try {
         log.info("Broadcasting event :: {}", choreographedEvent);
-        connection.publish(PEN_MATCH_EVENTS_TOPIC.toString(), JsonUtil.getJsonBytesFromObject(choreographedEvent));
-      } catch (IOException | TimeoutException e) {
+        this.connection.publish(PEN_MATCH_EVENTS_TOPIC.toString(), JsonUtil.getJsonBytesFromObject(choreographedEvent));
+      } catch (final IOException | TimeoutException e) {
         log.error("exception while broadcasting message to STAN", e);
-      } catch (InterruptedException e) {
+      } catch (final InterruptedException e) {
         log.error("exception while broadcasting message to STAN", e);
         Thread.currentThread().interrupt();
       }
     }
   }
-
-  /**
-   * This method will keep retrying for a connection.
-   *
-   * @param streamingConnection the streaming connection
-   * @param e                   the e
-   */
-  private void connectionLostHandler(StreamingConnection streamingConnection, Exception e) {
-    if (e != null) {
-      int numOfRetries = 1;
-      while (true) {
-        try {
-          log.trace("retrying connection as connection was lost :: retrying ::" + numOfRetries++);
-          connection = connectionFactory.createConnection();
-          log.info("successfully reconnected after {} attempts", numOfRetries);
-          break;
-        } catch (IOException ex) {
-          backOff(numOfRetries, ex);
-        } catch (InterruptedException interruptedException) {
-          Thread.currentThread().interrupt();
-          backOff(numOfRetries, interruptedException);
-        }
-      }
-    }
-  }
-
-  /**
-   * Back off.
-   *
-   * @param numOfRetries the num of retries
-   * @param ex           the ex
-   */
-  private void backOff(int numOfRetries, Exception ex) {
-    log.error("exception occurred", ex);
-    try {
-      double sleepTime = (2 * numOfRetries);
-      TimeUnit.SECONDS.sleep((long) sleepTime);
-    } catch (InterruptedException exc) {
-      log.error("exception occurred", exc);
-      Thread.currentThread().interrupt();
-    }
-  }
-
   /**
    * Closes this stream and releases any system resources associated
    * with it. If the stream is already closed then invoking this
@@ -144,15 +110,8 @@ public class Publisher implements Closeable {
    */
   @Override
   public void close() {
-    if (connection != null) {
-      log.info("closing stan connection...");
-      try {
-        connection.close();
-      } catch (IOException | TimeoutException | InterruptedException e) {
-        log.error("error while closing stan connection...", e);
-        Thread.currentThread().interrupt();
-      }
-      log.info("stan connection closed...");
-    }
+    super.close(this.connection);
   }
+
+
 }

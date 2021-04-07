@@ -15,7 +15,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPIC;
@@ -25,7 +24,7 @@ import static ca.bc.gov.educ.api.penmatch.constants.Topics.PEN_MATCH_EVENTS_TOPI
  */
 @Component
 @Slf4j
-public class Subscriber implements Closeable {
+public class Subscriber extends PubSub implements Closeable {
   /**
    * The Connection factory.
    */
@@ -49,18 +48,19 @@ public class Subscriber implements Closeable {
    * @throws InterruptedException the interrupted exception
    */
   @Autowired
-  public Subscriber(ApplicationProperties applicationProperties, NatsConnection natsConnection, STANEventHandlerService stanEventHandlerService) throws IOException, InterruptedException {
+  public Subscriber(final ApplicationProperties applicationProperties, final NatsConnection natsConnection, final STANEventHandlerService stanEventHandlerService) throws IOException, InterruptedException {
     this.stanEventHandlerService = stanEventHandlerService;
-    if(applicationProperties.getIsSTANEnabled()){
-      Options options = new Options.Builder()
+    if (applicationProperties.getIsSTANEnabled() != null && applicationProperties.getIsSTANEnabled()) {
+      final Options options = new Options.Builder()
           .clusterId(applicationProperties.getStanCluster())
           .connectionLostHandler(this::connectionLostHandler)
           .natsConn(natsConnection.getNatsCon())
+          .traceConnection()
           .maxPingsOut(30)
           .pingInterval(Duration.ofSeconds(2))
           .clientId("pen-match-api-subscriber" + UUID.randomUUID().toString()).build();
-      connectionFactory = new StreamingConnectionFactory(options);
-      connection = connectionFactory.createConnection();
+      this.connectionFactory = new StreamingConnectionFactory(options);
+      this.connection = this.connectionFactory.createConnection();
     }
   }
 
@@ -75,10 +75,10 @@ public class Subscriber implements Closeable {
    */
   @PostConstruct
   public void subscribe() throws InterruptedException, TimeoutException, IOException {
-    if(connection != null) {
-      SubscriptionOptions options = new SubscriptionOptions.Builder()
-              .durableName("pen-match-api-pen-match-event-consumer").build();
-      connection.subscribe(PEN_MATCH_EVENTS_TOPIC.toString(), "pen-match-api-pen-match-event", this::onPenMatchEventsTopicMessage, options);
+    if (this.connection != null) {
+      final SubscriptionOptions options = new SubscriptionOptions.Builder()
+          .durableName("pen-match-api-pen-match-event-consumer").build();
+      this.connection.subscribe(PEN_MATCH_EVENTS_TOPIC.toString(), "pen-match-api-pen-match-event", this::onPenMatchEventsTopicMessage, options);
     }
   }
 
@@ -89,12 +89,12 @@ public class Subscriber implements Closeable {
    *
    * @param message the string representation of {@link ChoreographedEvent} if it not type of event then it will throw exception and will be ignored.
    */
-  public void onPenMatchEventsTopicMessage(Message message) {
+  public void onPenMatchEventsTopicMessage(final Message message) {
     if (message != null) {
       try {
-        String eventString = new String(message.getData());
-        ChoreographedEvent event = JsonUtil.getJsonObjectFromString(ChoreographedEvent.class, eventString);
-        stanEventHandlerService.updateEventStatus(event);
+        final String eventString = new String(message.getData());
+        final ChoreographedEvent event = JsonUtil.getJsonObjectFromString(ChoreographedEvent.class, eventString);
+        this.stanEventHandlerService.updateEventStatus(event);
         log.info("received event :: {} ", event);
       } catch (final Exception ex) {
         log.error("Exception ", ex);
@@ -104,8 +104,16 @@ public class Subscriber implements Closeable {
 
 
   /**
-   * Retry subscription.
+   * This method will keep retrying for a connection.
+   *
+   * @param streamingConnection the streaming connection
+   * @param e                   the e
    */
+  private void connectionLostHandler(final StreamingConnection streamingConnection, final Exception e) {
+    this.connection = super.connectionLostHandler(this.connectionFactory);
+    this.retrySubscription();
+  }
+
   private void retrySubscription() {
     int numOfRetries = 0;
     while (true) {
@@ -114,74 +122,15 @@ public class Subscriber implements Closeable {
         this.subscribe();
         log.info("successfully resubscribed after {} attempts", numOfRetries);
         break;
-      } catch (InterruptedException | TimeoutException | IOException exception) {
+      } catch (final InterruptedException | TimeoutException | IOException exception) {
         log.error("exception occurred while retrying subscription", exception);
         Thread.currentThread().interrupt();
       }
     }
   }
 
-  /**
-   * This method will keep retrying for a connection.
-   *
-   * @param streamingConnection the streaming connection
-   * @param e                   the e
-   */
-  private void connectionLostHandler(StreamingConnection streamingConnection, Exception e) {
-    if (e != null) {
-      reconnect();
-      retrySubscription();
-    }
-  }
-
-  /**
-   * Reconnect.
-   */
-  private void reconnect() {
-    int numOfRetries = 1;
-    while (true) {
-      try {
-        log.trace("retrying connection as connection was lost :: retrying ::" + numOfRetries++);
-        connection = connectionFactory.createConnection();
-        log.info("successfully reconnected after {} attempts", numOfRetries);
-        break;
-      } catch (IOException ex) {
-        backOff(numOfRetries, ex);
-      } catch (InterruptedException interruptedException) {
-        Thread.currentThread().interrupt();
-        backOff(numOfRetries, interruptedException);
-      }
-    }
-  }
-
-  /**
-   * Back off.
-   *
-   * @param numOfRetries the num of retries
-   * @param ex           the ex
-   */
-  private void backOff(int numOfRetries, Exception ex) {
-    log.error("exception occurred", ex);
-    try {
-      double sleepTime = (2 * numOfRetries);
-      TimeUnit.SECONDS.sleep((long) sleepTime);
-    } catch (InterruptedException exc) {
-      log.error("exception occurred", exc);
-      Thread.currentThread().interrupt();
-    }
-  }
-
   @Override
   public void close() {
-    if (connection != null) {
-      log.info("closing stan connection...");
-      try {
-        connection.close();
-      } catch (IOException | TimeoutException | InterruptedException e) {
-        log.error("error while closing stan connection...", e);
-        Thread.currentThread().interrupt();
-      }
-      log.info("stan connection closed...");
-    }
+    super.close(this.connection);
   }
 }
