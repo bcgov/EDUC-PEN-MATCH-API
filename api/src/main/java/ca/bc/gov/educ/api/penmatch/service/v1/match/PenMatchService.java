@@ -620,7 +620,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
         // If only one really good match, and no pretty good matches,
         // just send the one PEN back
-       if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getMatchingRecords().size() <= 1 && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null && !session.isType5F1()) {
+       if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getMatchingRecords().size() <= 1 && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null) {
             session.getMatchingRecords().clear();
             session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterMatchRecord().getMasterRecord().getPen(), session.getReallyGoodMasterMatchRecord().getMasterRecord().getStudentID(), session.getReallyGoodMasterMatchRecord().getMasterRecord()));
             session.setPenStatus(PenStatus.D1.getValue());
