@@ -620,7 +620,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
 
         // If only one really good match, and no pretty good matches,
         // just send the one PEN back
-       if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getMatchingRecords().size() <= 1 && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatchRecord() == null) {
+       if (session.getPenStatus().substring(0, 1).equals(PenStatus.D.getValue()) && session.getReallyGoodMasterMatchRecord() != null && session.getPrettyGoodMatches() == 0) {
             session.getMatchingRecords().clear();
             session.getMatchingRecords().add(new OldPenMatchRecord(null, null, session.getReallyGoodMasterMatchRecord().getMasterRecord().getPen(), session.getReallyGoodMasterMatchRecord().getMasterRecord().getStudentID(), session.getReallyGoodMasterMatchRecord().getMasterRecord()));
             session.setPenStatus(PenStatus.D1.getValue());
@@ -888,7 +888,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
                 if (bonusPoints >= 70) {
                     setReallyGoodMasterRecord(master, session, totalPoints);
                 } else if (bonusPoints >= 60 || localIDMatchResult.getLocalIDPoints() >= 20) {
-                    setReallyGoodMasterRecord(master, session, totalPoints);
+                    session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
                 }
                 session.setType5F1(true);
             }
@@ -905,7 +905,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
             // but not a full 60 points as above
             if (surnameMatchResult.getSurnamePoints() >= 20 && givenNameMatchResult.getGivenNamePoints() >= 15 && birthdayPoints >= 15) {
                 totalPoints = 55;
-                setReallyGoodMasterRecord(master, session, totalPoints);
+                session.setPrettyGoodMatches(session.getPrettyGoodMatches() + 1);
             }
             session.setType5F1(true);
         }

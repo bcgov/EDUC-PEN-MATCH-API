@@ -19,7 +19,7 @@ public class PenMatchSession {
   /**
    * The Pretty good match record.
    */
-  private PenMasterRecord prettyGoodMatchRecord;
+  private int prettyGoodMatches;
   /**
    * The Really good master record.
    */
