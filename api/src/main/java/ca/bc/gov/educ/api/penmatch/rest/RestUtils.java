@@ -203,7 +203,7 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
-    SearchCriteria criteriaMandD =
+    final SearchCriteria criteriaMandD =
             SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
@@ -256,7 +256,7 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
-    SearchCriteria criteriaMandD =
+    final SearchCriteria criteriaMandD =
             SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
@@ -293,18 +293,18 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
-    SearchCriteria criteriaMandD =
+    final SearchCriteria criteriaMandD =
             SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
 
-    List<Search> searches = new LinkedList<>();
+    final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
     if (!criteriaListSurnameGiven.isEmpty()) {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
     searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
-    ObjectMapper objectMapper = new ObjectMapper();
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
@@ -367,7 +367,7 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
-    SearchCriteria criteriaMandD =
+    final SearchCriteria criteriaMandD =
             SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
@@ -384,7 +384,13 @@ public class RestUtils {
    * @return the optional
    */
   public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
-    final List<StudentMergeEntity> studentResponse = this.webClient.get().uri(this.props.getPenServicesApiURL(), uri -> uri.path("/".concat(studentID).concat("/merges?mergeDirection=TO")).build()).header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
+    final List<StudentMergeEntity> studentResponse =
+        this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
+            .path("/{studentID}/merges")
+            .queryParam("mergeDirection", "TO")
+            .build(studentID))
+            .header(CONTENT_TYPE,
+                MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
 
     if (studentResponse != null && !studentResponse.isEmpty()) {
       return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse).get(0).getMergeStudent().getPen()));

@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryReactiveC
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 /**
  * The type Rest web client.
@@ -30,7 +31,7 @@ public class RestWebClient {
    *
    * @param props the props
    */
-  public RestWebClient(ApplicationProperties props) {
+  public RestWebClient(final ApplicationProperties props) {
     this.props = props;
   }
 
@@ -42,17 +43,19 @@ public class RestWebClient {
   @Bean
   WebClient webClient() {
     val clientRegistryRepo = new InMemoryReactiveClientRegistrationRepository(ClientRegistration
-        .withRegistrationId(props.getClientID())
-        .tokenUri(props.getTokenURL())
-        .clientId(props.getClientID())
-        .clientSecret(props.getClientSecret())
+        .withRegistrationId(this.props.getClientID())
+        .tokenUri(this.props.getTokenURL())
+        .clientId(this.props.getClientID())
+        .clientSecret(this.props.getClientSecret())
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .build());
     val clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistryRepo);
     val authorizedClientManager =
         new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(clientRegistryRepo, clientService);
     val oauthFilter = new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
-    oauthFilter.setDefaultClientRegistrationId(props.getClientID());
+    oauthFilter.setDefaultClientRegistrationId(this.props.getClientID());
+    final DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
     return WebClient.builder()
         .filter(oauthFilter)
         .build();
