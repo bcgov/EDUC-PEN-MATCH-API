@@ -28,7 +28,8 @@ import java.util.*;
 
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_PAGINATED_STUDENT_BY_CRITERIA;
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_STUDENT;
-import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.*;
+import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.EQUAL;
+import static ca.bc.gov.educ.api.penmatch.filter.FilterOperation.STARTS_WITH;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.DATE;
@@ -383,7 +384,7 @@ public class RestUtils {
    * @return the optional
    */
   public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
-    final List<StudentMergeEntity> studentResponse = this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri.path("/".concat(studentID).concat("/merges?mergeDirection=TO")).build()).header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
+    final List<StudentMergeEntity> studentResponse = this.webClient.get().uri(this.props.getPenServicesApiURL(), uri -> uri.path("/".concat(studentID).concat("/merges?mergeDirection=TO")).build()).header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
 
     if (studentResponse != null && !studentResponse.isEmpty()) {
       return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse).get(0).getMergeStudent().getPen()));

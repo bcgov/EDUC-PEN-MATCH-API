@@ -44,6 +44,12 @@ public class ApplicationProperties {
   private String studentApiURL;
 
   /**
+   * The PEN Services api url.
+   */
+  @Value("${penservices.api.url}")
+  private String penServicesApiURL;
+
+  /**
    * The Stan url.
    */
   @Value("${stan.url}")
