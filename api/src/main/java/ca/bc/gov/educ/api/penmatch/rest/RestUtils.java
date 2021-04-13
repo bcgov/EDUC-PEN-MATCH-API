@@ -385,7 +385,7 @@ public class RestUtils {
    */
   public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
     final List<StudentMergeEntity> studentResponse =
-        this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
+        this.webClient.get().uri(this.props.getPenServicesApiURL(), uri -> uri
             .path("/{studentID}/merges")
             .queryParam("mergeDirection", "TO")
             .build(studentID))
