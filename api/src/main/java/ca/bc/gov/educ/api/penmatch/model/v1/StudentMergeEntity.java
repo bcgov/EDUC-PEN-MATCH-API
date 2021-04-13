@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * The type Student merge entity.
@@ -14,15 +15,16 @@ import javax.validation.constraints.NotNull;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentMergeEntity {
+public class StudentMergeEntity implements Serializable {
+  private static final long serialVersionUID = 2160199040305625786L;
   /**
-   * The constant serialVersionUID.
+   * The Create user.
    */
-  private static final long serialVersionUID = 1L;
-
+  public String createUser;
   /**
-   * The Student merge id.
+   * The Update user.
    */
+  public String updateUser;
   String studentMergeID;
   /**
    * The Student id.
@@ -44,9 +46,4 @@ public class StudentMergeEntity {
    */
   @NotNull(message = "Student Merge Source Code can not be null.")
   String studentMergeSourceCode;
-
-  /**
-   * The Merge student.
-   */
-  StudentEntity mergeStudent;
 }

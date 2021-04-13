@@ -1,9 +1,9 @@
 package ca.bc.gov.educ.api.penmatch.rest;
 
+import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.StudentMergeEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.struct.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
@@ -15,9 +15,13 @@ import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -383,17 +387,33 @@ public class RestUtils {
    * @param studentID the student id
    * @return the optional
    */
+  @Retryable(value = {Exception.class}, maxAttempts = 5, backoff = @Backoff(multiplier = 2, delay = 2000))
   public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
-    final List<StudentMergeEntity> studentResponse =
-        this.webClient.get().uri(this.props.getPenServicesApiURL(), uri -> uri
-            .path("/{studentID}/merges")
-            .queryParam("mergeDirection", "TO")
-            .build(studentID))
-            .header(CONTENT_TYPE,
-                MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToFlux(StudentMergeEntity.class).collectList().block();
-
-    if (studentResponse != null && !studentResponse.isEmpty()) {
-      return Optional.ofNullable(StringUtils.trim(Objects.requireNonNull(studentResponse).get(0).getMergeStudent().getPen()));
+    try {
+      final StudentEntity studentEntity =
+          this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
+              .path("/{studentID}")
+              .build(studentID))
+              .header(CONTENT_TYPE,
+                  MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToMono(StudentEntity.class).block();
+      assert studentEntity != null;
+      if (StringUtils.isNotBlank(studentEntity.getTrueStudentID())) {
+        final StudentEntity trueStudentEntity =
+            this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
+                .path("/{studentID}")
+                .build(studentEntity.getTrueStudentID()))
+                .header(CONTENT_TYPE,
+                    MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToMono(StudentEntity.class).block();
+        assert trueStudentEntity != null;
+        log.info("got student true pen as :: {} for student ID :: {}", trueStudentEntity.getPen(), studentID);
+        return Optional.ofNullable(trueStudentEntity.getPen());
+      }
+    } catch (final WebClientResponseException e) {
+      if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+        return Optional.empty();
+      } else {
+        throw new PENMatchRuntimeException("Exception while calling student api " + e.getStatusCode());
+      }
     }
     return Optional.empty();
   }
