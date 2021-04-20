@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.service.v1.events;
 
 import ca.bc.gov.educ.api.penmatch.messaging.MessagePublisher;
-import ca.bc.gov.educ.api.penmatch.messaging.stan.Publisher;
+import ca.bc.gov.educ.api.penmatch.messaging.jetstream.Publisher;
 import ca.bc.gov.educ.api.penmatch.model.v1.PENMatchEvent;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import io.nats.client.Message;
@@ -43,7 +43,7 @@ public class EventHandlerDelegatorService {
    * The Publisher.
    */
   @Getter(PRIVATE)
-  private final Publisher publisher; // STAN publisher for choreography
+  private final Publisher publisher; // Jet Stream publisher for choreography
 
   /**
    * Instantiates a new Event handler delegator service.
@@ -83,7 +83,7 @@ public class EventHandlerDelegatorService {
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           pairedResult = this.getEventHandlerService().handleAddPossibleMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, pairedResult.getLeft());
-          pairedResult.getRight().ifPresent(this::publishToSTAN);
+          pairedResult.getRight().ifPresent(this::publishToJetStream);
           break;
         case GET_POSSIBLE_MATCH:
           log.info("received GET_POSSIBLE_MATCH event for :: {}", event.getSagaId());
@@ -96,7 +96,7 @@ public class EventHandlerDelegatorService {
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           final var pair = this.getEventHandlerService().handleDeletePossibleMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, pair.getLeft());
-          pair.getRight().ifPresent(this::publishToSTAN);
+          pair.getRight().ifPresent(this::publishToJetStream);
           break;
         default:
           log.info("silently ignoring other event :: {}", event);
@@ -112,7 +112,7 @@ public class EventHandlerDelegatorService {
    *
    * @param event the event
    */
-  private void publishToSTAN(@NonNull final PENMatchEvent event) {
+  private void publishToJetStream(@NonNull final PENMatchEvent event) {
     this.publisher.dispatchChoreographyEvent(event);
   }
 

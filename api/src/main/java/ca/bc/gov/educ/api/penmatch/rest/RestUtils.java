@@ -149,7 +149,7 @@ public class RestUtils {
     try {
       final Event event = Event.builder().sagaId(correlationID).eventType(GET_STUDENT).eventPayload(pen).build();
       final var responseMessage = this.connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
-      if (responseMessage.getData() != null && responseMessage.getData().length > 0) {
+      if (responseMessage != null && responseMessage.getData() != null && responseMessage.getData().length > 0) {
         val student = obMapper.readValue(responseMessage.getData(), StudentEntity.class);
         if (student == null || student.getPen() == null) {
           return Optional.empty();

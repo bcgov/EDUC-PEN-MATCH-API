@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.threads.EnhancedQueueExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.Closeable;
@@ -36,7 +37,7 @@ public class NatsConnection implements Closeable {
    */
   @Autowired
   public NatsConnection(final ApplicationProperties applicationProperties) throws IOException, InterruptedException {
-    this.natsCon = this.connectToNats(applicationProperties.getStanUrl(), applicationProperties.getNatsMaxReconnect());
+    this.natsCon = this.connectToNats(applicationProperties.getNatsUrl(), applicationProperties.getNatsMaxReconnect());
   }
 
   /**
@@ -52,7 +53,6 @@ public class NatsConnection implements Closeable {
     final io.nats.client.Options natsOptions = new io.nats.client.Options.Builder()
         .connectionListener(this::connectionListener)
         .maxPingsOut(5)
-        .oldRequestStyle()
         .pingInterval(Duration.ofSeconds(2))
         .connectionName("PEN-MATCH-API")
         .connectionTimeout(Duration.ofSeconds(5))
@@ -76,6 +76,15 @@ public class NatsConnection implements Closeable {
     log.info("NATS -> {}", events.toString());
   }
 
+  /**
+   * Connection connection.
+   *
+   * @return the connection
+   */
+  @Bean
+  public Connection connection() {
+    return this.natsCon;
+  }
 
   @Override
   public void close() {

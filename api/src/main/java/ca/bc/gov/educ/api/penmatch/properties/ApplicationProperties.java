@@ -18,6 +18,7 @@ public class ApplicationProperties {
    * The constant API_NAME.
    */
   public static final String API_NAME = "PEN_MATCH_API";
+  public static final String STREAM_NAME = "PEN_MATCH_EVENTS";
 
   /**
    * The Client id.
@@ -50,16 +51,11 @@ public class ApplicationProperties {
   private String penServicesApiURL;
 
   /**
-   * The Stan url.
+   * The Nats url.
    */
-  @Value("${stan.url}")
-  String stanUrl;
+  @Value("${nats.url}")
+  String natsUrl;
 
-  /**
-   * The Stan cluster.
-   */
-  @Value("${stan.cluster}")
-  String stanCluster;
 
   /**
    * The Nats max reconnect.
@@ -67,9 +63,4 @@ public class ApplicationProperties {
   @Value("${nats.maxReconnect}")
   Integer natsMaxReconnect;
 
-  /**
-   * Is stan enabled
-   */
-  @Value("${stan.enabled}")
-  Boolean isSTANEnabled;
 }
