@@ -20,11 +20,9 @@ public class ApplicationPropertiesTest {
 
   @Test
   public void testGetStanUrl__shouldGiveValueFromProperties() {
-    assertThat(applicationProperties).isNotNull();
-    assertThat(applicationProperties.getStanUrl()).isNotNull();
-    assertThat(applicationProperties.getStanCluster()).isNotNull();
-    assertThat(applicationProperties.getStanUrl()).isEqualTo("test");
-    assertThat(applicationProperties.getStanCluster()).isEqualTo("test");
-    assertThat(applicationProperties.getNatsMaxReconnect()).isEqualTo(60);
+    assertThat(this.applicationProperties).isNotNull();
+    assertThat(this.applicationProperties.getNatsUrl()).isNotNull();
+    assertThat(this.applicationProperties.getNatsUrl()).isEqualTo("test");
+    assertThat(this.applicationProperties.getNatsMaxReconnect()).isEqualTo(60);
   }
 }

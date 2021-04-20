@@ -27,59 +27,59 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class STANEventHandlerServiceTest {
+public class JetStreamEventHandlerServiceTest {
 
   @Autowired
-  STANEventHandlerService stanEventHandlerService;
+  JetStreamEventHandlerService jetStreamEventHandlerService;
 
   @Autowired
   PENMatchEventRepository penMatchEventRepository;
 
   @After
   public void tearDown() {
-    penMatchEventRepository.deleteAll();
+    this.penMatchEventRepository.deleteAll();
   }
 
   @Test
   public void testUpdateEventStatus_givenNoDataInDB_shouldDONothing() throws JsonProcessingException {
-    ChoreographedEvent choreographedEvent = new ChoreographedEvent();
+    final ChoreographedEvent choreographedEvent = new ChoreographedEvent();
     choreographedEvent.setEventID(UUID.randomUUID().toString());
     choreographedEvent.setEventOutcome(POSSIBLE_MATCH_ADDED);
     choreographedEvent.setEventType(ADD_POSSIBLE_MATCH);
     choreographedEvent.setEventPayload(JsonUtil.getJsonStringFromObject(new ArrayList<>()));
-    stanEventHandlerService.updateEventStatus(choreographedEvent);
-    var results = penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
+    this.jetStreamEventHandlerService.updateEventStatus(choreographedEvent);
+    final var results = this.penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
     assertThat(results).isEmpty();
   }
 
   @Test
   public void testUpdateEventStatus_givenEventIdNull_shouldDONothing() throws JsonProcessingException {
-    ChoreographedEvent choreographedEvent = new ChoreographedEvent();
+    final ChoreographedEvent choreographedEvent = new ChoreographedEvent();
     choreographedEvent.setEventOutcome(POSSIBLE_MATCH_ADDED);
     choreographedEvent.setEventType(ADD_POSSIBLE_MATCH);
     choreographedEvent.setEventPayload(JsonUtil.getJsonStringFromObject(new ArrayList<>()));
-    stanEventHandlerService.updateEventStatus(choreographedEvent);
-    var results = penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
+    this.jetStreamEventHandlerService.updateEventStatus(choreographedEvent);
+    final var results = this.penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
     assertThat(results).isEmpty();
   }
 
   @Test
   public void testUpdateEventStatus_givenChoreographedEventNull_shouldDONothing() {
-    stanEventHandlerService.updateEventStatus(null);
-    var results = penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
+    this.jetStreamEventHandlerService.updateEventStatus(null);
+    final var results = this.penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
     assertThat(results).isEmpty();
   }
 
   @Test
   public void testUpdateEventStatus_givenDataInDB_shouldUpdateStatus() throws JsonProcessingException {
-    var studentEvent = penMatchEventRepository.save(createStudentEvent());
-    ChoreographedEvent choreographedEvent = new ChoreographedEvent();
+    final var studentEvent = this.penMatchEventRepository.save(this.createStudentEvent());
+    final ChoreographedEvent choreographedEvent = new ChoreographedEvent();
     choreographedEvent.setEventID(studentEvent.getEventId().toString());
     choreographedEvent.setEventOutcome(POSSIBLE_MATCH_ADDED);
     choreographedEvent.setEventType(ADD_POSSIBLE_MATCH);
     choreographedEvent.setEventPayload(JsonUtil.getJsonStringFromObject(new ArrayList<>()));
-    stanEventHandlerService.updateEventStatus(choreographedEvent);
-    var results = penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
+    this.jetStreamEventHandlerService.updateEventStatus(choreographedEvent);
+    final var results = this.penMatchEventRepository.findByEventStatus(MESSAGE_PUBLISHED.toString());
     assertThat(results).hasSize(1);
     assertThat(results.get(0)).isNotNull();
   }

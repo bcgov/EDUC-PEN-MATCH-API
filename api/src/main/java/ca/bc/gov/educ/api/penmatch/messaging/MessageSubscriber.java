@@ -40,19 +40,18 @@ public class MessageSubscriber {
    * @param eventHandlerDelegatorService the event handler delegator service
    */
   @Autowired
-  public MessageSubscriber(final NatsConnection natsConnection, EventHandlerDelegatorService eventHandlerDelegatorService) {
+  public MessageSubscriber(final NatsConnection natsConnection, final EventHandlerDelegatorService eventHandlerDelegatorService) {
     this.eventHandlerDelegatorService = eventHandlerDelegatorService;
     this.connection = natsConnection.getNatsCon();
   }
 
   /**
-   * This subscription will makes sure the messages are required to acknowledge manually to STAN.
    * Subscribe.
    */
   @PostConstruct
   public void subscribe() {
-    String queue = PEN_MATCH_API_TOPIC.toString().replace("_", "-");
-    var dispatcher = connection.createDispatcher(onMessage());
+    final String queue = PEN_MATCH_API_TOPIC.toString().replace("_", "-");
+    final var dispatcher = this.connection.createDispatcher(this.onMessage());
     dispatcher.subscribe(PEN_MATCH_API_TOPIC.toString(), queue);
   }
 
@@ -66,9 +65,9 @@ public class MessageSubscriber {
       if (message != null) {
         log.info("Message received subject :: {},  replyTo :: {}, subscriptionID :: {}", message.getSubject(), message.getReplyTo(), message.getSID());
         try {
-          var eventString = new String(message.getData());
-          var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
-          eventHandlerDelegatorService.handleEvent(event, message);
+          final var eventString = new String(message.getData());
+          final var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
+          this.eventHandlerDelegatorService.handleEvent(event, message);
         } catch (final Exception e) {
           log.error("Exception ", e);
         }

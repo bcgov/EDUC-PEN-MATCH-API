@@ -13,11 +13,11 @@ import static ca.bc.gov.educ.api.penmatch.constants.EventStatus.MESSAGE_PUBLISHE
 
 
 /**
- * This class will process events from STAN, which is used in choreography pattern, where messages are published if a student is created or updated.
+ * This class will process events from Jet Stream, which is used in choreography pattern.
  */
 @Service
 @Slf4j
-public class STANEventHandlerService {
+public class JetStreamEventHandlerService {
 
   /**
    * The Event repository.
@@ -31,7 +31,7 @@ public class STANEventHandlerService {
    * @param eventRepository the student event repository
    */
   @Autowired
-  public STANEventHandlerService(PENMatchEventRepository eventRepository) {
+  public JetStreamEventHandlerService(final PENMatchEventRepository eventRepository) {
     this.eventRepository = eventRepository;
   }
 
@@ -41,14 +41,14 @@ public class STANEventHandlerService {
    * @param choreographedEvent the choreographed event
    */
   @Transactional
-  public void updateEventStatus(ChoreographedEvent choreographedEvent) {
+  public void updateEventStatus(final ChoreographedEvent choreographedEvent) {
     if (choreographedEvent != null && choreographedEvent.getEventID() != null) {
-      var eventID = UUID.fromString(choreographedEvent.getEventID());
-      var eventOptional = eventRepository.findById(eventID);
+      final var eventID = UUID.fromString(choreographedEvent.getEventID());
+      final var eventOptional = this.eventRepository.findById(eventID);
       if (eventOptional.isPresent()) {
-        var studentEvent = eventOptional.get();
+        final var studentEvent = eventOptional.get();
         studentEvent.setEventStatus(MESSAGE_PUBLISHED.toString());
-        eventRepository.save(studentEvent);
+        this.eventRepository.save(studentEvent);
       }
     }
   }
