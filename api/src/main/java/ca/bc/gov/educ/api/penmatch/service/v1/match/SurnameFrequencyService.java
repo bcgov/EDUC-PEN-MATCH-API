@@ -62,7 +62,7 @@ public class SurnameFrequencyService {
 
   }
 
-  @Scheduled(cron = "${schedule.jobs.load.surname.frequency.cron}") // 0 0 0/6 * * * every 6 hours
+  @Scheduled(cron = "${schedule.jobs.load.surname.frequency.cron}") // every midnight
   public void scheduled() {
     final Lock writeLock = this.surnameFreqMapLock.writeLock();
     try {
