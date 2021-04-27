@@ -9,6 +9,7 @@ import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.SurnameFrequencyService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -85,6 +86,9 @@ public class PenMatchLookupManagerTest {
    */
   @Autowired
   SurnameFrequencyRepository surnameFrequencyRepository;
+
+  @Autowired
+  SurnameFrequencyService surnameFrequencyService;
   /**
    * The Correlation id.
    */
@@ -107,7 +111,7 @@ public class PenMatchLookupManagerTest {
       List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
       });
       surnameFrequencyRepository.saveAll(surnameFreqEntities);
-      lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils);
+      lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, surnameFrequencyService);
       dataLoaded = true;
     }
   }
