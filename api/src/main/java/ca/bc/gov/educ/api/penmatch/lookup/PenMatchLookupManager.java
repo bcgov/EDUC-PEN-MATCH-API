@@ -1,11 +1,15 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import ca.bc.gov.educ.api.penmatch.model.v1.*;
+import ca.bc.gov.educ.api.penmatch.model.v1.ForeignSurnamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.SurnameFrequencyService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
@@ -13,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -67,18 +72,18 @@ public class PenMatchLookupManager {
    */
   private final RestUtils restUtils;
   /**
-   * The Match codes map.
-   */
-  private Map<String, String> matchCodesMap;
-  /**
    * The Nicknames map
    */
   private final Map<String, List<NicknamesEntity>> nicknamesMap = new ConcurrentHashMap<>();
-
   /**
    * The Nicknames lock.
    */
   private final ReadWriteLock nicknamesLock = new ReentrantReadWriteLock();
+  private final SurnameFrequencyService surnameFrequencyService;
+  /**
+   * The Match codes map.
+   */
+  private Map<String, String> matchCodesMap;
 
   /**
    * Instantiates a new Pen match lookup manager.
@@ -90,12 +95,13 @@ public class PenMatchLookupManager {
    * @param restUtils                  the rest utils
    */
   @Autowired
-  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils) {
+  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, SurnameFrequencyService surnameFrequencyService) {
     this.foreignSurnameRepository = foreignSurnameRepository;
     this.nicknamesRepository = nicknamesRepository;
     this.surnameFrequencyRepository = surnameFrequencyRepository;
     this.matchCodesRepository = matchCodesRepository;
     this.restUtils = restUtils;
+    this.surnameFrequencyService = surnameFrequencyService;
   }
 
   /**
@@ -277,14 +283,15 @@ public class PenMatchLookupManager {
    * @return the integer
    */
   public Integer lookupSurnameFrequency(String fullStudentSurname) {
-    if (fullStudentSurname == null) {
+    if (StringUtils.isBlank(fullStudentSurname)) {
       return 0;
     }
     // Note this returns in two different places
     int surnameFrequency = 0;
-    var surnameFreqEntityList = getSurnameFrequencyRepository().findAllBySurnameStartingWith(fullStudentSurname);
-    for (SurnameFrequencyEntity surnameFreqEntity : surnameFreqEntityList) {
-      surnameFrequency += Integer.parseInt(surnameFreqEntity.getSurnameFrequency());
+    for (val key : this.surnameFrequencyService.getSurnameFreqMap().keySet()) {
+      if (StringUtils.startsWith(key, fullStudentSurname)) {
+        surnameFrequency += this.surnameFrequencyService.getSurnameFreqMap().get(key);
+      }
       if (surnameFrequency >= VERY_FREQUENT) {
         break;
       }
@@ -403,7 +410,7 @@ public class PenMatchLookupManager {
    */
 // map as (givenName, list of Nicknames entity)
   private void mapNicknames(List<NicknamesEntity> entities) {
-    for(NicknamesEntity entity: entities) {
+    for (NicknamesEntity entity : entities) {
       String givenName = entity.getNickname1();
       String key = StringUtils.trimToNull(givenName);
       List<NicknamesEntity> nicknames;
@@ -420,7 +427,7 @@ public class PenMatchLookupManager {
       }
     }
 
-    for(NicknamesEntity entity: entities) {
+    for (NicknamesEntity entity : entities) {
       String givenName = entity.getNickname2();
       String key = StringUtils.trimToNull(givenName);
       List<NicknamesEntity> nicknames;
