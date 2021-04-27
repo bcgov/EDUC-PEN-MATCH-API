@@ -175,6 +175,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       // Find match using demographics if
       // The supplied PEN was not confirmed or no PEN was supplied
       findMatchesByDemog(student, session);
+
       if (session.getMatchingRecordsList().size() == 1) {
         NewPenMatchRecord matchRecord = session.getMatchingRecordsList().get(0);
         if (matchRecord.getMatchResult().equals("P")) {

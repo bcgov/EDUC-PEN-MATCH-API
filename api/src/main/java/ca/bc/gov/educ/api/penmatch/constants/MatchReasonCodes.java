@@ -35,7 +35,7 @@ public enum MatchReasonCodes {
   /**
    * Mi match reason codes.
    */
-  MI,
+  MINISTRY,
   /**
    * Sc match reason codes.
    */
