@@ -73,8 +73,7 @@ public class Subscriber {
    * @param message the string representation of {@link ChoreographedEvent} if it not type of event then it will throw exception and will be ignored.
    */
   public void onPenMatchEventsTopicMessage(final Message message) {
-    log.info("Received message Subject:: {} , SID :: {} , sequence :: {}, pending :: {} ", message.getSubject(), message.getSID(), message.metaData().consumerSequence(),
-      message.metaData().pendingCount());
+    log.info("Received message Subject:: {} , SID :: {} , sequence :: {}, pending :: {} ", message.getSubject(), message.getSID(), message.metaData().consumerSequence(), message.metaData().pendingCount());
     try {
       final String eventString = new String(message.getData());
       final ChoreographedEvent event = JsonUtil.getJsonObjectFromString(ChoreographedEvent.class, eventString);
