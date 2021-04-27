@@ -113,6 +113,7 @@ public class PenMatchLookupManagerTest {
       surnameFrequencyRepository.saveAll(surnameFreqEntities);
       lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, surnameFrequencyRepository, matchCodesRepository, restUtils, surnameFrequencyService);
       dataLoaded = true;
+      surnameFrequencyService.init();
     }
   }
 

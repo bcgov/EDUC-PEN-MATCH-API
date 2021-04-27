@@ -11,6 +11,7 @@ import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.service.v1.match.PenMatchService;
+import ca.bc.gov.educ.api.penmatch.service.v1.match.SurnameFrequencyService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
@@ -83,6 +84,9 @@ public class PenMatchServiceTest {
    */
   @Autowired
   SurnameFrequencyRepository surnameFreqRepository;
+
+  @Autowired
+  SurnameFrequencyService surnameFrequencyService;
   /**
    * The Service.
    */
@@ -127,6 +131,7 @@ public class PenMatchServiceTest {
       dataLoaded = true;
     }
     lookupManager.init();
+    surnameFrequencyService.init();
   }
 
   /**
