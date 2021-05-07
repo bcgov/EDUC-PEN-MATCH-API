@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.penmatch.util;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.language.Soundex;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The type Scoring utils.
@@ -119,8 +120,9 @@ public class ScoringUtils {
 
     // Prepare to negate any local_id_points if the local ids actually conflict
     if (localIDPoints > 0 && mincode.equals(masterMincode)) {
-      if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null) || (localID != null && !localID.equals(masterLocalID))) {
-        if ((student.getAlternateLocalID() != null && master.getAlternateLocalId() != null && !student.getAlternateLocalID().equals(master.getAlternateLocalId())) || (student.getAlternateLocalID() == null && master.getAlternateLocalId() == null)) {
+      if(StringUtils.isNotBlank(localID) && StringUtils.isNotBlank(masterLocalID) && !localID.equals(masterLocalID)){
+        //if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null) || (localID != null && !localID.equals(masterLocalID))) {
+        if ((StringUtils.isNotBlank(student.getAlternateLocalID()) && StringUtils.isNotBlank(master.getAlternateLocalId()) && !student.getAlternateLocalID().equals(master.getAlternateLocalId())) || (StringUtils.isBlank(student.getAlternateLocalID()) && StringUtils.isBlank(master.getAlternateLocalId()))) {
           matchResult.setIdDemerits(localIDPoints);
         }
       }
