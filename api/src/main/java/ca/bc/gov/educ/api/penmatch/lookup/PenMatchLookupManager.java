@@ -198,11 +198,12 @@ public class PenMatchLookupManager {
    * Fetches a PEN Master Record given a student number
    *
    * @param studentID the student id
+   * @param correlationID the correlation or transaction id
    * @return the string
    */
-  public String lookupStudentTruePENNumberByStudentID(String studentID) {
+  public String lookupStudentTruePENNumberByStudentID(String studentID, UUID correlationID) {
     if (studentID != null) {
-      var truePenOptional = restUtils.lookupStudentTruePENNumberByStudentID(studentID);
+      var truePenOptional = restUtils.lookupStudentTruePENNumberByStudentID(studentID, correlationID);
       if (truePenOptional.isPresent()) {
         return truePenOptional.get();
       }

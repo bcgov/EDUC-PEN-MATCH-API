@@ -23,5 +23,13 @@ public enum EventOutcome {
   /**
    * Pen match processed event outcome.
    */
-  PEN_MATCH_PROCESSED
+  PEN_MATCH_PROCESSED,
+  /**
+   * Student not found event outcome.
+   */
+  STUDENT_NOT_FOUND,
+  /**
+   * Students found event outcome.
+   */
+  STUDENTS_FOUND
 }

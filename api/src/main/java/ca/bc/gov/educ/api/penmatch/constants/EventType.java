@@ -31,5 +31,6 @@ public enum EventType {
   /**
    * Delete possible match event type.
    */
-  DELETE_POSSIBLE_MATCH
+  DELETE_POSSIBLE_MATCH,
+  GET_STUDENTS
 }

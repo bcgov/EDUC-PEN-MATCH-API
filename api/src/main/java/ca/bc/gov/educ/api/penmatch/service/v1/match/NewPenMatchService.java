@@ -5,7 +5,9 @@ import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.struct.v1.*;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenConfirmationResult;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.newmatch.*;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
@@ -564,7 +566,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
 
 
     if (masterRecordOptional.isPresent() && MERGED.equals(masterRecordOptional.get().getStatus())) {
-      studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecordOptional.get().getStudentID());
+      studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecordOptional.get().getStudentID(), session.getCorrelationID());
     }
 
     if (masterRecordOptional.isPresent() && StringUtils.equals(masterRecordOptional.get().getPen(), localStudentNumber)) {
