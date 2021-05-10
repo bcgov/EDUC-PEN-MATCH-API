@@ -519,7 +519,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
             masterRecord = masterRecordOptional.get();
             result.setPenConfirmationResultCode(PenConfirmationResult.PEN_ON_FILE);
 
-            String studentTrueNumber = getStudentTrueNumberForMergedStudent(masterRecord);
+            String studentTrueNumber = getStudentTrueNumberForMergedStudent(masterRecord, session.getCorrelationID());
 
             if (MERGED.equals(masterRecord.getStatus()) && StringUtils.isNotBlank(studentTrueNumber)) {
                 localStudentNumber = studentTrueNumber.trim();
@@ -557,12 +557,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      * Gets student true number for merged student.
      *
      * @param masterRecord the master record
+     * @param correlationID the correlation id
      * @return the student true number for merged student
      */
-    private String getStudentTrueNumberForMergedStudent(PenMasterRecord masterRecord) {
+    private String getStudentTrueNumberForMergedStudent(PenMasterRecord masterRecord, UUID correlationID) {
         String studentTrueNumber = null;
         if (MERGED.equals(masterRecord.getStatus())) {
-            studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecord.getStudentID());
+            studentTrueNumber = lookupManager.lookupStudentTruePENNumberByStudentID(masterRecord.getStudentID(), correlationID);
         }
         return studentTrueNumber;
     }

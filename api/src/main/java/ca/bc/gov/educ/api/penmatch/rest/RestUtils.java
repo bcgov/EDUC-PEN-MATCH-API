@@ -1,12 +1,14 @@
 package ca.bc.gov.educ.api.penmatch.rest;
 
+import ca.bc.gov.educ.api.penmatch.constants.EventOutcome;
+import ca.bc.gov.educ.api.penmatch.constants.EventType;
 import ca.bc.gov.educ.api.penmatch.exception.PENMatchRuntimeException;
 import ca.bc.gov.educ.api.penmatch.filter.FilterOperation;
 import ca.bc.gov.educ.api.penmatch.messaging.NatsConnection;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.struct.*;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
+import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,20 +17,20 @@ import io.nats.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_PAGINATED_STUDENT_BY_CRITERIA;
 import static ca.bc.gov.educ.api.penmatch.constants.EventType.GET_STUDENT;
@@ -38,7 +40,6 @@ import static ca.bc.gov.educ.api.penmatch.struct.Condition.AND;
 import static ca.bc.gov.educ.api.penmatch.struct.Condition.OR;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.DATE;
 import static ca.bc.gov.educ.api.penmatch.struct.ValueType.STRING;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 /**
  * This class is used for REST calls
@@ -104,36 +105,25 @@ public class RestUtils {
    * The constant DOB_FORMATTER_LONG.
    */
   private static final DateTimeFormatter DOB_FORMATTER_LONG = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  public static final String STUDENT_API_TOPIC = "STUDENT_API_TOPIC";
   /**
    * The Object mapper.
    */
   private final ObjectMapper objectMapper = new ObjectMapper();
-  /**
-   * The Props.
-   */
-  private final ApplicationProperties props;
 
   /**
    * The Connection.
    */
   private final Connection connection;
 
-  /**
-   * The Web client.
-   */
-  private final WebClient webClient;
 
   /**
    * Instantiates a new Rest utils.
    *
-   * @param props      the props
    * @param connection the connection
-   * @param webClient  the web client
    */
-  public RestUtils(final ApplicationProperties props, final NatsConnection connection, final WebClient webClient) {
-    this.props = props;
+  public RestUtils(final NatsConnection connection) {
     this.connection = connection.getNatsCon();
-    this.webClient = webClient;
   }
 
 
@@ -145,12 +135,11 @@ public class RestUtils {
    * @return the pen master record by pen
    */
   public Optional<PenMasterRecord> getPenMasterRecordByPen(final String pen, final UUID correlationID) {
-    final var obMapper = new ObjectMapper();
     try {
       final Event event = Event.builder().sagaId(correlationID).eventType(GET_STUDENT).eventPayload(pen).build();
-      final var responseMessage = this.connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      final var responseMessage = this.connection.request(STUDENT_API_TOPIC, this.objectMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
       if (responseMessage != null && responseMessage.getData() != null && responseMessage.getData().length > 0) {
-        val student = obMapper.readValue(responseMessage.getData(), StudentEntity.class);
+        val student = this.objectMapper.readValue(responseMessage.getData(), StudentEntity.class);
         if (student == null || student.getPen() == null) {
           return Optional.empty();
         }
@@ -208,7 +197,7 @@ public class RestUtils {
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
     final SearchCriteria criteriaMandD =
-            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+      SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
     searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
@@ -261,7 +250,7 @@ public class RestUtils {
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
     final SearchCriteria criteriaMandD =
-            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+      SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
     searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
@@ -298,7 +287,7 @@ public class RestUtils {
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
     final SearchCriteria criteriaMandD =
-            SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
+      SearchCriteria.builder().key(STATUS_CODE).operation(FilterOperation.NOT_IN).value("M,D").valueType(ValueType.STRING).build();
 
     criteriaMergedDeceased.add(criteriaMandD);
 
@@ -308,7 +297,6 @@ public class RestUtils {
       searches.add(Search.builder().condition(OR).searchCriteriaList(criteriaListSurnameGiven).build());
     }
     searches.add(Search.builder().condition(AND).searchCriteriaList(criteriaMergedDeceased).build());
-    final ObjectMapper objectMapper = new ObjectMapper();
 
     final String criteriaJSON = this.objectMapper.writeValueAsString(searches);
 
@@ -385,37 +373,40 @@ public class RestUtils {
    * Fetches a PEN Master Record given a student number
    *
    * @param studentID the student id
+   * @param correlationID the correlation id.
    * @return the optional
    */
-  @Retryable(value = {Exception.class}, maxAttempts = 5, backoff = @Backoff(multiplier = 2, delay = 2000))
-  public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID) {
+  @Retryable(value = {Exception.class}, backoff = @Backoff(multiplier = 2, delay = 200))
+  public Optional<String> lookupStudentTruePENNumberByStudentID(final String studentID, UUID correlationID) {
     try {
-      final StudentEntity studentEntity =
-          this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
-              .path("/{studentID}")
-              .build(studentID))
-              .header(CONTENT_TYPE,
-                  MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToMono(StudentEntity.class).block();
-      assert studentEntity != null;
-      if (StringUtils.isNotBlank(studentEntity.getTrueStudentID())) {
-        final StudentEntity trueStudentEntity =
-            this.webClient.get().uri(this.props.getStudentApiURL(), uri -> uri
-                .path("/{studentID}")
-                .build(studentEntity.getTrueStudentID()))
-                .header(CONTENT_TYPE,
-                    MediaType.APPLICATION_JSON_VALUE).retrieve().bodyToMono(StudentEntity.class).block();
-        assert trueStudentEntity != null;
-        log.info("got student true pen as :: {} for student ID :: {}", trueStudentEntity.getPen(), studentID);
-        return Optional.ofNullable(trueStudentEntity.getPen());
+      List<String> studentIDs = new ArrayList<>();
+      studentIDs.add(studentID);
+      final List<StudentEntity> students = getStudents(correlationID, studentIDs); // it will be always a single response since one id was passed.
+      if (students.get(0) != null && students.get(0).getTrueStudentID() != null) {
+        studentIDs.clear();
+        studentIDs.add(students.get(0).getTrueStudentID());
+        final List<StudentEntity> trueStudents = getStudents(correlationID, studentIDs); // it will be always a single response since one id was passed.
+        if (trueStudents != null && trueStudents.get(0) != null) {
+          return Optional.ofNullable(trueStudents.get(0).getPen());
+        }
       }
-    } catch (final WebClientResponseException e) {
-      if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-        return Optional.empty();
-      } else {
-        throw new PENMatchRuntimeException("Exception while calling student api " + e.getStatusCode());
-      }
+    } catch (final Exception e) {
+      throw new PENMatchRuntimeException("Exception while calling student api for correlation ID :: "+correlationID+" :: "+ e.getMessage());
     }
     return Optional.empty();
+  }
+
+  private List<StudentEntity> getStudents(UUID sagaId, List<String> studentIDs) throws IOException, ExecutionException, InterruptedException, TimeoutException {
+    final var event = ca.bc.gov.educ.api.penmatch.struct.Event.builder().sagaId(sagaId).eventType(EventType.GET_STUDENTS).eventPayload(JsonUtil.getJsonStringFromObject(studentIDs)).build();
+    log.info("called STUDENT_API saga id :: {}, get students :: {}",sagaId, studentIDs);
+    val responseEvent = JsonUtil.getJsonObjectFromByteArray(ca.bc.gov.educ.api.penmatch.struct.Event.class, this.connection.request(STUDENT_API_TOPIC, JsonUtil.getJsonBytesFromObject(event)).get(2, TimeUnit.SECONDS).getData());
+    log.info("got response from STUDENT_API  :: {}", responseEvent);
+    if (responseEvent.getEventOutcome() == EventOutcome.STUDENT_NOT_FOUND) {
+      log.error("Students not found or student size mismatch for student IDs:: {}, this should not have happened", studentIDs);
+      throw new PENMatchRuntimeException("Student not found for , " + studentIDs);
+    }
+    return this.objectMapper.readValue(responseEvent.getEventPayload(), new TypeReference<>() {
+    });
   }
 
   /**
@@ -431,7 +422,7 @@ public class RestUtils {
       };
       final var obMapper = new ObjectMapper();
       final Event event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
-      final var responseMessage = this.connection.request("STUDENT_API_TOPIC", obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      final var responseMessage = this.connection.request(STUDENT_API_TOPIC, obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
       if (null != responseMessage) {
         return obMapper.readValue(responseMessage.getData(), ref).getContent();
       } else {

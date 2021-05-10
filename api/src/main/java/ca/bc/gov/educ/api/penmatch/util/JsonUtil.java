@@ -3,6 +3,8 @@ package ca.bc.gov.educ.api.penmatch.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+
 /**
  * The type Json util.
  */
@@ -12,7 +14,7 @@ public class JsonUtil {
    */
   private JsonUtil() {
   }
-
+  private static final ObjectMapper objectMapper = new ObjectMapper();
   /**
    * Gets json string from object.
    *
@@ -21,7 +23,7 @@ public class JsonUtil {
    * @throws JsonProcessingException the json processing exception
    */
   public static String getJsonStringFromObject(Object payload) throws JsonProcessingException {
-    return new ObjectMapper().writeValueAsString(payload);
+    return objectMapper.writeValueAsString(payload);
   }
 
   /**
@@ -34,7 +36,7 @@ public class JsonUtil {
    * @throws JsonProcessingException the json processing exception
    */
   public static <T> T getJsonObjectFromString(Class<T> clazz, String payload) throws JsonProcessingException {
-    return new ObjectMapper().readValue(payload, clazz);
+    return  objectMapper.readValue(payload, clazz);
   }
 
   /**
@@ -45,7 +47,7 @@ public class JsonUtil {
    */
   public static String getJsonPrettyStringFromObject(Object payload) {
     try {
-      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(payload);
+      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(payload);
     } catch (JsonProcessingException e) {
       return "";
     }
@@ -59,6 +61,19 @@ public class JsonUtil {
    * @throws JsonProcessingException the json processing exception
    */
   public static byte[] getJsonBytesFromObject(Object payload) throws JsonProcessingException {
-    return new ObjectMapper().writeValueAsBytes(payload);
+    return objectMapper.writeValueAsBytes(payload);
+  }
+
+  /**
+   * Gets json object from byte array.
+   *
+   * @param <T>     the type parameter
+   * @param clazz   the clazz
+   * @param payload the payload
+   * @return the json object from byte array
+   * @throws IOException the io exception
+   */
+  public static <T> T getJsonObjectFromByteArray(final Class<T> clazz, final byte[] payload) throws IOException {
+    return objectMapper.readValue(payload, clazz);
   }
 }
