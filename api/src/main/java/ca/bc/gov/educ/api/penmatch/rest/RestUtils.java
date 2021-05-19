@@ -171,7 +171,12 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
     criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+
+    if(StringUtils.isNotBlank(givenName)) {
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }else{
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, EQUAL, null, STRING, AND));
+    }
 
     final List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
     criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
@@ -264,7 +269,12 @@ public class RestUtils {
 
     final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
     criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+
+    if(StringUtils.isNotBlank(givenName)) {
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }else{
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, EQUAL, null, STRING, AND));
+    }
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
 
