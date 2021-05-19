@@ -398,7 +398,7 @@ public class RestUtils {
    */
   public List<StudentEntity> getStudentsByCriteria(final String criteria, final UUID correlationID) {
     try {
-      log.info("Sys Criteria: {}", criteria);
+      log.debug("Sys Criteria: {}", criteria);
       final TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
       };
       final var obMapper = new ObjectMapper();
