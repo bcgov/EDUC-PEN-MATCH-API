@@ -170,20 +170,17 @@ public class RestUtils {
     final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
-    if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    }
-    if (StringUtils.isNotBlank(givenName)) {
+    criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+
+    if(StringUtils.isNotBlank(givenName)) {
       criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }else{
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, EQUAL, null, STRING, AND));
     }
 
     final List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
-    if (StringUtils.isNotBlank(mincode)) {
-      criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
-    }
-    if (StringUtils.isNotBlank(localID)) {
-      criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
-    }
+    criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
+    criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
 
     final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
@@ -226,17 +223,11 @@ public class RestUtils {
     final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     final List<SearchCriteria> criteriaListSurname = new LinkedList<>();
-    if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    }
+    criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
 
     final List<SearchCriteria> criteriaListMincodeLocalID = new LinkedList<>();
-    if (StringUtils.isNotBlank(mincode)) {
-      criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
-    }
-    if (StringUtils.isNotBlank(localID)) {
-      criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
-    }
+    criteriaListMincodeLocalID.add(this.getCriteria(MINCODE, EQUAL, mincode, STRING));
+    criteriaListMincodeLocalID.add(this.getCriteriaWithCondition(LOCAL_ID, EQUAL, localID, STRING, AND));
 
     final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
@@ -277,11 +268,12 @@ public class RestUtils {
     final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     final List<SearchCriteria> criteriaListSurnameGiven = new LinkedList<>();
-    if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    }
-    if (StringUtils.isNotBlank(givenName)) {
+    criteriaListSurnameGiven.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
+
+    if(StringUtils.isNotBlank(givenName)) {
       criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, STARTS_WITH, givenName, STRING, AND));
+    }else{
+      criteriaListSurnameGiven.add(this.getCriteriaWithCondition(LEGAL_FIRST_NAME, EQUAL, null, STRING, AND));
     }
 
     final List<SearchCriteria> criteriaMergedDeceased = new LinkedList<>();
@@ -347,9 +339,7 @@ public class RestUtils {
     final List<SearchCriteria> criteriaListDob = new LinkedList<>(Collections.singletonList(criteriaDob));
 
     final List<SearchCriteria> criteriaListSurname = new LinkedList<>();
-    if (StringUtils.isNotBlank(surname)) {
-      criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
-    }
+    criteriaListSurname.add(this.getCriteria(LEGAL_LAST_NAME, STARTS_WITH, surname, STRING));
 
     final List<Search> searches = new LinkedList<>();
     searches.add(Search.builder().searchCriteriaList(criteriaListDob).build());
@@ -418,6 +408,7 @@ public class RestUtils {
    */
   public List<StudentEntity> getStudentsByCriteria(final String criteria, final UUID correlationID) {
     try {
+      log.debug("Sys Criteria: {}", criteria);
       final TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
       };
       final var obMapper = new ObjectMapper();
