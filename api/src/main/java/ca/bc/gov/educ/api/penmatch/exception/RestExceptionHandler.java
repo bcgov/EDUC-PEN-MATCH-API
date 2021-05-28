@@ -65,10 +65,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(EntityNotFoundException.class)
   protected ResponseEntity<Object> handleEntityNotFound(
       EntityNotFoundException ex) {
-    log.info("handleEntityNotFound", ex);
     ApiError apiError = new ApiError(NOT_FOUND);
     apiError.setMessage(ex.getMessage());
-    log.error("{} ", apiError.getMessage(), ex);
+    log.info("{} ", apiError.getMessage(), ex);
     return buildResponseEntity(apiError);
   }
 
@@ -80,7 +79,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler({InvalidParameterException.class, InvalidValueException.class})
   protected ResponseEntity<Object> handleInvalidParameter(RuntimeException ex) {
-    log.warn("handleInvalidParameter or InvalidValue", ex);
     ApiError apiError = new ApiError(BAD_REQUEST);
     apiError.setMessage(ex.getMessage());
     log.error("{} ", apiError.getMessage(), ex);
@@ -116,7 +114,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
       HttpHeaders headers,
       HttpStatus status,
       WebRequest request) {
-    log.warn("handleMethodArgumentNotValid", ex);
     ApiError apiError = new ApiError(BAD_REQUEST);
     apiError.setMessage("Validation error");
     apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
