@@ -1,9 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import ca.bc.gov.educ.api.penmatch.model.v1.ForeignSurnamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.*;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
@@ -40,10 +37,6 @@ import java.util.stream.Collectors;
 public class PenMatchLookupManager {
 
   /**
-   * The constant VERY_FREQUENT.
-   */
-  public static final Integer VERY_FREQUENT = 500;
-  /**
    * The constant ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON.
    */
   public static final String ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON = "Error occurred while writing criteria as JSON: ";
@@ -52,11 +45,6 @@ public class PenMatchLookupManager {
    */
   @Getter(AccessLevel.PRIVATE)
   private final ForeignSurnameRepository foreignSurnameRepository;
-  /**
-   * The Surname frequency repository.
-   */
-  @Getter(AccessLevel.PRIVATE)
-  private final SurnameFrequencyRepository surnameFrequencyRepository;
   /**
    * The Nicknames repository.
    */
@@ -90,15 +78,13 @@ public class PenMatchLookupManager {
    *
    * @param foreignSurnameRepository   the foreign surname repository
    * @param nicknamesRepository        the nicknames repository
-   * @param surnameFrequencyRepository the surname frequency repository
    * @param matchCodesRepository       the match codes repository
    * @param restUtils                  the rest utils
    */
   @Autowired
-  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final SurnameFrequencyRepository surnameFrequencyRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, SurnameFrequencyService surnameFrequencyService) {
+  public PenMatchLookupManager(final ForeignSurnameRepository foreignSurnameRepository, final NicknamesRepository nicknamesRepository, final MatchCodesRepository matchCodesRepository, final RestUtils restUtils, final SurnameFrequencyService surnameFrequencyService) {
     this.foreignSurnameRepository = foreignSurnameRepository;
     this.nicknamesRepository = nicknamesRepository;
-    this.surnameFrequencyRepository = surnameFrequencyRepository;
     this.matchCodesRepository = matchCodesRepository;
     this.restUtils = restUtils;
     this.surnameFrequencyService = surnameFrequencyService;
@@ -283,21 +269,11 @@ public class PenMatchLookupManager {
    * @param fullStudentSurname the full student surname
    * @return the integer
    */
+  /**
+   * Check frequency of surname
+   */
   public Integer lookupSurnameFrequency(String fullStudentSurname) {
-    if (StringUtils.isBlank(fullStudentSurname)) {
-      return 0;
-    }
-    // Note this returns in two different places
-    int surnameFrequency = 0;
-    for (val key : this.surnameFrequencyService.getSurnameFreqMap().keySet()) {
-      if (StringUtils.startsWith(key, fullStudentSurname)) {
-        surnameFrequency += this.surnameFrequencyService.getSurnameFreqMap().get(key);
-      }
-      if (surnameFrequency >= VERY_FREQUENT) {
-        break;
-      }
-    }
-    return surnameFrequency;
+    return surnameFrequencyService.lookupSurnameFrequency(fullStudentSurname);
   }
 
   /**

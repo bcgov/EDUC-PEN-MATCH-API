@@ -131,7 +131,6 @@ public class PenMatchServiceTest {
       dataLoaded = true;
     }
     lookupManager.init();
-    surnameFrequencyService.init();
   }
 
   /**

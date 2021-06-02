@@ -411,20 +411,17 @@ public class RestUtils {
       log.debug("Sys Criteria: {}", criteria);
       final TypeReference<RestPageImpl<StudentEntity>> ref = new TypeReference<>() {
       };
-      final var obMapper = new ObjectMapper();
-      final Event event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
-      final var responseMessage = this.connection.request(STUDENT_API_TOPIC, obMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
+      val event = Event.builder().sagaId(correlationID).eventType(GET_PAGINATED_STUDENT_BY_CRITERIA).eventPayload(SEARCH_CRITERIA_LIST.concat("=").concat(URLEncoder.encode(criteria, StandardCharsets.UTF_8)).concat("&").concat(PAGE_SIZE).concat("=").concat("100000")).build();
+      final var responseMessage = this.connection.request(STUDENT_API_TOPIC, JsonUtil.objectMapper.writeValueAsBytes(event), Duration.ofSeconds(60));
       if (null != responseMessage) {
-        return obMapper.readValue(responseMessage.getData(), ref).getContent();
+        return JsonUtil.objectMapper.readValue(responseMessage.getData(), ref).getContent();
       } else {
-        log.error("Either NATS timed out or the response is null");
+        throw new PENMatchRuntimeException("Either NATS timed out or the response is null , correlationID :: " + correlationID);
       }
 
     } catch (final Exception ex) {
-      log.error("exception", ex);
+      throw new PENMatchRuntimeException("Either NATS timed out or the response is null , correlationID :: " + correlationID + ex.getMessage());
     }
-    return new ArrayList<>();
   }
-
 
 }

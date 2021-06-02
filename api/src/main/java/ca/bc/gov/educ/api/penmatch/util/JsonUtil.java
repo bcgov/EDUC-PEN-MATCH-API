@@ -14,7 +14,7 @@ public class JsonUtil {
    */
   private JsonUtil() {
   }
-  private static final ObjectMapper objectMapper = new ObjectMapper();
+  public static final ObjectMapper objectMapper = new ObjectMapper();
   /**
    * Gets json string from object.
    *
