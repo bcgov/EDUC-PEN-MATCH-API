@@ -322,25 +322,6 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     return useGivenInitial;
   }
 
-
-  /**
-   * !---------------------------------------------------------------------------
-   * ! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
-   * !---------------------------------------------------------------------------
-   *
-   * @param student the student
-   * @param session the session
-   */
-  private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
-    var stopwatch = Stopwatch.createStarted();
-    List<StudentEntity> penDemogList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(),student.getMincode(), student.getLocalID(), session.getCorrelationID());
-    for (StudentEntity entity : penDemogList) {
-      determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
-    }
-    stopwatch.stop();
-    log.debug("Completed new PEN match :: lookupByDobSurnameGiven :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-  }
-
   /**
    * !---------------------------------------------------------------------------
    * ! Determine if the match is a Pass or Fail
@@ -397,6 +378,25 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
     }
     stopwatch.stop();
     log.debug("Completed new PEN match :: lookupByDobSurname :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+  }
+
+
+  /**
+   * !---------------------------------------------------------------------------
+   * ! Read Pen master by BIRTH DATE or SURNAME or (MINCODE and LOCAL ID)
+   * !---------------------------------------------------------------------------
+   *
+   * @param student the student
+   * @param session the session
+   */
+  private void lookupByDobSurnameGiven(NewPenMatchStudentDetail student, NewPenMatchSession session) {
+    var stopwatch = Stopwatch.createStarted();
+    List<StudentEntity> penDemogList = lookupManager.lookupWithAllParts(student.getDob(), student.getPartialStudentSurname(), student.getPartialStudentGiven(),student.getMincode(), student.getLocalID(), session.getCorrelationID());
+    for (StudentEntity entity : penDemogList) {
+      determineIfMatch(student, PenMatchUtils.convertStudentEntityToPenMasterRecord(entity), session);
+    }
+    stopwatch.stop();
+    log.debug("Completed new PEN match :: lookupByDobSurnameGiven :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
   }
 
   /**
