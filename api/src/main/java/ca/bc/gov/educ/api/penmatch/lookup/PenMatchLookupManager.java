@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
+import ca.bc.gov.educ.api.penmatch.exception.LookupRuntimeException;
 import ca.bc.gov.educ.api.penmatch.model.v1.*;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
@@ -17,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +44,11 @@ public class PenMatchLookupManager {
    * The constant ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON.
    */
   public static final String ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON = "Error occurred while writing criteria as JSON: ";
+
+  /**
+   * The constant ERROR_OCCURRED_DURING_LOOKUP.
+   */
+  public static final String ERROR_OCCURRED_DURING_LOOKUP = "Error occurred during lookup: ";
   /**
    * The Foreign surname repository.
    */
@@ -90,6 +99,14 @@ public class PenMatchLookupManager {
     this.surnameFrequencyService = surnameFrequencyService;
   }
 
+  @Scheduled(fixedRate = 30000)
+  @Caching(evict = {
+          @CacheEvict(value="lookupAllParts", allEntries=true),
+          @CacheEvict(value="lookupNoInit", allEntries=true) })
+  public void evictAllCachesAtIntervals() {
+    log.debug("Evicting cache for lookups");
+  }
+
   /**
    * Local ID is not blank, lookup with all parts
    *
@@ -101,12 +118,13 @@ public class PenMatchLookupManager {
    * @param correlationID the correlation id
    * @return the list
    */
+  @Cacheable("lookupAllParts")
   public List<StudentEntity> lookupWithAllParts(String dob, String surname, String givenName, String mincode, String localID, UUID correlationID) {
     try {
       return restUtils.lookupWithAllParts(dob, surname, givenName, mincode, localID, correlationID);
     } catch (JsonProcessingException e) {
-      log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
-      return new ArrayList<>();
+      log.error(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
+      throw new LookupRuntimeException(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
     }
   }
 
@@ -121,12 +139,13 @@ public class PenMatchLookupManager {
    * @param correlationID the correlation id
    * @return the list
    */
+  @Cacheable("lookupNoInit")
   public List<StudentEntity> lookupNoInit(String dob, String surname, String mincode, String localID, UUID correlationID) {
     try {
       return restUtils.lookupNoInit(dob, surname, mincode, localID, correlationID);
     } catch (JsonProcessingException e) {
-      log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
-      return new ArrayList<>();
+      log.error(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
+      throw new LookupRuntimeException(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
     }
   }
 
@@ -143,8 +162,8 @@ public class PenMatchLookupManager {
     try {
       return restUtils.lookupNoLocalID(dob, surname, givenName, correlationID);
     } catch (JsonProcessingException e) {
-      log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
-      return new ArrayList<>();
+      log.error(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
+      throw new LookupRuntimeException(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
     }
   }
 
@@ -160,8 +179,8 @@ public class PenMatchLookupManager {
     try {
       return restUtils.lookupNoInitNoLocalID(dob, surname, correlationID);
     } catch (JsonProcessingException e) {
-      log.error(ERROR_OCCURRED_WHILE_WRITING_CRITERIA_AS_JSON + e.getMessage());
-      return new ArrayList<>();
+      log.error(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
+      throw new LookupRuntimeException(ERROR_OCCURRED_DURING_LOOKUP + e.getMessage());
     }
   }
 
