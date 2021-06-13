@@ -17,20 +17,15 @@ public class PenMatchMVCConfig implements WebMvcConfigurer {
    * The Pen match request interceptor.
    */
   @Getter(AccessLevel.PRIVATE)
-  private final PenMatchRequestInterceptor penMatchRequestInterceptor;
+  private final RequestResponseInterceptor requestResponseInterceptor;
 
-  /**
-   * Instantiates a new Pen match mvc config.
-   *
-   * @param penDemogRequestInterceptor the pen demog request interceptor
-   */
   @Autowired
-  public PenMatchMVCConfig(final PenMatchRequestInterceptor penDemogRequestInterceptor) {
-    this.penMatchRequestInterceptor = penDemogRequestInterceptor;
+  public PenMatchMVCConfig(final RequestResponseInterceptor requestResponseInterceptor) {
+    this.requestResponseInterceptor = requestResponseInterceptor;
   }
 
   @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(penMatchRequestInterceptor).addPathPatterns("/**");
+  public void addInterceptors(final InterceptorRegistry registry) {
+    registry.addInterceptor(this.requestResponseInterceptor).addPathPatterns("/**");
   }
 }

@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.messaging;
 
+import ca.bc.gov.educ.api.penmatch.helpers.LogHelper;
 import ca.bc.gov.educ.api.penmatch.service.v1.events.EventHandlerDelegatorService;
 import ca.bc.gov.educ.api.penmatch.struct.Event;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
@@ -66,6 +67,7 @@ public class MessageSubscriber {
         log.info("Message received subject :: {},  replyTo :: {}, subscriptionID :: {}", message.getSubject(), message.getReplyTo(), message.getSID());
         try {
           final var eventString = new String(message.getData());
+          LogHelper.logMessagingEventDetails(eventString);
           final var event = JsonUtil.getJsonObjectFromString(Event.class, eventString);
           this.eventHandlerDelegatorService.handleEvent(event, message);
         } catch (final Exception e) {

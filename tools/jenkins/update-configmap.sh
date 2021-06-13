@@ -77,10 +77,11 @@ FLB_CONFIG="[SERVICE]
    Log_Level    debug
    HTTP_Server   On
    HTTP_Listen   0.0.0.0
-   HTTP_Port     2020
+   Parsers_File parsers.conf
 [INPUT]
    Name   tail
    Path   /mnt/log/*
+   Parser docker
    Mem_Buf_Limit 20MB
 [FILTER]
    Name record_modifier
@@ -99,6 +100,11 @@ FLB_CONFIG="[SERVICE]
    Message_Key $APP_NAME
    Splunk_Token $SPLUNK_TOKEN
 "
+PARSER_CONFIG="
+[PARSER]
+    Name        docker
+    Format      json
+"
 
 echo Creating config map "$APP_NAME"-config-map
 oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map --from-literal=TZ=$TZVALUE --from-literal=CLIENT_ID=pen-match-api-service --from-literal=CLIENT_SECRET=$penMatchAPIServiceClientSecret --from-literal=STUDENT_API_URL="http://student-api-master.$COMMON_NAMESPACE-$envValue.svc.cluster.local:8080/api/v1/student" --from-literal=PEN_SERVICES_API_URL="http://pen-services-api-master.$PEN_NAMESPACE-$envValue.svc.cluster.local:8080/api/v1/pen-services" --from-literal=TOKEN_URL=https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID/protocol/openid-connect/token --from-literal=JDBC_URL=$DB_JDBC_CONNECT_STRING --from-literal=ORACLE_USERNAME="$DB_USER" --from-literal=ORACLE_PASSWORD="$DB_PWD" --from-literal=KEYCLOAK_PUBLIC_KEY="$soamFullPublicKey" --from-literal=SPRING_SECURITY_LOG_LEVEL=INFO --from-literal=SPRING_WEB_LOG_LEVEL=INFO --from-literal=APP_LOG_LEVEL=INFO --from-literal=SPRING_BOOT_AUTOCONFIG_LOG_LEVEL=INFO --from-literal=SPRING_SHOW_REQUEST_DETAILS=false --from-literal=NATS_URL="$NATS_URL" --from-literal=NATS_CLUSTER="$NATS_CLUSTER" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON="0/30 * * * * *" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_LEAST_FOR="25s" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_MOST_FOR="27s" --from-literal=TOKEN_ISSUER_URL="https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID" --from-literal=NATS_MAX_RECONNECT=60 --dry-run -o yaml | oc apply -f -
@@ -109,4 +115,4 @@ oc project $PEN_NAMESPACE-$envValue
 oc set env --from=configmap/$APP_NAME-config-map dc/$APP_NAME-$SOAM_KC_REALM_ID
 
 echo Creating config map "$APP_NAME"-flb-sc-config-map
-oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-flb-sc-config-map --from-literal=fluent-bit.conf="$FLB_CONFIG" --dry-run -o yaml | oc apply -f -
+oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-flb-sc-config-map --from-literal=fluent-bit.conf="$FLB_CONFIG" --from-literal=parsers.conf="$PARSER_CONFIG" --dry-run -o yaml | oc apply -f -
