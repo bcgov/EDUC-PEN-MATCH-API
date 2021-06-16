@@ -34,7 +34,7 @@ curl -sX POST "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients" \
 
 echo
 echo Retrieving client ID for pen-match-api-service
-penMatchAPIServiceClientID=$(curl -sX POST "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients" \
+penMatchAPIServiceClientID=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
   | jq '.[] | select(.clientId=="pen-match-api-service")' | jq '.id')
@@ -121,6 +121,7 @@ PARSER_CONFIG="
     Format      json
 "
 
+echo
 echo Creating config map "$APP_NAME"-config-map
 oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map --from-literal=TZ=$TZVALUE --from-literal=CLIENT_ID=pen-match-api-service --from-literal=CLIENT_SECRET=$penMatchAPIServiceClientSecret --from-literal=STUDENT_API_URL="http://student-api-master.$COMMON_NAMESPACE-$envValue.svc.cluster.local:8080/api/v1/student" --from-literal=PEN_SERVICES_API_URL="http://pen-services-api-master.$PEN_NAMESPACE-$envValue.svc.cluster.local:8080/api/v1/pen-services" --from-literal=TOKEN_URL=https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID/protocol/openid-connect/token --from-literal=JDBC_URL=$DB_JDBC_CONNECT_STRING --from-literal=ORACLE_USERNAME="$DB_USER" --from-literal=ORACLE_PASSWORD="$DB_PWD" --from-literal=SPRING_SECURITY_LOG_LEVEL=INFO --from-literal=SPRING_WEB_LOG_LEVEL=INFO --from-literal=APP_LOG_LEVEL=INFO --from-literal=SPRING_BOOT_AUTOCONFIG_LOG_LEVEL=INFO --from-literal=SPRING_SHOW_REQUEST_DETAILS=false --from-literal=NATS_URL="$NATS_URL" --from-literal=NATS_CLUSTER="$NATS_CLUSTER" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON="0/30 * * * * *" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_LEAST_FOR="25s" --from-literal=SCHEDULED_JOBS_EXTRACT_UNPROCESSED_EVENTS_CRON_LOCK_AT_MOST_FOR="27s" --from-literal=TOKEN_ISSUER_URL="https://$SOAM_KC/auth/realms/$SOAM_KC_REALM_ID" --from-literal=NATS_MAX_RECONNECT=60 --dry-run -o yaml | oc apply -f -
 
@@ -131,4 +132,4 @@ echo Creating config map "$APP_NAME"-flb-sc-config-map
 oc create -n "$PEN_NAMESPACE"-"$envValue" configmap "$APP_NAME"-flb-sc-config-map --from-literal=fluent-bit.conf="$FLB_CONFIG" --from-literal=parsers.conf="$PARSER_CONFIG" --dry-run -o yaml | oc apply -f -
 
 echo Removing un-needed config entries
-oc -n "$OPENSHIFT_NAMESPACE"-"$envValue" set env dc/"$APP_NAME"-$SOAM_KC_REALM_ID KEYCLOAK_PUBLIC_KEY-
+oc -n "$PEN_NAMESPACE"-"$envValue" set env dc/"$APP_NAME"-$SOAM_KC_REALM_ID KEYCLOAK_PUBLIC_KEY-
