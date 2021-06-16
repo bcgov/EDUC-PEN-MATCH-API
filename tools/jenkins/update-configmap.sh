@@ -39,14 +39,14 @@ penMatchAPIServiceClientID=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$S
   -H "Authorization: Bearer $TKN" \
   | jq '.[] | select(.clientId=="pen-match-api-service")' | jq '.id')
 
-echo
+echo Client ID: "$penMatchAPIServiceClientID"
 echo Retrieving client secret for pen-match-api-service
 penMatchAPIServiceClientSecret=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients/$penMatchAPIServiceClientID/client-secret" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
   | jq -r '.value')
 
-echo
+echo Client sec: "$penMatchAPIServiceClientSecret"
 echo Writing scope READ_PEN_MATCH
 curl -sX POST "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/client-scopes" \
   -H "Content-Type: application/json" \
