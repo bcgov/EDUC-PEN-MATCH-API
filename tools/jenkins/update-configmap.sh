@@ -44,7 +44,7 @@ echo Retrieving client secret for pen-match-api-service
 penMatchAPIServiceClientSecret=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients/$penMatchAPIServiceClientID/client-secret" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
-  | jq -r '.id')
+  | jq -r '.value')
 
 echo
 echo Writing scope READ_PEN_MATCH
