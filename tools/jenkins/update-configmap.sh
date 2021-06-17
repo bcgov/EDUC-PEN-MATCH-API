@@ -41,7 +41,7 @@ penMatchAPIServiceClientID=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$S
 
 echo
 echo Retrieving client secret for pen-match-api-service
-penMatchAPIServiceClientSecret=$(curl -vX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients/$penMatchAPIServiceClientID/client-secret" \
+penMatchAPIServiceClientSecret=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients/$penMatchAPIServiceClientID/client-secret" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
   | jq -r '.value')
