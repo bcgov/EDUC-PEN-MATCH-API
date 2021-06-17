@@ -37,16 +37,16 @@ echo Retrieving client ID for pen-match-api-service
 penMatchAPIServiceClientID=$(curl -sX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
-  | jq '.[] | select(.clientId=="pen-match-api-service")' | jq '.id')
+  | jq '.[] | select(.clientId=="pen-match-api-service")' | jq -r '.id')
 
-echo Client ID: $penMatchAPIServiceClientID
+echo
 echo Retrieving client secret for pen-match-api-service
 penMatchAPIServiceClientSecret=$(curl -vX GET "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/clients/$penMatchAPIServiceClientID/client-secret" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TKN" \
   | jq -r '.value')
 
-echo Client sec: "$penMatchAPIServiceClientSecret"
+echo
 echo Writing scope READ_PEN_MATCH
 curl -sX POST "https://$SOAM_KC/auth/admin/realms/$SOAM_KC_REALM_ID/client-scopes" \
   -H "Content-Type: application/json" \
