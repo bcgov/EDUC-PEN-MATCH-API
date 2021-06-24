@@ -50,7 +50,7 @@ public class Publisher {
    * @throws JetStreamApiException the jet stream api exception
    */
   private void createOrUpdateStudentEventStream(final Connection natsConnection) throws IOException, JetStreamApiException {
-    val streamConfiguration = StreamConfiguration.builder().name(ApplicationProperties.STREAM_NAME).replicas(1).maxMessages(1000000).addSubjects(PEN_MATCH_EVENTS_TOPIC.toString()).build();
+    val streamConfiguration = StreamConfiguration.builder().name(ApplicationProperties.STREAM_NAME).replicas(1).maxMessages(10000).addSubjects(PEN_MATCH_EVENTS_TOPIC.toString()).build();
     try {
       natsConnection.jetStreamManagement().updateStream(streamConfiguration);
     } catch (final JetStreamApiException exception) {
@@ -70,7 +70,7 @@ public class Publisher {
    */
   public void dispatchChoreographyEvent(@NonNull final PENMatchEvent event) {
     if (event.getEventId() != null) {
-      final ChoreographedEvent choreographedEvent = new ChoreographedEvent();
+      val choreographedEvent = new ChoreographedEvent();
       choreographedEvent.setEventType(EventType.valueOf(event.getEventType()));
       choreographedEvent.setEventOutcome(EventOutcome.valueOf(event.getEventOutcome()));
       choreographedEvent.setEventPayload(event.getEventPayload());
