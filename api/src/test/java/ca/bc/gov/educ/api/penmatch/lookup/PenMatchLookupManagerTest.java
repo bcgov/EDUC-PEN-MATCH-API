@@ -141,10 +141,7 @@ public class PenMatchLookupManagerTest {
     lookupManager.init();
     lookupManager.lookupNicknames(penMatchTransactionNames, "JAMES");
 
-    assertNotNull(penMatchTransactionNames.getNickname1());
-    assertNotNull(penMatchTransactionNames.getNickname2());
-    assertNotNull(penMatchTransactionNames.getNickname3());
-    assertNotNull(penMatchTransactionNames.getNickname4());
+    assertEquals(5, penMatchTransactionNames.getNicknames().size());
   }
 
   /**

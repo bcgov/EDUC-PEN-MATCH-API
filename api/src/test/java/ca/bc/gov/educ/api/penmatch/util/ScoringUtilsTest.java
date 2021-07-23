@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -514,9 +516,10 @@ public class ScoringUtilsTest {
   public Object testMatchLocalIDWithDemerits_ShouldScore10DemeritsWithAlternate() {
     PenMatchStudentDetail student = createPenMatchStudentDetail();
     PenMasterRecord master = createPenMasterRecord();
-    student.setLocalID("123456789");
+    student.setLocalID("123456 789");
     student.setMincode("987654321");
     master.setMincode("987654321");
+    master.setLocalId("1234554789");
     master.setAlternateLocalId("123456788");
 
     PenMatchSession session = new PenMatchSession();
@@ -947,7 +950,7 @@ public class ScoringUtilsTest {
   public Object testMatchGivenNameNickname1_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
-    penMatchTransactionNames.setNickname1("Michealalad");
+    penMatchTransactionNames.getNicknames().add("Michealalad");
     penMatchMasterNames.setLegalGiven("Michealalad");
     return new Object[]{
         penMatchTransactionNames, penMatchMasterNames, 10, false
@@ -962,7 +965,8 @@ public class ScoringUtilsTest {
   public Object testMatchGivenNameNickname2_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
-    penMatchTransactionNames.setNickname2("Michealalad");
+    penMatchTransactionNames.getNicknames().add("Marco");
+    penMatchTransactionNames.getNicknames().add("Michealalad");
     penMatchMasterNames.setLegalGiven("Michealalad");
     return new Object[]{
         penMatchTransactionNames, penMatchMasterNames, 10, false
@@ -977,7 +981,9 @@ public class ScoringUtilsTest {
   public Object testMatchGivenNameNickname3_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
-    penMatchTransactionNames.setNickname3("Michealalad");
+    penMatchTransactionNames.getNicknames().add("Mingwei");
+    penMatchTransactionNames.getNicknames().add("Marco");
+    penMatchTransactionNames.getNicknames().add("Michealalad");
     penMatchMasterNames.setLegalGiven("Michealalad");
     return new Object[]{
         penMatchTransactionNames, penMatchMasterNames, 10, false
@@ -992,7 +998,10 @@ public class ScoringUtilsTest {
   public Object testMatchGivenNameNickname4_SubsetShouldScore10() {
     PenMatchNames penMatchTransactionNames = new PenMatchNames();
     PenMatchNames penMatchMasterNames = new PenMatchNames();
-    penMatchTransactionNames.setNickname4("Michealalad");
+    penMatchTransactionNames.getNicknames().add("Jim");
+    penMatchTransactionNames.getNicknames().add("Mingwei");
+    penMatchTransactionNames.getNicknames().add("Marco");
+    penMatchTransactionNames.getNicknames().add("Michealalad");
     penMatchMasterNames.setLegalGiven("Michealalad");
     return new Object[]{
         penMatchTransactionNames, penMatchMasterNames, 10, false

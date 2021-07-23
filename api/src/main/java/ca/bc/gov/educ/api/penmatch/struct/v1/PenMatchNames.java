@@ -1,16 +1,19 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The type Pen match names.
  */
 @Data
-@NoArgsConstructor
 public class PenMatchNames {
+
+  public PenMatchNames() {
+    this.nicknames = new ArrayList<>();
+  }
+
   /**
    * The Legal given.
    */

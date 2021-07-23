@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.language.Soundex;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 /**
  * The type Scoring utils.
  */
@@ -96,7 +98,7 @@ public class ScoringUtils {
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={} PenMasterRecord={} PenMatchSession={}", JsonUtil.getJsonPrettyStringFromObject(student), JsonUtil.getJsonPrettyStringFromObject(master), JsonUtil.getJsonPrettyStringFromObject(session));
     }
-    LocalIDMatchResult matchResult = new LocalIDMatchResult();
+    var matchResult = new LocalIDMatchResult();
     int localIDPoints = 0;
     String mincode = student.getMincode();
     String localID = student.getLocalID();
@@ -121,7 +123,6 @@ public class ScoringUtils {
     // Prepare to negate any local_id_points if the local ids actually conflict
     if (localIDPoints > 0 && mincode.equals(masterMincode)) {
       if(StringUtils.isNotBlank(localID) && StringUtils.isNotBlank(masterLocalID) && !localID.equals(masterLocalID)){
-        //if ((localID == null && masterLocalID != null) || (localID != null && masterLocalID == null) || (localID != null && !localID.equals(masterLocalID))) {
         if ((StringUtils.isNotBlank(student.getAlternateLocalID()) && StringUtils.isNotBlank(master.getAlternateLocalId()) && !student.getAlternateLocalID().equals(master.getAlternateLocalId())) || (StringUtils.isBlank(student.getAlternateLocalID()) && StringUtils.isBlank(master.getAlternateLocalId()))) {
           matchResult.setIdDemerits(localIDPoints);
         }
@@ -238,7 +239,7 @@ public class ScoringUtils {
       }
     }
 
-    SurnameMatchResult result = new SurnameMatchResult();
+    var result = new SurnameMatchResult();
     result.setLegalSurnameUsed(legalSurnameUsed);
     result.setSurnamePoints(surnamePoints);
     if (log.isDebugEnabled()) {
@@ -267,11 +268,11 @@ public class ScoringUtils {
     String usualGiven = penMatchTransactionNames.getUsualGiven();
     String alternateLegalGiven = penMatchTransactionNames.getAlternateLegalGiven();
     String alternateUsualGiven = penMatchTransactionNames.getAlternateUsualGiven();
-
-    String nickname1 = penMatchTransactionNames.getNickname1();
-    String nickname2 = penMatchTransactionNames.getNickname2();
-    String nickname3 = penMatchTransactionNames.getNickname3();
-    String nickname4 = penMatchTransactionNames.getNickname4();
+//
+//    String nickname1 = penMatchTransactionNames.getNickname1();
+//    String nickname2 = penMatchTransactionNames.getNickname2();
+//    String nickname3 = penMatchTransactionNames.getNickname3();
+//    String nickname4 = penMatchTransactionNames.getNickname4();
 
     if ((hasGivenNameFullCharMatch(legalGiven, penMatchMasterNames)) || (hasGivenNameFullCharMatch(usualGiven, penMatchMasterNames)) || (hasGivenNameFullCharMatch(alternateLegalGiven, penMatchMasterNames)) || (hasGivenNameFullCharMatch(alternateUsualGiven, penMatchMasterNames))) {
       // 10 Character match
@@ -287,7 +288,7 @@ public class ScoringUtils {
         || (hasGivenNameSubsetCharMatch(alternateUsualGiven, 4, penMatchMasterNames))) {
       // 4 Character Match
       givenNamePoints = 15;
-    } else if ((hasGivenNameSubsetCharMatch(nickname1, 10, penMatchMasterNames)) || (hasGivenNameSubsetCharMatch(nickname2, 10, penMatchMasterNames)) || (hasGivenNameSubsetCharMatch(nickname3, 10, penMatchMasterNames)) || (hasGivenNameSubsetCharMatch(nickname4, 10, penMatchMasterNames))) {
+    } else if ((hasGivenNameSubsetCharMatch(penMatchTransactionNames.getNicknames(), 10, penMatchMasterNames))) {
       // No 4 character matches found , try nicknames
       givenNamePoints = 10;
     } else if ((hasGivenNameSubsetCharMatch(legalGiven, 1, penMatchMasterNames)) || (hasGivenNameSubsetCharMatch(usualGiven, 1, penMatchMasterNames)) || (hasGivenNameSubsetCharMatch(alternateLegalGiven, 1, penMatchMasterNames))
@@ -301,7 +302,7 @@ public class ScoringUtils {
       givenFlip = true;
     }
 
-    GivenNameMatchResult result = new GivenNameMatchResult();
+    var result = new GivenNameMatchResult();
     result.setGivenNamePoints(givenNamePoints);
     result.setGivenNameFlip(givenFlip);
     if (log.isDebugEnabled()) {
@@ -354,7 +355,7 @@ public class ScoringUtils {
       middleFlip = true;
     }
 
-    MiddleNameMatchResult result = new MiddleNameMatchResult();
+    var result = new MiddleNameMatchResult();
     result.setMiddleNamePoints(middleNamePoints);
     result.setMiddleNameFlip(middleFlip);
     if (log.isDebugEnabled()) {
@@ -465,6 +466,28 @@ public class ScoringUtils {
           || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().length() >= numOfChars && penMatchMasterNames.getUsualGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars && penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)))
           || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(givenName.substring(0, numOfChars)));
+    }
+    return false;
+  }
+
+  /**
+   * Utility function for subset match
+   *
+   * @param nicknames           the nicknames list
+   * @param numOfChars          the num of chars
+   * @param penMatchMasterNames the pen match master names
+   * @return the boolean
+   */
+  public static boolean hasGivenNameSubsetCharMatch(List<String> nicknames, int numOfChars, PenMatchNames penMatchMasterNames) {
+    for(String nickname: nicknames) {
+      if (nickname != null && nickname.length() >= numOfChars) {
+        if ((penMatchMasterNames.getLegalGiven() != null && penMatchMasterNames.getLegalGiven().length() >= numOfChars && penMatchMasterNames.getLegalGiven().substring(0, numOfChars).equals(nickname.substring(0, numOfChars)))
+                || (penMatchMasterNames.getUsualGiven() != null && penMatchMasterNames.getUsualGiven().length() >= numOfChars && penMatchMasterNames.getUsualGiven().substring(0, numOfChars).equals(nickname.substring(0, numOfChars)))
+                || (penMatchMasterNames.getAlternateLegalGiven() != null && penMatchMasterNames.getAlternateLegalGiven().length() >= numOfChars && penMatchMasterNames.getAlternateLegalGiven().substring(0, numOfChars).equals(nickname.substring(0, numOfChars)))
+                || (penMatchMasterNames.getAlternateUsualGiven() != null && penMatchMasterNames.getAlternateUsualGiven().length() >= numOfChars && penMatchMasterNames.getAlternateUsualGiven().substring(0, numOfChars).equals(nickname.substring(0, numOfChars)))){
+          return true;
+        }
+      }
     }
     return false;
   }

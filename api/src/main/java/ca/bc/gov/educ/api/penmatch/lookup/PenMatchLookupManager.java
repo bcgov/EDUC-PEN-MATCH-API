@@ -5,12 +5,10 @@ import ca.bc.gov.educ.api.penmatch.model.v1.*;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
-import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import ca.bc.gov.educ.api.penmatch.rest.RestUtils;
 import ca.bc.gov.educ.api.penmatch.service.v1.match.SurnameFrequencyService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
-import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,7 +26,6 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -266,28 +263,18 @@ public class PenMatchLookupManager {
     if (baseNickname != null) {
 
       if (!StringUtils.equals(baseNickname, givenNameUpper)) {
-        penMatchTransactionNames.setNickname1(baseNickname);
+        penMatchTransactionNames.getNicknames().add(baseNickname);
       }
 
       List<NicknamesEntity> tempNicknamesList = getNicknames(baseNickname);
       for (NicknamesEntity nickEntity : tempNicknamesList) {
         if (!StringUtils.equals(nickEntity.getNickname2(), givenNameUpper)) {
-          PenMatchUtils.setNextNickname(penMatchTransactionNames, StringUtils.trimToEmpty(nickEntity.getNickname2()));
-        }
-        if (StringUtils.isNotBlank(penMatchTransactionNames.getNickname4())) {
-          break;
+          penMatchTransactionNames.getNicknames().add(StringUtils.trimToEmpty(nickEntity.getNickname2()));
         }
       }
     }
   }
 
-
-  /**
-   * Check frequency of surname
-   *
-   * @param fullStudentSurname the full student surname
-   * @return the integer
-   */
   /**
    * Check frequency of surname
    */
@@ -303,7 +290,7 @@ public class PenMatchLookupManager {
    * @return the boolean
    */
   public boolean lookupForeignSurname(String surname, String ancestry) {
-    LocalDate curDate = LocalDate.now();
+    var curDate = LocalDate.now();
 
     Optional<ForeignSurnamesEntity> foreignSurnamesEntities = getForeignSurnameRepository().findBySurnameAndAncestryAndEffectiveDateLessThanEqualAndExpiryDateGreaterThanEqual(surname, ancestry, curDate, curDate);
 
@@ -388,7 +375,7 @@ public class PenMatchLookupManager {
    * Sets nicknames.
    */
   private void setNicknames() {
-    Lock writeLock = nicknamesLock.writeLock();
+    var writeLock = nicknamesLock.writeLock();
     try {
       writeLock.lock();
       mapNicknames(getNicknamesRepository().findAll());
@@ -408,7 +395,7 @@ public class PenMatchLookupManager {
   private void mapNicknames(List<NicknamesEntity> entities) {
     for (NicknamesEntity entity : entities) {
       String givenName = entity.getNickname1();
-      String key = StringUtils.trimToNull(givenName);
+      var key = StringUtils.trimToNull(givenName);
       List<NicknamesEntity> nicknames;
 
       if (this.nicknamesMap.containsKey(key)) {
@@ -417,7 +404,7 @@ public class PenMatchLookupManager {
         nicknames = new ArrayList<>();
       }
 
-      if (!nicknames.contains(entity.getNickname2())) {
+      if (!nicknames.contains(entity)) {
         nicknames.add(entity);
         this.nicknamesMap.put(key, nicknames);
       }
@@ -425,7 +412,7 @@ public class PenMatchLookupManager {
 
     for (NicknamesEntity entity : entities) {
       String givenName = entity.getNickname2();
-      String key = StringUtils.trimToNull(givenName);
+      var key = StringUtils.trimToNull(givenName);
       List<NicknamesEntity> nicknames;
 
       if (this.nicknamesMap.containsKey(key)) {
@@ -434,7 +421,7 @@ public class PenMatchLookupManager {
         nicknames = new ArrayList<>();
       }
 
-      if (!nicknames.contains(entity.getNickname1())) {
+      if (!nicknames.contains(entity)) {
         nicknames.add(entity);
         this.nicknamesMap.put(key, nicknames);
       }

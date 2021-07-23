@@ -36,27 +36,6 @@ public class PenMatchUtils {
   }
 
   /**
-   * Utility method which sets the penMatchTransactionNames
-   *
-   * @param penMatchTransactionNames the pen match transaction names
-   * @param nextNickname             the next nickname
-   */
-  public static void setNextNickname(PenMatchNames penMatchTransactionNames, String nextNickname) {
-    if (log.isDebugEnabled()) {
-      log.debug(" input :: PenMatchNames={} nextNickname={}", JsonUtil.getJsonPrettyStringFromObject(penMatchTransactionNames), nextNickname);
-    }
-    if (penMatchTransactionNames.getNickname1() == null || penMatchTransactionNames.getNickname1().length() < 1) {
-      penMatchTransactionNames.setNickname1(nextNickname);
-    } else if (penMatchTransactionNames.getNickname2() == null || penMatchTransactionNames.getNickname2().length() < 1) {
-      penMatchTransactionNames.setNickname2(nextNickname);
-    } else if (penMatchTransactionNames.getNickname3() == null || penMatchTransactionNames.getNickname3().length() < 1) {
-      penMatchTransactionNames.setNickname3(nextNickname);
-    } else if (penMatchTransactionNames.getNickname4() == null || penMatchTransactionNames.getNickname4().length() < 1) {
-      penMatchTransactionNames.setNickname4(nextNickname);
-    }
-  }
-
-  /**
    * Utility function to uppercase all incoming student data
    *
    * @param student the student
@@ -95,11 +74,11 @@ public class PenMatchUtils {
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenDemographicsEntity={}", JsonUtil.getJsonPrettyStringFromObject(entity));
     }
-    PenMasterRecord masterRecord = new PenMasterRecord();
+    var masterRecord = new PenMasterRecord();
 
     masterRecord.setStudentID(entity.getStudentID().toString());
     masterRecord.setPen(checkForValidValue(entity.getPen()));
-    LocalDate dobDate = LocalDate.parse(entity.getDob(), DOB_FORMATTER_LONG);
+    var dobDate = LocalDate.parse(entity.getDob(), DOB_FORMATTER_LONG);
     masterRecord.setDob(DOB_FORMATTER_SHORT.format(dobDate));
     masterRecord.setSurname(checkForValidValue(entity.getLegalLastName()));
     masterRecord.setGiven(checkForValidValue(entity.getLegalFirstName()));
@@ -298,8 +277,8 @@ public class PenMatchUtils {
 
     ArrayList<Integer> odds = new ArrayList<>();
     ArrayList<Integer> evens = new ArrayList<>();
-    for (int i = 0; i < pen.length() - 1; i++) {
-      int number = Integer.parseInt(pen.substring(i, i + 1));
+    for (var i = 0; i < pen.length() - 1; i++) {
+      var number = Integer.parseInt(pen.substring(i, i + 1));
       if (i % 2 == 0) {
         odds.add(number);
       } else {
@@ -309,14 +288,14 @@ public class PenMatchUtils {
 
     int sumOdds = odds.stream().mapToInt(Integer::intValue).sum();
 
-    StringBuilder fullEvenStringBuilder = new StringBuilder();
+    var fullEvenStringBuilder = new StringBuilder();
     for (int i : evens) {
       fullEvenStringBuilder.append(i);
     }
 
     ArrayList<Integer> listOfFullEvenValueDoubled = new ArrayList<>();
-    String fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenStringBuilder.toString()) * 2);
-    for (int i = 0; i < fullEvenValueDoubledString.length(); i++) {
+    var fullEvenValueDoubledString = Integer.toString(Integer.parseInt(fullEvenStringBuilder.toString()) * 2);
+    for (var i = 0; i < fullEvenValueDoubledString.length(); i++) {
       listOfFullEvenValueDoubled.add(Integer.parseInt(fullEvenValueDoubledString.substring(i, i + 1)));
     }
 
@@ -324,7 +303,7 @@ public class PenMatchUtils {
 
     int finalSum = sumEvens + sumOdds;
 
-    String penCheckDigit = pen.substring(8, 9);
+    var penCheckDigit = pen.substring(8, 9);
 
 
     boolean result = ((finalSum % 10 == 0 && penCheckDigit.equals("0")) || ((10 - finalSum % 10) == Integer.parseInt(penCheckDigit)));
