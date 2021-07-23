@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -39,27 +40,17 @@ public class PenMatchUtilsTest {
 	public void testSetNicknames_ShouldReturnContainNames() {
 
 		PenMatchNames penMatchTransactionNames = new PenMatchNames();
-		PenMatchUtils.setNextNickname(penMatchTransactionNames, "Wayne");
-		assertNotNull(penMatchTransactionNames.getNickname1());
-		assertNull(penMatchTransactionNames.getNickname2());
+	  	penMatchTransactionNames.getNicknames().add("Wayne");
+		assertEquals(1, penMatchTransactionNames.getNicknames().size());
 
-		PenMatchUtils.setNextNickname(penMatchTransactionNames, "Wayner");
-		assertNotNull(penMatchTransactionNames.getNickname1());
-		assertNotNull(penMatchTransactionNames.getNickname2());
-		assertNull(penMatchTransactionNames.getNickname3());
+        penMatchTransactionNames.getNicknames().add("Wayner");
+	    assertEquals(2, penMatchTransactionNames.getNicknames().size());
 
-		PenMatchUtils.setNextNickname(penMatchTransactionNames, "Wayners");
-		assertNotNull(penMatchTransactionNames.getNickname1());
-		assertNotNull(penMatchTransactionNames.getNickname2());
-		assertNotNull(penMatchTransactionNames.getNickname3());
-		assertNull(penMatchTransactionNames.getNickname4());
+		penMatchTransactionNames.getNicknames().add("Wayners");
+		assertEquals(3, penMatchTransactionNames.getNicknames().size());
 
-		penMatchTransactionNames.setNickname4("");
-		PenMatchUtils.setNextNickname(penMatchTransactionNames, "Way");
-		assertNotNull(penMatchTransactionNames.getNickname1());
-		assertNotNull(penMatchTransactionNames.getNickname2());
-		assertNotNull(penMatchTransactionNames.getNickname3());
-		assertNotNull(penMatchTransactionNames.getNickname4());
+	    penMatchTransactionNames.getNicknames().add("Way");
+	    assertEquals(4, penMatchTransactionNames.getNicknames().size());
 	}
 
   /**

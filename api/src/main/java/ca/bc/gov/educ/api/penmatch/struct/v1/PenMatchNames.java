@@ -1,14 +1,19 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Pen match names.
  */
 @Data
-@NoArgsConstructor
 public class PenMatchNames {
+
+  public PenMatchNames() {
+    this.nicknames = new ArrayList<>();
+  }
+
   /**
    * The Legal given.
    */
@@ -42,21 +47,9 @@ public class PenMatchNames {
    */
   private String alternateUsualMiddle;
   /**
-   * The Nickname 1.
+   * The Nicknames.
    */
-  private String nickname1;
-  /**
-   * The Nickname 2.
-   */
-  private String nickname2;
-  /**
-   * The Nickname 3.
-   */
-  private String nickname3;
-  /**
-   * The Nickname 4.
-   */
-  private String nickname4;
+  private List<String> nicknames;
   /**
    * The Legal surname.
    */
