@@ -447,11 +447,11 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      */
     private boolean isS2PreMatch(PenMatchStudentDetail student, PenMasterRecord master) {
         return student.getSurname() != null
-                && student.getSurname().equals(master.getSurname().trim())
+                && student.getSurname().equals(StringUtils.trim(master.getSurname()))
                 && student.getGivenName() != null
-                && student.getGivenName().equals(master.getGiven().trim())
+                && student.getGivenName().equals(StringUtils.trim(master.getGiven()))
                 && student.getDob() != null
-                && student.getDob().equals(master.getDob())
+                && student.getDob().equals(StringUtils.trim(master.getDob()))
                 && student.getLocalID() != null
                 && student.getLocalID().length() > 1;
     }
@@ -465,13 +465,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      */
     private boolean isS1Match(PenMatchStudentDetail student, PenMasterRecord master) {
         return student.getSurname() != null
-                && student.getSurname().equals(master.getSurname().trim())
+                && student.getSurname().equals(StringUtils.trim(master.getSurname()))
                 && student.getGivenName() != null
-                && student.getGivenName().equals(master.getGiven().trim())
+                && student.getGivenName().equals(StringUtils.trim(master.getGiven()))
                 && student.getDob() != null
-                && student.getDob().equals(master.getDob())
+                && student.getDob().equals(StringUtils.trim(master.getDob()))
                 && student.getSex() != null
-                && student.getSex().equals(master.getSex());
+                && student.getSex().equals(StringUtils.trim(master.getSex()));
     }
 
     /**
