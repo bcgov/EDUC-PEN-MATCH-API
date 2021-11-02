@@ -174,7 +174,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
                     && masterRecord.getLocalId() != null
                     && student.getLocalID() != null
                     && StringUtils.equals(masterRecord.getLocalId().trim(), student.getLocalID().trim())) {
-                session.setPenStatusMessage("Possible twin: " + masterRecord.getGiven().trim() + " vs " + student.getGivenName().trim());
+                session.setPenStatusMessage("Possible twin: " + StringUtils.trim(masterRecord.getGiven()) + " vs " + StringUtils.trim(student.getGivenName()));
                 session.setPenStatus(PenStatus.F1.getValue());
                 session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.getStudentID(),masterRecord));
             }
@@ -447,11 +447,11 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      */
     private boolean isS2PreMatch(PenMatchStudentDetail student, PenMasterRecord master) {
         return student.getSurname() != null
-                && student.getSurname().equals(master.getSurname().trim())
+                && student.getSurname().equals(StringUtils.trim(master.getSurname()))
                 && student.getGivenName() != null
-                && student.getGivenName().equals(master.getGiven().trim())
+                && student.getGivenName().equals(StringUtils.trim(master.getGiven()))
                 && student.getDob() != null
-                && student.getDob().equals(master.getDob())
+                && student.getDob().equals(StringUtils.trim(master.getDob()))
                 && student.getLocalID() != null
                 && student.getLocalID().length() > 1;
     }
@@ -465,13 +465,13 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      */
     private boolean isS1Match(PenMatchStudentDetail student, PenMasterRecord master) {
         return student.getSurname() != null
-                && student.getSurname().equals(master.getSurname().trim())
+                && student.getSurname().equals(StringUtils.trim(master.getSurname()))
                 && student.getGivenName() != null
-                && student.getGivenName().equals(master.getGiven().trim())
+                && student.getGivenName().equals(StringUtils.trim(master.getGiven()))
                 && student.getDob() != null
-                && student.getDob().equals(master.getDob())
+                && student.getDob().equals(StringUtils.trim(master.getDob()))
                 && student.getSex() != null
-                && student.getSex().equals(master.getSex());
+                && student.getSex().equals(StringUtils.trim(master.getSex()));
     }
 
     /**
