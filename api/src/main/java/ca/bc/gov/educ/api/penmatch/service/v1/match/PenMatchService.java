@@ -174,7 +174,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
                     && masterRecord.getLocalId() != null
                     && student.getLocalID() != null
                     && StringUtils.equals(masterRecord.getLocalId().trim(), student.getLocalID().trim())) {
-                session.setPenStatusMessage("Possible twin: " + masterRecord.getGiven().trim() + " vs " + student.getGivenName().trim());
+                session.setPenStatusMessage("Possible twin: " + StringUtils.trim(masterRecord.getGiven()) + " vs " + StringUtils.trim(student.getGivenName()));
                 session.setPenStatus(PenStatus.F1.getValue());
                 session.getMatchingRecords().add(new OldPenMatchRecord(null, null, student.getPen(), masterRecord.getStudentID(),masterRecord));
             }
