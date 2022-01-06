@@ -42,6 +42,7 @@ public class PenMatchStudent {
    * The Given name.
    */
   @Size(min = 1, max = 255)
+  @NotNull(message = "Given name can not be null.")
   protected String givenName;
   /**
    * The Middle name.
