@@ -224,16 +224,16 @@ public class ScoringUtils {
       String soundexLegalSurname = runSoundex(studentSurnameNoBlanks);
       String soundexUsualSurname = runSoundex(usualSurnameNoBlanks);
 
-      if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && soundexLegalSurname.equals(masterSoundexLegalSurname)) {
+      if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && masterSoundexLegalSurname != null && soundexLegalSurname.equals(masterSoundexLegalSurname)) {
         // Check if the legal surname soundex matches the master legal surname soundex
         surnamePoints = 10;
-      } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && soundexUsualSurname.equals(masterSoundexLegalSurname)) {
+      } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && masterSoundexLegalSurname != null && soundexUsualSurname.equals(masterSoundexLegalSurname)) {
         // Check if the usual surname soundex matches the master legal surname soundex
         surnamePoints = 10;
-      } else if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && soundexLegalSurname.equals(masterSoundexUsualSurname)) {
+      } else if (soundexLegalSurname != null && soundexLegalSurname.length() > 0 && soundexLegalSurname.charAt(0) != ' ' && masterSoundexUsualSurname != null && soundexLegalSurname.equals(masterSoundexUsualSurname)) {
         // Check if the legal surname soundex matches the master usual surname soundex
         surnamePoints = 10;
-      } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && soundexUsualSurname.equals(masterSoundexUsualSurname)) {
+      } else if (soundexUsualSurname != null && soundexUsualSurname.length() > 0 && soundexUsualSurname.charAt(0) != ' ' && masterSoundexUsualSurname != null && soundexUsualSurname.equals(masterSoundexUsualSurname)) {
         // Check if the usual surname soundex matches the master usual surname soundex
         surnamePoints = 10;
       }
@@ -380,42 +380,48 @@ public class ScoringUtils {
     String soundexString;
     String tempString;
 
-    if (inputString != null && inputString.length() >= 2) {
-      Soundex soundex = new Soundex();
-      tempString = soundex.soundex(inputString);
-      soundexString = inputString.substring(0, 1);
-      previousCharRaw = inputString.substring(0, 1);
-      previousCharSoundex = -1;
-      currentCharRaw = inputString.substring(1, 2);
+    try {
+      if (inputString != null && inputString.length() >= 2) {
+        Soundex soundex = new Soundex();
+        tempString = soundex.soundex(inputString);
+        soundexString = inputString.substring(0, 1);
+        previousCharRaw = inputString.substring(0, 1);
+        previousCharSoundex = -1;
+        currentCharRaw = inputString.substring(1, 2);
 
-      StringBuilder soundexStringBuilder = new StringBuilder();
-      soundexStringBuilder.append(soundexString);
-      for (int i = 1; i < tempString.length(); i++) {
-        currentCharSoundex = Integer.parseInt(tempString.substring(i, i + 1));
+        StringBuilder soundexStringBuilder = new StringBuilder();
+        soundexStringBuilder.append(soundexString);
+        for (int i = 1; i < tempString.length(); i++) {
+          currentCharSoundex = Integer.parseInt(tempString.substring(i, i + 1));
 
-        if (currentCharSoundex >= 1 && currentCharSoundex <= 7) {
-          // If the second "soundexable" character is not the same as the first raw
-          // character then append the soundex value of this character to the soundex
-          // string. If this is the third or greater soundexable value, then if the
-          // soundex
-          // value of the character is not equal to the soundex value of the previous
-          // character, then append that soundex value to the soundex string.
-          if (i == 1) {
-            if (!currentCharRaw.equals(previousCharRaw)) {
+          if (currentCharSoundex >= 1 && currentCharSoundex <= 7) {
+            // If the second "soundexable" character is not the same as the first raw
+            // character then append the soundex value of this character to the soundex
+            // string. If this is the third or greater soundexable value, then if the
+            // soundex
+            // value of the character is not equal to the soundex value of the previous
+            // character, then append that soundex value to the soundex string.
+            if (i == 1) {
+              if (!currentCharRaw.equals(previousCharRaw)) {
+                soundexStringBuilder.append(currentCharSoundex);
+                previousCharSoundex = currentCharSoundex;
+              }
+            } else if (currentCharSoundex != previousCharSoundex) {
               soundexStringBuilder.append(currentCharSoundex);
               previousCharSoundex = currentCharSoundex;
             }
-          } else if (currentCharSoundex != previousCharSoundex) {
-            soundexStringBuilder.append(currentCharSoundex);
-            previousCharSoundex = currentCharSoundex;
           }
         }
-      }
 
-      soundexString = (soundexStringBuilder.append("00000000")).substring(0, 8);
-    } else {
+        soundexString = (soundexStringBuilder.append("00000000")).substring(0, 8);
+      } else {
+        return null;
+      }
+    }catch(Exception e){
+      log.debug("Error occurred processing soundex: ", e.getMessage());
       return null;
     }
+
     log.debug(" output :: soundexString={}", soundexString);
     return soundexString;
   }
