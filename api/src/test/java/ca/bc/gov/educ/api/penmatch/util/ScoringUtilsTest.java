@@ -326,6 +326,21 @@ public class ScoringUtilsTest {
   }
 
   /**
+   * Test match legal to usual surname soundex should score 10.
+   */
+  @Test
+  public void testMatchLegalToUsualSurnameBadCharacterSoundex_ShouldScore10() {
+    PenMatchStudentDetail student = createPenMatchStudentDetail();
+    PenMasterRecord master = createPenMasterRecord();
+    student.setSurname(null);
+    master.setSurname("Micells");
+    student.setUsualSurname("Michéals");
+    master.setUsualSurname(null);
+    SurnameMatchResult result = ScoringUtils.matchSurname(student, master);
+    assertEquals(0, (int) result.getSurnamePoints());
+  }
+
+  /**
    * Test match sex should score 0.
    */
   @Test
