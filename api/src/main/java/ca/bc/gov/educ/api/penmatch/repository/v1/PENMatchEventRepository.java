@@ -1,9 +1,13 @@
 package ca.bc.gov.educ.api.penmatch.repository.v1;
 
 import ca.bc.gov.educ.api.penmatch.model.v1.PENMatchEvent;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,4 +33,9 @@ public interface PENMatchEventRepository extends CrudRepository<PENMatchEvent, U
    * @return the optional
    */
   Optional<PENMatchEvent> findBySagaIdAndEventType(UUID sagaId, String toString);
+
+  @Transactional
+  @Modifying
+  @Query("delete from PENMatchEvent where createDate <= :createDate")
+  void deleteByCreateDateBefore(LocalDateTime createDate);
 }
