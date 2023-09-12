@@ -197,6 +197,16 @@ public class PenMatchControllerTest {
         .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
   }
 
+  @Test
+  public void testNicknames_ForGivenName_WithWrongScope_ShouldReturnStatusForbidden() throws Exception {
+    GrantedAuthority grantedAuthority = () -> "WRONG_SCOPE";
+    var mockAuthority = oidcLogin().authorities(grantedAuthority);
+    penMatchLookupManager.reloadCache();
+    this.mockMvc
+        .perform(get("/api/v1/pen-match/nicknames/ALEXANDER").with(mockAuthority).contentType(MediaType.APPLICATION_JSON))
+        .andDo(print()).andExpect(status().isForbidden());
+  }
+
   /**
    * Test save possible matches given payload should return saved list.
    *
@@ -251,7 +261,7 @@ public class PenMatchControllerTest {
         .createUser("TEST")
         .updateUser("TEST").build());
     this.mockMvc
-        .perform(delete("/api/v1/pen-match/possible-match/").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
+        .perform(delete("/api/v1/pen-match/possible-match").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isNoContent());
     assertThat(possibleMatchRepository.findAll().size()).isEqualTo(16);
   }
@@ -270,7 +280,7 @@ public class PenMatchControllerTest {
         .createUser("TEST")
         .updateUser("TEST").build());
     this.mockMvc
-        .perform(delete("/api/v1/pen-match/possible-match/").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
+        .perform(delete("/api/v1/pen-match/possible-match").content(JsonUtil.getJsonStringFromObject(payload)).with(jwt().jwt((jwt) -> jwt.claim("scope", "DELETE_POSSIBLE_MATCH"))).contentType(MediaType.APPLICATION_JSON))
         .andDo(print()).andExpect(status().isNoContent());
     assertThat(possibleMatchRepository.findAll().size()).isEqualTo(20);
   }
