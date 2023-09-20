@@ -35,9 +35,9 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-5Jun-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-5Jun-
+            ${{ runner.os }}-maven-
       - name: Run unit tests
         run: mvn -f pom.xml clean package
       - name: Cache SonarCloud packages
