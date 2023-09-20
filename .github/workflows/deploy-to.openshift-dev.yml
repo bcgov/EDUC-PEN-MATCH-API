@@ -36,9 +36,9 @@ env:
   MIN_REPLICAS_DEV: "1"
   MAX_REPLICAS_DEV: "1"
   MIN_CPU: "10m"
-  MAX_CPU: "100m"
-  MIN_MEM: "500Mi"
-  MAX_MEM: "1000Mi"
+  MAX_CPU: "150m"
+  MIN_MEM: "400Mi"
+  MAX_MEM: "750Mi"
 
 on:
   push:
