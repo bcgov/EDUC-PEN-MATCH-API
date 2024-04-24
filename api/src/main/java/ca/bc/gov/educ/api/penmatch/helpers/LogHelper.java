@@ -43,7 +43,7 @@ public final class LogHelper {
       httpMap.put("server_http_request_remote_address", request.getRemoteAddr());
       httpMap.put("server_http_request_client_name", StringUtils.trimToEmpty(request.getHeader("X-Client-Name")));
       MDC.putCloseable("httpEvent", mapper.writeValueAsString(httpMap));
-      log.info("");
+      log.debug("");
       MDC.clear();
     } catch (final Exception exception) {
       log.error(EXCEPTION, exception);
@@ -60,7 +60,7 @@ public final class LogHelper {
         httpMap.put("correlation_id", String.join(",", correlationID));
       }
       MDC.putCloseable("httpEvent", mapper.writeValueAsString(httpMap));
-      log.info("");
+      log.debug("");
       MDC.clear();
     } catch (final Exception exception) {
       log.error(EXCEPTION, exception);
@@ -75,7 +75,7 @@ public final class LogHelper {
   public static void logMessagingEventDetails(final String event) {
     try {
       MDC.putCloseable("messageEvent", event);
-      log.info("");
+      log.debug("");
       MDC.clear();
     } catch (final Exception exception) {
       log.error(EXCEPTION, exception);

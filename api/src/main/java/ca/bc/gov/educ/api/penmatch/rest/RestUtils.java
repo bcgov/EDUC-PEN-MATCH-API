@@ -388,9 +388,9 @@ public class RestUtils {
 
   private List<StudentEntity> getStudents(UUID sagaId, List<String> studentIDs) throws IOException, ExecutionException, InterruptedException, TimeoutException {
     final var event = ca.bc.gov.educ.api.penmatch.struct.Event.builder().sagaId(sagaId).eventType(EventType.GET_STUDENTS).eventPayload(JsonUtil.getJsonStringFromObject(studentIDs)).build();
-    log.info("called STUDENT_API saga id :: {}, get students :: {}",sagaId, studentIDs);
+    log.debug("called STUDENT_API saga id :: {}, get students :: {}",sagaId, studentIDs);
     val responseEvent = JsonUtil.getJsonObjectFromByteArray(ca.bc.gov.educ.api.penmatch.struct.Event.class, this.connection.request(STUDENT_API_TOPIC, JsonUtil.getJsonBytesFromObject(event)).get(2, TimeUnit.SECONDS).getData());
-    log.info("got response from STUDENT_API  :: {}", responseEvent);
+    log.debug("got response from STUDENT_API  :: {}", responseEvent);
     if (responseEvent.getEventOutcome() == EventOutcome.STUDENT_NOT_FOUND) {
       log.error("Students not found or student size mismatch for student IDs:: {}, this should not have happened", studentIDs);
       throw new PENMatchRuntimeException("Student not found for , " + studentIDs);

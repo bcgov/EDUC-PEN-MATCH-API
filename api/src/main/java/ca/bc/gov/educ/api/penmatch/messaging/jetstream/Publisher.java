@@ -57,7 +57,7 @@ public class Publisher {
       if (exception.getErrorCode() == 404) { // the stream does not exist , lets create it.
         natsConnection.jetStreamManagement().addStream(streamConfiguration);
       } else {
-        log.info("exception", exception);
+        log.error("exception", exception);
       }
     }
   }
@@ -78,9 +78,9 @@ public class Publisher {
       choreographedEvent.setCreateUser(event.getCreateUser());
       choreographedEvent.setUpdateUser(event.getUpdateUser());
       try {
-        log.info("Broadcasting event :: {}", choreographedEvent);
+        log.debug("Broadcasting event :: {}", choreographedEvent);
         val pub = this.jetStream.publishAsync(PEN_MATCH_EVENTS_TOPIC.toString(), JsonUtil.getJsonBytesFromObject(choreographedEvent));
-        pub.thenAcceptAsync(result -> log.info("Event ID :: {} Published to JetStream :: {}", event.getEventId(), result.getSeqno()));
+        pub.thenAcceptAsync(result -> log.debug("Event ID :: {} Published to JetStream :: {}", event.getEventId(), result.getSeqno()));
       } catch (final IOException e) {
         log.error("exception while broadcasting message to JetStream", e);
       }

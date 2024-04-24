@@ -83,7 +83,7 @@ public class EventHandlerService {
   @Transactional(propagation = REQUIRES_NEW)
   public byte[] handleProcessPenMatchEvent(@NonNull final Event event) throws IOException {
     final var result = this.getPenMatchService().matchStudent(penMatchStudentMapper.toPenMatchStudentDetails(JsonUtil.getJsonObjectFromString(PenMatchStudent.class, event.getEventPayload())), event.getSagaId());
-    log.info("PEN Match Result for event :: {} , is:: {} ", event, result);
+    log.debug("PEN Match Result for event :: {} , is:: {} ", event, result);
     event.setEventOutcome(EventOutcome.PEN_MATCH_PROCESSED);
     event.setEventPayload(JsonUtil.getJsonStringFromObject(result));
     final Event newEvent = Event.builder()

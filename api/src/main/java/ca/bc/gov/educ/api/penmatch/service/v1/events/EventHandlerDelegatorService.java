@@ -73,33 +73,33 @@ public class EventHandlerDelegatorService {
     try {
       switch (event.getEventType()) {
         case PROCESS_PEN_MATCH:
-          log.info("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
+          log.debug("received PROCESS_PEN_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           response = this.getEventHandlerService().handleProcessPenMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, response);
           break;
         case ADD_POSSIBLE_MATCH:
-          log.info("received ADD_POSSIBLE_MATCH event for :: {}", event.getSagaId());
+          log.debug("received ADD_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           pairedResult = this.getEventHandlerService().handleAddPossibleMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, pairedResult.getLeft());
           pairedResult.getRight().ifPresent(this::publishToJetStream);
           break;
         case GET_POSSIBLE_MATCH:
-          log.info("received GET_POSSIBLE_MATCH event for :: {}", event.getSagaId());
+          log.debug("received GET_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           response = this.getEventHandlerService().handleGetPossibleMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, response);
           break;
         case DELETE_POSSIBLE_MATCH:
-          log.info("received DELETE_POSSIBLE_MATCH event for :: {}", event.getSagaId());
+          log.debug("received DELETE_POSSIBLE_MATCH event for :: {}", event.getSagaId());
           log.debug(PAYLOAD_LOG + event.getEventPayload());
           final var pair = this.getEventHandlerService().handleDeletePossibleMatchEvent(event);
           this.publishToNATS(event, message, isSynchronous, pair.getLeft());
           pair.getRight().ifPresent(this::publishToJetStream);
           break;
         default:
-          log.info("silently ignoring other event :: {}", event);
+          log.debug("silently ignoring other event :: {}", event);
           break;
       }
     } catch (final Exception e) {

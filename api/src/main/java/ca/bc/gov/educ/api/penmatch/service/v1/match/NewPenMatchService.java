@@ -150,7 +150,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
    */
   public PenMatchResult matchStudent(NewPenMatchStudentDetail student, UUID correlationID) {
     var stopwatch = Stopwatch.createStarted();
-    log.info("Started new match");
+    log.debug("Started new match");
     if (log.isDebugEnabled()) {
       log.debug(" input :: PenMatchStudentDetail={}", JsonUtil.getJsonPrettyStringFromObject(student));
     }
@@ -249,7 +249,7 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
       log.debug(" output :: NewPenMatchResult={}", JsonUtil.getJsonPrettyStringFromObject(result));
     }
     stopwatch.stop();
-    log.info("Completed new PEN match :: matchStudent :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    log.debug("Completed new PEN match :: matchStudent :: in {} milli seconds", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     return result;
   }
 
