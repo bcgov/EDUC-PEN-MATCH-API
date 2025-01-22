@@ -1,10 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.model.v1;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Immutable;
 
-import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**

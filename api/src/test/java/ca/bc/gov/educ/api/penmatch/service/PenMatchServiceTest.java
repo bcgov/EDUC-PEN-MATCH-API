@@ -2,10 +2,10 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
+import ca.bc.gov.educ.api.penmatch.model.v1.FrequencySurnameEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
@@ -19,6 +19,8 @@ import ca.bc.gov.educ.api.penmatch.util.PenMatchUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.extern.slf4j.Slf4j;
@@ -118,14 +120,16 @@ public class PenMatchServiceTest {
   public void setup() throws Exception {
     MockitoAnnotations.openMocks(this);
     if (!dataLoaded) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
       matchCodesRepository.saveAll(getMatchCodes());
       final File fileNick = new File("src/test/resources/mock_nicknames.json");
-      List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
+      List<NicknameEntity> nicknameEntities = objectMapper.readValue(fileNick, new TypeReference<>() {
       });
       nicknamesRepository.saveAll(nicknameEntities);
 
       final File fileSurnameFrequency = new File("src/test/resources/mock_surname_frequency.json");
-      List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
+      List<FrequencySurnameEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
       });
       surnameFreqRepository.saveAll(surnameFreqEntities);
       dataLoaded = true;

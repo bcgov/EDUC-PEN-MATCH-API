@@ -1,11 +1,10 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * The type Pen match student.

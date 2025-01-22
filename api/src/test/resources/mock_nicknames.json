@@ -1,2026 +1,5106 @@
 [
   {
-   "nickname1":"ABDULRAHMAN",
-   "nickname2":"ABDUL"
+    "nickname1" : "ISABEL",
+    "nickname2" : "IZZY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABELLA",
+    "nickname2" : "BELLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABELLA",
+    "nickname2" : "BELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABELLA",
+    "nickname2" : "ELLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABELLA",
+    "nickname2" : "IZZIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABELLA",
+    "nickname2" : "IZZY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISRAEL",
+    "nickname2" : "IZZY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "IVAN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "JACOB",
+    "nickname2" : "COBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "JACOB",
+    "nickname2" : "JACK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "JACOB",
+    "nickname2" : "JAKE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "JACQUELINE",
+    "nickname2" : "JACKIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "JAGMAAN",
+    "nickname2" : "MANNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ABIGAIL",
-   "nickname2":"ABBY"
+    "nickname1" : "JAMES",
+    "nickname2" : "JAMIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ABIGAIL",
-   "nickname2":"GAIL"
+    "nickname1" : "JAMES",
+    "nickname2" : "JAMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ABRAHAM",
-   "nickname2":"ABE"
+    "nickname1" : "JAMES",
+    "nickname2" : "JAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ABRAHAM",
-   "nickname2":"BRAM"
+    "nickname1" : "JAMES",
+    "nickname2" : "JIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ADRIENNE",
-   "nickname2":"ADDIE"
+    "nickname1" : "JAMES",
+    "nickname2" : "JIMMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AGATHA",
-   "nickname2":"AGGIE"
+    "nickname1" : "JANET",
+    "nickname2" : "JAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALAN",
-   "nickname2":"AL"
+    "nickname1" : "JASMINDER",
+    "nickname2" : "JAS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALANA",
-   "nickname2":"LAN"
+    "nickname1" : "JASMINE",
+    "nickname2" : "JAS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALBERT",
-   "nickname2":"AL"
+    "nickname1" : "JASON",
+    "nickname2" : "JAYSON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALBERT",
-   "nickname2":"BERT"
+    "nickname1" : "JASPREET",
+    "nickname2" : "JAS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDER",
-   "nickname2":"ALEC"
+    "nickname1" : "JAYDEN",
+    "nickname2" : "JADE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDER",
-   "nickname2":"ALEX"
+    "nickname1" : "JAYDEN",
+    "nickname2" : "JAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDER",
-   "nickname2":"SASHA"
+    "nickname1" : "JEANNINE",
+    "nickname2" : "JEANIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDRA",
-   "nickname2":"ALEX"
+    "nickname1" : "JEFFREY",
+    "nickname2" : "JEFF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDRA",
-   "nickname2":"ALEXIS"
+    "nickname1" : "JEMMA",
+    "nickname2" : "JEM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALEXANDRA",
-   "nickname2":"SANDY"
+    "nickname1" : "JENNIFER",
+    "nickname2" : "JEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALFRED",
-   "nickname2":"ALFIE"
+    "nickname1" : "JENNIFER",
+    "nickname2" : "JENN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALISON",
-   "nickname2":"ALLY"
+    "nickname1" : "JENNIFER",
+    "nickname2" : "JENNA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALLAN",
-   "nickname2":"AL"
+    "nickname1" : "JENNIFER",
+    "nickname2" : "JENNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALLEN",
-   "nickname2":"AL"
+    "nickname1" : "JEREMIAH",
+    "nickname2" : "JEREMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ALLISON",
-   "nickname2":"ALI"
+    "nickname1" : "JEREMY",
+    "nickname2" : "JERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AMANDA",
-   "nickname2":"AMY"
+    "nickname1" : "JEROME",
+    "nickname2" : "JERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AMANDA",
-   "nickname2":"MANDY"
+    "nickname1" : "JESSICA",
+    "nickname2" : "JESS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AMANDEEP",
-   "nickname2":"AMANJIT"
+    "nickname1" : "JESSICA",
+    "nickname2" : "JESSIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AMANDEEP",
-   "nickname2":"AMANPREET"
+    "nickname1" : "JILLIAN",
+    "nickname2" : "JILL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AMREET",
-   "nickname2":"AMIT"
+    "nickname1" : "JOAN",
+    "nickname2" : "JONI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANDREW",
-   "nickname2":"ANDY"
+    "nickname1" : "JOCELYN",
+    "nickname2" : "LYN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANGELA",
-   "nickname2":"ANGIE"
+    "nickname1" : "JOHAN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANGELINA",
-   "nickname2":"GINA"
+    "nickname1" : "JOHANN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANNE",
-   "nickname2":"ANNIE"
+    "nickname1" : "JOHN",
+    "nickname2" : "JOHNNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANTHONY",
-   "nickname2":"TONY"
+    "nickname1" : "JOHNATHAN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANTOINETTE",
-   "nickname2":"TONI"
+    "nickname1" : "JOHNATHAN",
+    "nickname2" : "JOHNATHON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANTONETTE",
-   "nickname2":"TONI"
+    "nickname1" : "JOHNATHAN",
+    "nickname2" : "JONATHAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANTONIA",
-   "nickname2":"TONI"
+    "nickname1" : "JOHNATHAN",
+    "nickname2" : "JONATHON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ANTONIO",
-   "nickname2":"TONY"
+    "nickname1" : "JOHNATHON",
+    "nickname2" : "JONATHAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ARCHIBALD",
-   "nickname2":"ARCHIE"
+    "nickname1" : "JOHNATHON",
+    "nickname2" : "JONATHON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ARISTOTLE",
-   "nickname2":"ARI "
+    "nickname1" : "JONATHAN",
+    "nickname2" : "JACK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ARLENE",
-   "nickname2":"ARLA"
+    "nickname1" : "JONATHAN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ARNOLD",
-   "nickname2":"ARNIE"
+    "nickname1" : "JONATHAN",
+    "nickname2" : "JON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ARTHUR",
-   "nickname2":"ART "
+    "nickname1" : "JONATHAN",
+    "nickname2" : "JONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ASHLEY",
-   "nickname2":"LEE "
+    "nickname1" : "JONATHON",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"AUGUSTINE",
-   "nickname2":"GUS "
+    "nickname1" : "JORDAN",
+    "nickname2" : "JORDI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BARBARA",
-   "nickname2":"BARB"
+    "nickname1" : "JOSEF",
+    "nickname2" : "JOSEPH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BARBARA",
-   "nickname2":"BARBIE"
+    "nickname1" : "JOSEPH",
+    "nickname2" : "GIUSEPPE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BEATRICE",
-   "nickname2":"BEA "
+    "nickname1" : "JOSEPH",
+    "nickname2" : "JODY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BEATRICE",
-   "nickname2":"TRIXIE"
+    "nickname1" : "JOSEPH",
+    "nickname2" : "JOE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BELINDA",
-   "nickname2":"BELLE"
+    "nickname1" : "JOSEPH",
+    "nickname2" : "JOEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BENJAMIN",
-   "nickname2":"BEN "
+    "nickname1" : "JOSEPH",
+    "nickname2" : "JOSEF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BENJAMIN",
-   "nickname2":"BENJI"
+    "nickname1" : "JOSEPHINE",
+    "nickname2" : "JO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BENOIT",
-   "nickname2":"BENNY"
+    "nickname1" : "JOSEPHINE",
+    "nickname2" : "JOEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BERNADETTE",
-   "nickname2":"BERNIE"
+    "nickname1" : "JOSEPHINE",
+    "nickname2" : "JOSEE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BERNARD",
-   "nickname2":"BARRY"
+    "nickname1" : "JOSHUA",
+    "nickname2" : "JOSH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BERNARD",
-   "nickname2":"BERNIE"
+    "nickname1" : "JUAN",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BEVERLY",
-   "nickname2":"BEV "
+    "nickname1" : "JUDITH",
+    "nickname2" : "JUDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BRIANA",
-   "nickname2":"BREE"
+    "nickname1" : "JULIA",
+    "nickname2" : "JULIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BRITTANY",
-   "nickname2":"BRITT"
+    "nickname1" : "KAITIN",
+    "nickname2" : "KATIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"BURTON",
-   "nickname2":"BURT"
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KAREN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CALVIN",
-   "nickname2":"CAL "
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CALVIN",
-   "nickname2":"VINNY"
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KATE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CAMERON",
-   "nickname2":"CAM "
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KATHY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CANDACE",
-   "nickname2":"CANDY"
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KATIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CAROLINE",
-   "nickname2":"CARLA"
+    "nickname1" : "KATHERINE",
+    "nickname2" : "KAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CAROLINE",
-   "nickname2":"CAROL"
+    "nickname1" : "KATRINA",
+    "nickname2" : "KAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CAROLINE",
-   "nickname2":"CARRIE"
+    "nickname1" : "KATRINA",
+    "nickname2" : "TRINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CARROLL",
-   "nickname2":"CARL"
+    "nickname1" : "KEITH",
+    "nickname2" : "KIETH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CASEY",
-   "nickname2":"CASE"
+    "nickname1" : "KENNETH",
+    "nickname2" : "KEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CASSANDRA",
-   "nickname2":"SANDY"
+    "nickname1" : "KENNETH",
+    "nickname2" : "KENNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CATHERINE",
-   "nickname2":"CATHY"
+    "nickname1" : "KERANI",
+    "nickname2" : "RANI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CATHLEEN",
-   "nickname2":"CATHY"
+    "nickname1" : "KIMBALL",
+    "nickname2" : "KIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHANDLER",
-   "nickname2":"CHAND"
+    "nickname1" : "KIMBERLEY",
+    "nickname2" : "KIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHARLES",
-   "nickname2":"CARL"
+    "nickname1" : "KIMBERLEY",
+    "nickname2" : "KIMMIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHARLES",
-   "nickname2":"CHARLIE "
+    "nickname1" : "KIMBERLY",
+    "nickname2" : "KIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHARLES",
-   "nickname2":"CHUCK"
+    "nickname1" : "KIMBERLY",
+    "nickname2" : "KIMMIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHARLOTTE",
-   "nickname2":"CARLY"
+    "nickname1" : "KRISTINE",
+    "nickname2" : "KIRSTEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHRISTIAN",
-   "nickname2":"CHRIS"
+    "nickname1" : "KRISTINE",
+    "nickname2" : "KRIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHRISTINA",
-   "nickname2":"TINA"
+    "nickname1" : "KRISTINE",
+    "nickname2" : "KRISTA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHRISTINE",
-   "nickname2":"CHRISSY "
+    "nickname1" : "LAWRENCE",
+    "nickname2" : "LANNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CHRISTOPHER",
-   "nickname2":"CHRIS"
+    "nickname1" : "LAWRENCE",
+    "nickname2" : "LARRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CLAYTON",
-   "nickname2":"CLAY"
+    "nickname1" : "LAWRENCE",
+    "nickname2" : "LARS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CLIFFORD",
-   "nickname2":"CLIFF"
+    "nickname1" : "LEONARD",
+    "nickname2" : "LEE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CLIFFORD",
-   "nickname2":"CLIVE"
+    "nickname1" : "LEONARD",
+    "nickname2" : "LEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CLINTON",
-   "nickname2":"CLINT"
+    "nickname1" : "LEONARDO",
+    "nickname2" : "LEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CONRAD",
-   "nickname2":"CON "
+    "nickname1" : "LEONARDO",
+    "nickname2" : "LEO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CONSTANCE",
-   "nickname2":"CONNIE"
+    "nickname1" : "LEONARDO",
+    "nickname2" : "LEON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CORINNE",
-   "nickname2":"CORRIE"
+    "nickname1" : "LESLIE",
+    "nickname2" : "LES",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CORRINA",
-   "nickname2":"CORY"
+    "nickname1" : "LILITH",
+    "nickname2" : "LILLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"COURTNEY",
-   "nickname2":"CORRY"
+    "nickname1" : "LILITH",
+    "nickname2" : "LILY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CURTIS",
-   "nickname2":"CURT"
+    "nickname1" : "LILLIAN",
+    "nickname2" : "LILY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CYNTHIA",
-   "nickname2":"CINDY"
+    "nickname1" : "LINDSEY",
+    "nickname2" : "LINDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"CYRIL",
-   "nickname2":"CY  "
+    "nickname1" : "LISETTE",
+    "nickname2" : "ELISE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DAKOTA",
-   "nickname2":"DAC "
+    "nickname1" : "LISETTE",
+    "nickname2" : "LISE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DANIEL",
-   "nickname2":"DAN "
+    "nickname1" : "LORETTA",
+    "nickname2" : "LARA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DANIEL",
-   "nickname2":"DANNY"
+    "nickname1" : "LORETTA",
+    "nickname2" : "LAURA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DANIELLE",
-   "nickname2":"DANI"
+    "nickname1" : "LORRAINE",
+    "nickname2" : "LARA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DARCIE",
-   "nickname2":"DARCEY"
+    "nickname1" : "LORRAINE",
+    "nickname2" : "LAURIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DARCY",
-   "nickname2":"DARCEY"
+    "nickname1" : "LORRAINE",
+    "nickname2" : "LORI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DARCY",
-   "nickname2":"DARCIE"
+    "nickname1" : "LOUIS",
+    "nickname2" : "LOUIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DARLENE",
-   "nickname2":"DARLA"
+    "nickname1" : "LOUISE",
+    "nickname2" : "LOIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DAVID",
-   "nickname2":"DAVE"
+    "nickname1" : "LUCAS",
+    "nickname2" : "LUC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DEBORAH",
-   "nickname2":"DEBBIE"
+    "nickname1" : "LUCILLE",
+    "nickname2" : "LUCY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DEIRDRE",
-   "nickname2":"DEE "
+    "nickname1" : "MACKENZIE",
+    "nickname2" : "MACK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DELFUS",
-   "nickname2":"DEL "
+    "nickname1" : "MADELEINE",
+    "nickname2" : "MADDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DENIS",
-   "nickname2":"DENNY"
+    "nickname1" : "MADELEINE",
+    "nickname2" : "MADDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DESMOND",
-   "nickname2":"DES "
+    "nickname1" : "MADISON",
+    "nickname2" : "MADDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DIANA",
-   "nickname2":"DI  "
+    "nickname1" : "MADISON",
+    "nickname2" : "SONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DOMINIC",
-   "nickname2":"DOM "
+    "nickname1" : "MAKAYLA",
+    "nickname2" : "KAYLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DONALD",
-   "nickname2":"DON "
+    "nickname1" : "MAKAYLA",
+    "nickname2" : "KAYLIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DONALD",
-   "nickname2":"DONNY"
+    "nickname1" : "MAKAYLA",
+    "nickname2" : "MIKEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DOROTHY",
-   "nickname2":"DOT "
+    "nickname1" : "MALLORY",
+    "nickname2" : "MAL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DOUGLAS",
-   "nickname2":"DOUG"
+    "nickname1" : "MANDEEP",
+    "nickname2" : "MANDIEEP",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DUNCAN",
-   "nickname2":"DUNC"
+    "nickname1" : "MANDEEP",
+    "nickname2" : "MANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"DUSTIN",
-   "nickname2":"DUSTY"
+    "nickname1" : "MANPREET",
+    "nickname2" : "PREET",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EDITH",
-   "nickname2":"EDIE"
+    "nickname1" : "MARGARET",
+    "nickname2" : "MAGGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EDWARD",
-   "nickname2":"ED  "
+    "nickname1" : "MARGARET",
+    "nickname2" : "MARGE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EDWARD",
-   "nickname2":"EDDIE"
+    "nickname1" : "MARGARET",
+    "nickname2" : "MARGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EDWARD",
-   "nickname2":"NED "
+    "nickname1" : "MARGARET",
+    "nickname2" : "MARGO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EDWARD",
-   "nickname2":"TED "
+    "nickname1" : "MARGARET",
+    "nickname2" : "MEG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"BESSY"
+    "nickname1" : "MARGARET",
+    "nickname2" : "PEG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"BETTY"
+    "nickname1" : "MARGARET",
+    "nickname2" : "PEGGY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"LIBBY"
+    "nickname1" : "MARIA",
+    "nickname2" : "MARY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"LISA"
+    "nickname1" : "MARIE",
+    "nickname2" : "MARY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"LIZ "
+    "nickname1" : "MARKUS",
+    "nickname2" : "MARK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ELIZABETH",
-   "nickname2":"LIZA"
+    "nickname1" : "MARLENA",
+    "nickname2" : "MARLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EMANUEL",
-   "nickname2":"MANNY"
+    "nickname1" : "MARTIN",
+    "nickname2" : "MARTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EMILY",
-   "nickname2":"EM  "
+    "nickname1" : "MARTINA",
+    "nickname2" : "TINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ERICA",
-   "nickname2":"RIKKI"
+    "nickname1" : "MATHIEU",
+    "nickname2" : "MATT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ERNEST",
-   "nickname2":"ERNIE"
+    "nickname1" : "MATILDA",
+    "nickname2" : "TILDA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ESTELLE",
-   "nickname2":"STELLA"
+    "nickname1" : "MATILDA",
+    "nickname2" : "TILLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EUGENE",
-   "nickname2":"GENE"
+    "nickname1" : "MATTHEW",
+    "nickname2" : "MATT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EVELYN",
-   "nickname2":"EVE "
+    "nickname1" : "MAUREEN",
+    "nickname2" : "MAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"EVERETT",
-   "nickname2":"EV  "
+    "nickname1" : "MAURICE",
+    "nickname2" : "MOE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FLORENCE",
-   "nickname2":"FLO "
+    "nickname1" : "MAXIMILIAN",
+    "nickname2" : "MAX",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FRANCES",
-   "nickname2":"FRAN"
+    "nickname1" : "MELANIE",
+    "nickname2" : "MEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FRANCIS",
-   "nickname2":"FRANK"
+    "nickname1" : "MELISSA",
+    "nickname2" : "LISA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FREDERICK",
-   "nickname2":"ERIK"
+    "nickname1" : "MELISSA",
+    "nickname2" : "MILLIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FREDERICK",
-   "nickname2":"FRED"
+    "nickname1" : "MELVIN",
+    "nickname2" : "MEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"FREDERICK",
-   "nickname2":"RICK"
+    "nickname1" : "MICHAEL",
+    "nickname2" : "MICHEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GABRIELLE",
-   "nickname2":"GABBY"
+    "nickname1" : "MICHAEL",
+    "nickname2" : "MICK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GARRY",
-   "nickname2":"GARY"
+    "nickname1" : "MICHAEL",
+    "nickname2" : "MICKEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GENEVIEVE",
-   "nickname2":"GEN "
+    "nickname1" : "MICHAEL",
+    "nickname2" : "MIKE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GEOFFREY",
-   "nickname2":"GEOFF"
+    "nickname1" : "MICHAEL",
+    "nickname2" : "MIKEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GEORGETTE",
-   "nickname2":"GEORGIE "
+    "nickname1" : "MICHAELA",
+    "nickname2" : "MIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GERALD",
-   "nickname2":"GERRY"
+    "nickname1" : "MICHEAL",
+    "nickname2" : "MICHAEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GERALD",
-   "nickname2":"JERRY"
+    "nickname1" : "MICHEAL",
+    "nickname2" : "MICHEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GERARD",
-   "nickname2":"GERRY"
+    "nickname1" : "MICHELLE",
+    "nickname2" : "CHELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GERARD",
-   "nickname2":"JERRY"
+    "nickname1" : "MICHELLE",
+    "nickname2" : "ELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GERTRUDE",
-   "nickname2":"GERTIE"
+    "nickname1" : "MICHELLE",
+    "nickname2" : "MIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GILBERT",
-   "nickname2":"GIL "
+    "nickname1" : "MICHELLE",
+    "nickname2" : "MICKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GORDON",
-   "nickname2":"GORDIE"
+    "nickname1" : "MICHELLE",
+    "nickname2" : "SHELBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GRAHAM",
-   "nickname2":"GRAY"
+    "nickname1" : "MICHELLE",
+    "nickname2" : "SHELLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GREGORY",
-   "nickname2":"GREG"
+    "nickname1" : "MILLICENT",
+    "nickname2" : "MILLIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GURPREET",
-   "nickname2":"GURJIT"
+    "nickname1" : "MIRANDA",
+    "nickname2" : "RANDI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GWENDOLYN",
-   "nickname2":"GWEN"
+    "nickname1" : "MITCHELL",
+    "nickname2" : "MITCH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GWENDOLYN",
-   "nickname2":"WENDY"
+    "nickname1" : "MOHAMMED",
+    "nickname2" : "HAMID",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"GWYNETH",
-   "nickname2":"WINNIE"
+    "nickname1" : "MONTGOMERY",
+    "nickname2" : "MONTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HANNAH",
-   "nickname2":"ANN "
+    "nickname1" : "NADINE",
+    "nickname2" : "NADIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HANNAH",
-   "nickname2":"NINA"
+    "nickname1" : "NATALIE",
+    "nickname2" : "TALIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HARMINDER",
-   "nickname2":"RANDY"
+    "nickname1" : "NATASHA",
+    "nickname2" : "STACI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HAROLD",
-   "nickname2":"HARRY"
+    "nickname1" : "NATASHA",
+    "nickname2" : "TASHA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HARPREET",
-   "nickname2":"HARDEEP "
+    "nickname1" : "NATHAN",
+    "nickname2" : "NAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HARPREET",
-   "nickname2":"HARJIT"
+    "nickname1" : "NATHAN",
+    "nickname2" : "NATE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HARRIET",
-   "nickname2":"HETTY"
+    "nickname1" : "NATHANIEL",
+    "nickname2" : "NAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HELEN",
-   "nickname2":"HELENE"
+    "nickname1" : "NATHANIEL",
+    "nickname2" : "NATE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HENRY",
-   "nickname2":"HARRY"
+    "nickname1" : "NATHANIEL",
+    "nickname2" : "NATHAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HERBERT",
-   "nickname2":"HERB"
+    "nickname1" : "NICHOLAS",
+    "nickname2" : "COLIN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HUBERT",
-   "nickname2":"HUGH"
+    "nickname1" : "NICHOLAS",
+    "nickname2" : "NICK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"HUSSEIN",
-   "nickname2":"HUSSAIN "
+    "nickname1" : "NICHOLAS",
+    "nickname2" : "NICKOLAS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"IAIN",
-   "nickname2":"IAN "
+    "nickname1" : "NICOLA",
+    "nickname2" : "NIKKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"IRENE",
-   "nickname2":"RENE"
+    "nickname1" : "NICOLE",
+    "nickname2" : "NICKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ISAAC",
-   "nickname2":"IKE "
+    "nickname1" : "NICOLE",
+    "nickname2" : "NIKKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ISABEL",
-   "nickname2":"IZZY"
+    "nickname1" : "NORMA",
+    "nickname2" : "NOREEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ISRAEL",
-   "nickname2":"IZZY"
+    "nickname1" : "NORMAN",
+    "nickname2" : "NORM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"IVAN",
-   "nickname2":"JOHN"
+    "nickname1" : "OLIVIA",
+    "nickname2" : "LIV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JACOB",
-   "nickname2":"COBY"
+    "nickname1" : "OLIVIA",
+    "nickname2" : "LIVIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JACOB",
-   "nickname2":"JACK"
+    "nickname1" : "OLIVIA",
+    "nickname2" : "OLIVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JACOB",
-   "nickname2":"JAKE"
+    "nickname1" : "ORSON",
+    "nickname2" : "SONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JACQUELINE",
-   "nickname2":"JACKIE"
+    "nickname1" : "OVIVIA",
+    "nickname2" : "LIVY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAGMAAN",
-   "nickname2":"MANNY"
+    "nickname1" : "PARDEEP",
+    "nickname2" : "PETER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAMES",
-   "nickname2":"JAMIE"
+    "nickname1" : "PATRICIA",
+    "nickname2" : "PAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAMES",
-   "nickname2":"JAMY"
+    "nickname1" : "PATRICIA",
+    "nickname2" : "PATSY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAMES",
-   "nickname2":"JAY "
+    "nickname1" : "PATRICIA",
+    "nickname2" : "PATTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAMES",
-   "nickname2":"JIM "
+    "nickname1" : "PATRICIA",
+    "nickname2" : "TRICIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JAMES",
-   "nickname2":"JIMMY"
+    "nickname1" : "PATRICIA",
+    "nickname2" : "TRISH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JANET",
-   "nickname2":"JAN "
+    "nickname1" : "PATRICK",
+    "nickname2" : "PADDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JASMINDER",
-   "nickname2":"JAS "
+    "nickname1" : "PATRICK",
+    "nickname2" : "PAT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JASMINE",
-   "nickname2":"JAS "
+    "nickname1" : "PAULETTE",
+    "nickname2" : "PAULA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JASON",
-   "nickname2":"JAYSON"
+    "nickname1" : "PAULINE",
+    "nickname2" : "PAULA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JASPREET",
-   "nickname2":"JAS "
+    "nickname1" : "PAULINE",
+    "nickname2" : "POLLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEANNINE",
-   "nickname2":"JEANIE"
+    "nickname1" : "PENELOPE",
+    "nickname2" : "PENNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEFFREY",
-   "nickname2":"JEFF"
+    "nickname1" : "PERCIVAL",
+    "nickname2" : "PERCY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEMMA",
-   "nickname2":"JEM "
+    "nickname1" : "PETER",
+    "nickname2" : "PERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JENNIFER",
-   "nickname2":"JEN "
+    "nickname1" : "PHILIP",
+    "nickname2" : "PHIL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JENNIFER",
-   "nickname2":"JENN"
+    "nickname1" : "PRISCILLA",
+    "nickname2" : "PRISSY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JENNIFER",
-   "nickname2":"JENNY"
+    "nickname1" : "QUENTIN",
+    "nickname2" : "QUENT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEREMIAH",
-   "nickname2":"JEREMY"
+    "nickname1" : "RACHEL",
+    "nickname2" : "RAE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEREMY",
-   "nickname2":"JERRY"
+    "nickname1" : "RAFFERTY",
+    "nickname2" : "RAFE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JEROME",
-   "nickname2":"JERRY"
+    "nickname1" : "RAGHIB",
+    "nickname2" : "RAG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JESSICA",
-   "nickname2":"JESS"
+    "nickname1" : "RAJAH",
+    "nickname2" : "RAJ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JESSICA",
-   "nickname2":"JESSIE"
+    "nickname1" : "RAJESH",
+    "nickname2" : "RAJ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JILLIAN",
-   "nickname2":"JILL"
+    "nickname1" : "RALPH",
+    "nickname2" : "RAFE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOAN",
-   "nickname2":"JONI"
+    "nickname1" : "RAMADAN",
+    "nickname2" : "RAMA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOCELYN",
-   "nickname2":"LYN "
+    "nickname1" : "RAMANDEEP",
+    "nickname2" : "RAMANAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHN",
-   "nickname2":"JOHNNY"
+    "nickname1" : "RAMANJIT",
+    "nickname2" : "RAMANAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHAN",
-   "nickname2":"JOHN"
+    "nickname1" : "RAMANJOT",
+    "nickname2" : "RAMAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHAN",
-   "nickname2":"JOHNATHON"
+    "nickname1" : "RANDALL",
+    "nickname2" : "RANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHAN",
-   "nickname2":"JONATHAN"
+    "nickname1" : "RANDOLPH",
+    "nickname2" : "RANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHAN",
-   "nickname2":"JONATHON"
+    "nickname1" : "RAPHAEL",
+    "nickname2" : "RAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHON",
-   "nickname2":"JONATHAN"
+    "nickname1" : "RASHAD",
+    "nickname2" : "RASHID",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOHNATHON",
-   "nickname2":"JONATHON"
+    "nickname1" : "RAVIJOT",
+    "nickname2" : "RAVI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JONATHAN",
-   "nickname2":"JON"
+    "nickname1" : "RAYMOND",
+    "nickname2" : "RAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JORDAN",
-   "nickname2":"JORDI"
+    "nickname1" : "REBECCA",
+    "nickname2" : "BECCA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEF",
-   "nickname2":"JOSEPH"
+    "nickname1" : "REBECCA",
+    "nickname2" : "BECKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPH",
-   "nickname2":"JODY"
+    "nickname1" : "REBECCA",
+    "nickname2" : "BECKY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPH",
-   "nickname2":"JOE "
+    "nickname1" : "REBECCA",
+    "nickname2" : "BEKKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPH",
-   "nickname2":"JOEY"
+    "nickname1" : "REBECCA",
+    "nickname2" : "REBA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPH",
-   "nickname2":"JOSEF"
+    "nickname1" : "REGINALD",
+    "nickname2" : "REG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPHINE",
-   "nickname2":"JO"
+    "nickname1" : "REGINALD",
+    "nickname2" : "REGGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPHINE",
-   "nickname2":"JOEY"
+    "nickname1" : "REMINGTON",
+    "nickname2" : "TONY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSEPHINE",
-   "nickname2":"JOSEE"
+    "nickname1" : "RICHARD",
+    "nickname2" : "DICK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JOSHUA",
-   "nickname2":"JOSH"
+    "nickname1" : "RICHARD",
+    "nickname2" : "DICKY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JUDITH",
-   "nickname2":"JUDY"
+    "nickname1" : "RICHARD",
+    "nickname2" : "RICH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"JULIA",
-   "nickname2":"JULIE"
+    "nickname1" : "RICHARD",
+    "nickname2" : "RICKY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KAITIN",
-   "nickname2":"KATIE"
+    "nickname1" : "RICHARD",
+    "nickname2" : "RITCHIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KATHERINE",
-   "nickname2":"KAREN"
+    "nickname1" : "ROBERT",
+    "nickname2" : "BERT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KATHERINE",
-   "nickname2":"KATE"
+    "nickname1" : "ROBERT",
+    "nickname2" : "BOB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KATHERINE",
-   "nickname2":"KATIE"
+    "nickname1" : "ROBERT",
+    "nickname2" : "BOBBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KATHERINE",
-   "nickname2":"KAY "
+    "nickname1" : "ROBERT",
+    "nickname2" : "ROB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KATRINA",
-   "nickname2":"TRINA"
+    "nickname1" : "ROBERT",
+    "nickname2" : "ROBBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KEITH",
-   "nickname2":"KIETH"
+    "nickname1" : "ROBERT",
+    "nickname2" : "ROBIN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KENNETH",
-   "nickname2":"KEN "
+    "nickname1" : "ROBERTA",
+    "nickname2" : "BOBBIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KENNETH",
-   "nickname2":"KENNY"
+    "nickname1" : "ROBERTA",
+    "nickname2" : "ROBIN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KERANI",
-   "nickname2":"RANI"
+    "nickname1" : "RODERICK",
+    "nickname2" : "ROD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KIMBALL",
-   "nickname2":"KIM "
+    "nickname1" : "RODERICK",
+    "nickname2" : "RODDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KIMBERLEY",
-   "nickname2":"KIM "
+    "nickname1" : "RODERICK",
+    "nickname2" : "ROGER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KRISTINE",
-   "nickname2":"KIRSTEN "
+    "nickname1" : "RODERICK",
+    "nickname2" : "RORY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KRISTINE",
-   "nickname2":"KRIS"
+    "nickname1" : "RODNEY",
+    "nickname2" : "ROD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"KRISTINE",
-   "nickname2":"KRISTA"
+    "nickname1" : "ROGER",
+    "nickname2" : "ROG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LAWRENCE",
-   "nickname2":"LANNY"
+    "nickname1" : "RONALD",
+    "nickname2" : "RON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LAWRENCE",
-   "nickname2":"LARRY"
+    "nickname1" : "RONALD",
+    "nickname2" : "RONNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LAWRENCE",
-   "nickname2":"LARS"
+    "nickname1" : "RONALD",
+    "nickname2" : "RONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LEONARD",
-   "nickname2":"LEE "
+    "nickname1" : "ROSALIND",
+    "nickname2" : "ROSIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LEONARD",
-   "nickname2":"LEN "
+    "nickname1" : "ROSEANNE",
+    "nickname2" : "ROSIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LESLIE",
-   "nickname2":"LES "
+    "nickname1" : "ROXANNE",
+    "nickname2" : "ROXI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LILITH",
-   "nickname2":"LILY"
+    "nickname1" : "RUDOLPH",
+    "nickname2" : "RUDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LILLIAN",
-   "nickname2":"LILY"
+    "nickname1" : "RUSSELL",
+    "nickname2" : "RUSS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LINDSEY",
-   "nickname2":"LINDY"
+    "nickname1" : "SABRINA",
+    "nickname2" : "BRINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LISETTE",
-   "nickname2":"ELISE"
+    "nickname1" : "SABRINA",
+    "nickname2" : "SABBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LISETTE",
-   "nickname2":"LISE"
+    "nickname1" : "SALIM",
+    "nickname2" : "SAL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LORETTA",
-   "nickname2":"LARA"
+    "nickname1" : "SAMANTHA",
+    "nickname2" : "SAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LORETTA",
-   "nickname2":"LAURA"
+    "nickname1" : "SAMANTHA",
+    "nickname2" : "SAMI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LORRAINE",
-   "nickname2":"LARA"
+    "nickname1" : "SAMIR",
+    "nickname2" : "SAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LORRAINE",
-   "nickname2":"LAURIE"
+    "nickname1" : "SAMUEL",
+    "nickname2" : "SAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LORRAINE",
-   "nickname2":"LORI"
+    "nickname1" : "SAMUEL",
+    "nickname2" : "SAMMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LOUIS",
-   "nickname2":"LOUIE"
+    "nickname1" : "SAMUEL",
+    "nickname2" : "SHEM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LOUISE",
-   "nickname2":"LOIS"
+    "nickname1" : "SANDEEP",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LUCAS",
-   "nickname2":"LUC "
+    "nickname1" : "SANDRA",
+    "nickname2" : "SANDI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"LUCILLE",
-   "nickname2":"LUCY"
+    "nickname1" : "SANDRA",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MACKENZIE",
-   "nickname2":"MACK"
+    "nickname1" : "SANJEEV",
+    "nickname2" : "SANJIV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MADELEINE",
-   "nickname2":"MADDY"
+    "nickname1" : "SARAH",
+    "nickname2" : "SALLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MADISON",
-   "nickname2":"SONNY"
+    "nickname1" : "SAUL",
+    "nickname2" : "SOL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MALLORY",
-   "nickname2":"MAL "
+    "nickname1" : "SEAMUS",
+    "nickname2" : "SHAMUS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MANDEEP",
-   "nickname2":"MANDIEEP"
+    "nickname1" : "SEAN",
+    "nickname2" : "SHAWN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MANDEEP",
-   "nickname2":"MANDY"
+    "nickname1" : "SEBASTIAN",
+    "nickname2" : "SEB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MANPREET",
-   "nickname2":"PREET"
+    "nickname1" : "SENH",
+    "nickname2" : "SEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARGARET",
-   "nickname2":"MAGGIE"
+    "nickname1" : "SERGIO",
+    "nickname2" : "SERGE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARGARET",
-   "nickname2":"MARGE"
+    "nickname1" : "SHADRACH",
+    "nickname2" : "SHAD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARGARET",
-   "nickname2":"MEG"
+    "nickname1" : "SHANE",
+    "nickname2" : "SHAINE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARGARET",
-   "nickname2":"PEGGY"
+    "nickname1" : "SHANE",
+    "nickname2" : "SHAYNE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARIA",
-   "nickname2":"MARY"
+    "nickname1" : "SHAQUILLE",
+    "nickname2" : "SHAQ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARIE",
-   "nickname2":"MARY"
+    "nickname1" : "SHEA",
+    "nickname2" : "SHAYE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARKUS",
-   "nickname2":"MARK"
+    "nickname1" : "SHILOH",
+    "nickname2" : "SHI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARLENA",
-   "nickname2":"MARLA"
+    "nickname1" : "SHINGAE",
+    "nickname2" : "SHING",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MARTIN",
-   "nickname2":"MARTY"
+    "nickname1" : "SHIRLEY",
+    "nickname2" : "SHERYL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MATHIEU",
-   "nickname2":"MATT"
+    "nickname1" : "SHIVAN",
+    "nickname2" : "SHIVA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MATILDA",
-   "nickname2":"TILDA"
+    "nickname1" : "SIDNEY",
+    "nickname2" : "SID",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MATTHEW",
-   "nickname2":"MATT"
+    "nickname1" : "SIOBHAN",
+    "nickname2" : "JANE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MAUREEN",
-   "nickname2":"MAY "
+    "nickname1" : "SIVA",
+    "nickname2" : "SIV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MAURICE",
-   "nickname2":"MOE "
+    "nickname1" : "SOLOMON",
+    "nickname2" : "SOL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MAXIMILIAN",
-   "nickname2":"MAX"
+    "nickname1" : "SOPHIA",
+    "nickname2" : "FIFI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MELANIE",
-   "nickname2":"MEL"
+    "nickname1" : "SOPHIA",
+    "nickname2" : "SOPHIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MELISSA",
-   "nickname2":"LISA"
+    "nickname1" : "SPENCER",
+    "nickname2" : "SPENCE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MELISSA",
-   "nickname2":"MILLIE"
+    "nickname1" : "SPENSER",
+    "nickname2" : "SPENCE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MELVIN",
-   "nickname2":"MEL "
+    "nickname1" : "STACEY",
+    "nickname2" : "STACI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHAEL",
-   "nickname2":"MICHEL"
+    "nickname1" : "STEPHANE",
+    "nickname2" : "STEVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHAEL",
-   "nickname2":"MICK"
+    "nickname1" : "STEPHANIE",
+    "nickname2" : "STEFANIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHAEL",
-   "nickname2":"MIKE"
+    "nickname1" : "STEPHANIE",
+    "nickname2" : "STEFFI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHAEL",
-   "nickname2":"MIKEY"
+    "nickname1" : "STEPHANIE",
+    "nickname2" : "STEVIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHAELA",
-   "nickname2":"MIA "
+    "nickname1" : "STEPHEN",
+    "nickname2" : "STEFAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHEAL",
-   "nickname2":"MICHAEL"
+    "nickname1" : "STEPHEN",
+    "nickname2" : "STEPHAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHEAL",
-   "nickname2":"MICHEL"
+    "nickname1" : "STEPHEN",
+    "nickname2" : "STEVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHELLE",
-   "nickname2":"MIA"
+    "nickname1" : "STEVEN",
+    "nickname2" : "STEVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MICHELLE",
-   "nickname2":"SHELLY"
+    "nickname1" : "STEWART",
+    "nickname2" : "STU",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MILLICENT",
-   "nickname2":"MILLIE"
+    "nickname1" : "STEWART",
+    "nickname2" : "STUART",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MIRANDA",
-   "nickname2":"RANDI"
+    "nickname1" : "STUART",
+    "nickname2" : "STU",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MITCHELL",
-   "nickname2":"MITCH"
+    "nickname1" : "SUNDEEP",
+    "nickname2" : "SUNDIP",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MOHAMMED",
-   "nickname2":"HAMID"
+    "nickname1" : "SUNRREP",
+    "nickname2" : "SUNRIP",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"MONTGOMERY",
-   "nickname2":"MONTY"
+    "nickname1" : "SUSAN",
+    "nickname2" : "SUE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NADINE",
-   "nickname2":"NADIA"
+    "nickname1" : "SVEND",
+    "nickname2" : "SVEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATALIE",
-   "nickname2":"TALIA"
+    "nickname1" : "SYLVAIN",
+    "nickname2" : "SYL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATASHA",
-   "nickname2":"STACI"
+    "nickname1" : "SYLVESTER",
+    "nickname2" : "SLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATASHA",
-   "nickname2":"TASHA"
+    "nickname1" : "SYLVESTER",
+    "nickname2" : "SYL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATHAN",
-   "nickname2":"NAT "
+    "nickname1" : "TABEEB",
+    "nickname2" : "TABIB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATHANIEL",
-   "nickname2":"NAT "
+    "nickname1" : "TABITHA",
+    "nickname2" : "TABBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NATHANIEL",
-   "nickname2":"NATHAN"
+    "nickname1" : "TAHEER",
+    "nickname2" : "TAHIR",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICHOLAS",
-   "nickname2":"COLIN"
+    "nickname1" : "TAJI",
+    "nickname2" : "TAJ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICHOLAS",
-   "nickname2":"NICK"
+    "nickname1" : "TAMARA",
+    "nickname2" : "TAMMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICHOLAS",
-   "nickname2":"NICKOLAS"
+    "nickname1" : "TANNER",
+    "nickname2" : "TAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICOLA",
-   "nickname2":"NIKKI"
+    "nickname1" : "TARIQ",
+    "nickname2" : "RICK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICOLE",
-   "nickname2":"NICKI"
+    "nickname1" : "TARIQ",
+    "nickname2" : "TAR",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NICOLE",
-   "nickname2":"NIKKI"
+    "nickname1" : "TAYLOR",
+    "nickname2" : "TY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NORMA",
-   "nickname2":"NOREEN"
+    "nickname1" : "TEHEODORE",
+    "nickname2" : "TAD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"NORMAN",
-   "nickname2":"NORM"
+    "nickname1" : "TERENCE",
+    "nickname2" : "TERRAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ORSON",
-   "nickname2":"SONNY"
+    "nickname1" : "TERESA",
+    "nickname2" : "TERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PARDEEP",
-   "nickname2":"PETER"
+    "nickname1" : "TERRENCE",
+    "nickname2" : "TERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PATRICIA",
-   "nickname2":"PAT "
+    "nickname1" : "TERRY",
+    "nickname2" : "TERRI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PATRICIA",
-   "nickname2":"PATSY"
+    "nickname1" : "THADDEUS",
+    "nickname2" : "TAD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PATRICIA",
-   "nickname2":"TRISH"
+    "nickname1" : "THAN",
+    "nickname2" : "TAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PATRICK",
-   "nickname2":"PADDY"
+    "nickname1" : "THEODORE",
+    "nickname2" : "TED",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PATRICK",
-   "nickname2":"PAT "
+    "nickname1" : "THEODORE",
+    "nickname2" : "TEDDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PAULETTE",
-   "nickname2":"PAULA"
+    "nickname1" : "THEODORE",
+    "nickname2" : "THEO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PAULINE",
-   "nickname2":"PAULA"
+    "nickname1" : "THERESA",
+    "nickname2" : "TERESA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PAULINE",
-   "nickname2":"POLLY"
+    "nickname1" : "THERESA",
+    "nickname2" : "TERRI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PENELOPE",
-   "nickname2":"PENNY"
+    "nickname1" : "THERESA",
+    "nickname2" : "TRACY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PERCIVAL",
-   "nickname2":"PERCY"
+    "nickname1" : "THOMAS",
+    "nickname2" : "TAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PETER",
-   "nickname2":"PERRY"
+    "nickname1" : "THOMAS",
+    "nickname2" : "THOM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PHILIP",
-   "nickname2":"PHIL"
+    "nickname1" : "THOMAS",
+    "nickname2" : "TOM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"PRISCILLA",
-   "nickname2":"PRISSY"
+    "nickname1" : "THOMAS",
+    "nickname2" : "TOMAS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"QUENTIN",
-   "nickname2":"QUENT"
+    "nickname1" : "THOMAS",
+    "nickname2" : "TOMMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RACHEL",
-   "nickname2":"RAE "
+    "nickname1" : "THORNTON",
+    "nickname2" : "THORNE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAFFERTY",
-   "nickname2":"RAFE"
+    "nickname1" : "TIFFANY",
+    "nickname2" : "TIFFI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAGHIB",
-   "nickname2":"RAG "
+    "nickname1" : "TIMON",
+    "nickname2" : "TIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAJAH",
-   "nickname2":"RAJ "
+    "nickname1" : "TIMOTHY",
+    "nickname2" : "TIM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAJESH",
-   "nickname2":"RAJ "
+    "nickname1" : "TIMOTHY",
+    "nickname2" : "TIMMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RALPH",
-   "nickname2":"RAFE"
+    "nickname1" : "TITANIA",
+    "nickname2" : "TANIA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAMADAN",
-   "nickname2":"RAMA"
+    "nickname1" : "TOBIA",
+    "nickname2" : "TOBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAMANDEEP",
-   "nickname2":"RAMANAN "
+    "nickname1" : "TORRENCE",
+    "nickname2" : "TORRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAMANJIT",
-   "nickname2":"RAMANAN "
+    "nickname1" : "TOSHI-SHITA",
+    "nickname2" : "TOSHIO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAMANJOT",
-   "nickname2":"RAMAN"
+    "nickname1" : "TOVI",
+    "nickname2" : "TOV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RANDALL",
-   "nickname2":"RANDY"
+    "nickname1" : "TRAHERN",
+    "nickname2" : "TRAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RANDOLPH",
-   "nickname2":"RANDY"
+    "nickname1" : "TRAVERS",
+    "nickname2" : "TRAVIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAPHAEL",
-   "nickname2":"RAY "
+    "nickname1" : "TRAYTON",
+    "nickname2" : "TRAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RASHAD",
-   "nickname2":"RASHID"
+    "nickname1" : "TREMAYNE",
+    "nickname2" : "TREY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAVIJOT",
-   "nickname2":"RAVI"
+    "nickname1" : "TRENTON",
+    "nickname2" : "TRENT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RAYMOND",
-   "nickname2":"RAY "
+    "nickname1" : "TREVOR",
+    "nickname2" : "TREV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"REBECCA",
-   "nickname2":"BECKY"
+    "nickname1" : "TRISTRAM",
+    "nickname2" : "TRISTAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"REBECCA",
-   "nickname2":"BEKKI"
+    "nickname1" : "TUCKER",
+    "nickname2" : "TUCK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"REGINALD",
-   "nickname2":"REG "
+    "nickname1" : "TYLER",
+    "nickname2" : "TY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"REGINALD",
-   "nickname2":"REGGIE"
+    "nickname1" : "TYRELL",
+    "nickname2" : "TY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"REMINGTON",
-   "nickname2":"TONY"
+    "nickname1" : "TYRONE",
+    "nickname2" : "TY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RICHARD",
-   "nickname2":"DICK"
+    "nickname1" : "U",
+    "nickname2" : "UU",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RICHARD",
-   "nickname2":"DICKY"
+    "nickname1" : "ULRICH",
+    "nickname2" : "UWE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RICHARD",
-   "nickname2":"RICH"
+    "nickname1" : "VALERIE",
+    "nickname2" : "VAL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RICHARD",
-   "nickname2":"RICKY"
+    "nickname1" : "VERNON",
+    "nickname2" : "VERN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RICHARD",
-   "nickname2":"RITCHIE "
+    "nickname1" : "VERONICA",
+    "nickname2" : "NICKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"BERT"
+    "nickname1" : "VERONICA",
+    "nickname2" : "RONI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"BOB "
+    "nickname1" : "VERONICA",
+    "nickname2" : "RONNI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"BOBBY"
+    "nickname1" : "VERONICA",
+    "nickname2" : "VERA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"ROB "
+    "nickname1" : "VERONICA",
+    "nickname2" : "VONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"ROBBY"
+    "nickname1" : "VICTOR",
+    "nickname2" : "VIC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERT",
-   "nickname2":"ROBIN"
+    "nickname1" : "VICTORIA",
+    "nickname2" : "TORI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERTA",
-   "nickname2":"BOBBIE"
+    "nickname1" : "VICTORIA",
+    "nickname2" : "VIC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROBERTA",
-   "nickname2":"ROBIN"
+    "nickname1" : "VICTORIA",
+    "nickname2" : "VICKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RODERICK",
-   "nickname2":"ROD "
+    "nickname1" : "VINCENT",
+    "nickname2" : "VINCE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RODERICK",
-   "nickname2":"RODDY"
+    "nickname1" : "VINCENT",
+    "nickname2" : "VINNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RODERICK",
-   "nickname2":"ROGER"
+    "nickname1" : "VIOLET",
+    "nickname2" : "VI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RODERICK",
-   "nickname2":"RORY"
+    "nickname1" : "VIOLET",
+    "nickname2" : "VIOLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RODNEY",
-   "nickname2":"ROD "
+    "nickname1" : "VIRGINIA",
+    "nickname2" : "GEENA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROGER",
-   "nickname2":"ROG "
+    "nickname1" : "VIVIAN",
+    "nickname2" : "VI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RONALD",
-   "nickname2":"RON "
+    "nickname1" : "VLADIMIR",
+    "nickname2" : "VLAD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RONALD",
-   "nickname2":"RONNIE"
+    "nickname1" : "VLADISLAV",
+    "nickname2" : "SLAVA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RONALD",
-   "nickname2":"RONNY"
+    "nickname1" : "WALKER",
+    "nickname2" : "WALLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROSALIND",
-   "nickname2":"ROSIE"
+    "nickname1" : "WALTER",
+    "nickname2" : "WALT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROSEANNE",
-   "nickname2":"ROSIE"
+    "nickname1" : "WENDEL",
+    "nickname2" : "WENDAL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ROXANNE",
-   "nickname2":"ROXI"
+    "nickname1" : "WENDY",
+    "nickname2" : "WENDI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RUDOLPH",
-   "nickname2":"RUDY"
+    "nickname1" : "WESLEY",
+    "nickname2" : "WES",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"RUSSELL",
-   "nickname2":"RUSS"
+    "nickname1" : "WILBERT",
+    "nickname2" : "WIL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SABRINA",
-   "nickname2":"BRINA"
+    "nickname1" : "WILFRED",
+    "nickname2" : "WILF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SABRINA",
-   "nickname2":"SABBY"
+    "nickname1" : "WILHELMINA",
+    "nickname2" : "MINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SALIM",
-   "nickname2":"SAL "
+    "nickname1" : "WILLIAM",
+    "nickname2" : "BILL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SAMANTHA",
-   "nickname2":"SAM "
+    "nickname1" : "WILLIAM",
+    "nickname2" : "LIAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SAMIR",
-   "nickname2":"SAM "
+    "nickname1" : "WILLIAM",
+    "nickname2" : "WILL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SAMUEL",
-   "nickname2":"SAM "
+    "nickname1" : "WILTON",
+    "nickname2" : "WILT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SAMUEL",
-   "nickname2":"SHEM"
+    "nickname1" : "WING-CHIU",
+    "nickname2" : "WING",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SANDEEP",
-   "nickname2":"SANDY"
+    "nickname1" : "WING-KIT",
+    "nickname2" : "WING",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SANDRA",
-   "nickname2":"SANDI"
+    "nickname1" : "WOLFGANG",
+    "nickname2" : "WOLF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SANDRA",
-   "nickname2":"SANDY"
+    "nickname1" : "XAVIER",
+    "nickname2" : "JAVIER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SANJEEV",
-   "nickname2":"SANJIV"
+    "nickname1" : "YITZCHAK",
+    "nickname2" : "ISAAC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SARAH",
-   "nickname2":"SALLY"
+    "nickname1" : "YOSHIUKI",
+    "nickname2" : "YOSHI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SAUL",
-   "nickname2":"SOL "
+    "nickname1" : "YUKIKO",
+    "nickname2" : "YUKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SEAMUS",
-   "nickname2":"SHAMUS"
+    "nickname1" : "ABDULRAHMAN",
+    "nickname2" : "ABDUL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SEAN",
-   "nickname2":"SHAWN"
+    "nickname1" : "ABIGAIL",
+    "nickname2" : "ABBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SEBASTIAN",
-   "nickname2":"SEB "
+    "nickname1" : "ABIGAIL",
+    "nickname2" : "GAIL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SENH",
-   "nickname2":"SEN "
+    "nickname1" : "ABIGAIL",
+    "nickname2" : "GALE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SERGIO",
-   "nickname2":"SERGE"
+    "nickname1" : "ABRAHAM",
+    "nickname2" : "ABE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHADRACH",
-   "nickname2":"SHAD"
+    "nickname1" : "ABRAHAM",
+    "nickname2" : "BRAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHANE",
-   "nickname2":"SHAINE"
+    "nickname1" : "ADELAIDE",
+    "nickname2" : "ADDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHANE",
-   "nickname2":"SHAYNE"
+    "nickname1" : "ADRIENNE",
+    "nickname2" : "ADDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHAQUILLE",
-   "nickname2":"SHAQ"
+    "nickname1" : "AGATHA",
+    "nickname2" : "AGGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHEA",
-   "nickname2":"SHAYE"
+    "nickname1" : "ALAN",
+    "nickname2" : "AL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHILOH",
-   "nickname2":"SHI "
+    "nickname1" : "ALANA",
+    "nickname2" : "LAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHINGAE",
-   "nickname2":"SHING"
+    "nickname1" : "ALASDAIR",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHIRLEY",
-   "nickname2":"SHERYL"
+    "nickname1" : "ALBERT",
+    "nickname2" : "AL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SHIVAN",
-   "nickname2":"SHIVA"
+    "nickname1" : "ALBERT",
+    "nickname2" : "BERT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SIDNEY",
-   "nickname2":"SID "
+    "nickname1" : "ALEJANDRO",
+    "nickname2" : "ALEXANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SIOBHAN",
-   "nickname2":"JANE"
+    "nickname1" : "ALEKSANDER",
+    "nickname2" : "ALEXANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SIVA",
-   "nickname2":"SIV "
+    "nickname1" : "ALESSANDRO",
+    "nickname2" : "ALEXANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SOLOMON",
-   "nickname2":"SOL "
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "AL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SPENCER",
-   "nickname2":"SPENCE"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "ALEC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SPENSER",
-   "nickname2":"SPENCE"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "ALEX",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STACEY",
-   "nickname2":"STACI"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "LEX",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHANE",
-   "nickname2":"STEVE"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHANIE",
-   "nickname2":"STEFANIE"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "SASHA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHANIE",
-   "nickname2":"STEFFI"
+    "nickname1" : "ALEXANDER",
+    "nickname2" : "XANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHEN",
-   "nickname2":"STEFAN"
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "ALEX",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHEN",
-   "nickname2":"STEPHAN "
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "ALEXIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEPHEN",
-   "nickname2":"STEVE"
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "LEXIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEVEN",
-   "nickname2":"STEVE"
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "SANDI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEWART",
-   "nickname2":"STU "
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "SANDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STEWART",
-   "nickname2":"STUART"
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"STUART",
-   "nickname2":"STU "
+    "nickname1" : "ALEXANDRA",
+    "nickname2" : "SASHA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SUNDEEP",
-   "nickname2":"SUNDIP"
+    "nickname1" : "ALEXANDRE",
+    "nickname2" : "ALEXANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SUNRREP",
-   "nickname2":"SUNRIP"
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "ALEX",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SUSAN",
-   "nickname2":"SUE "
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "ALEXA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SVEND",
-   "nickname2":"SVEN"
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "ALEXIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SYLVAIN",
-   "nickname2":"SYL "
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "ALLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SYLVESTER",
-   "nickname2":"SLY "
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "LEXI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"SYLVESTER",
-   "nickname2":"SYL "
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "SANDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TABEEB",
-   "nickname2":"TABIB"
+    "nickname1" : "ALEXANDRIA",
+    "nickname2" : "SANDRA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TABITHA",
-   "nickname2":"TABBY"
+    "nickname1" : "ALEXANDROS",
+    "nickname2" : "ALEXANDER",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TAHEER",
-   "nickname2":"TAHIR"
+    "nickname1" : "ALFRED",
+    "nickname2" : "ALFIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TAJI",
-   "nickname2":"TAJ "
+    "nickname1" : "ALISON",
+    "nickname2" : "ALICE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TAMARA",
-   "nickname2":"TAMMY"
+    "nickname1" : "ALISON",
+    "nickname2" : "ALLI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TANNER",
-   "nickname2":"TAN "
+    "nickname1" : "ALISON",
+    "nickname2" : "ALLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TARIQ",
-   "nickname2":"RICK"
+    "nickname1" : "ALISON",
+    "nickname2" : "ALYSSA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TARIQ",
-   "nickname2":"TAR "
+    "nickname1" : "ALLAN",
+    "nickname2" : "AL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TAYLOR",
-   "nickname2":"TY  "
+    "nickname1" : "ALLEN",
+    "nickname2" : "AL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TERENCE",
-   "nickname2":"TERRAN"
+    "nickname1" : "AMANDA",
+    "nickname2" : "AMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TERESA",
-   "nickname2":"TERRY"
+    "nickname1" : "AMANDA",
+    "nickname2" : "MANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TERRENCE",
-   "nickname2":"TERRY"
+    "nickname1" : "AMANDEEP",
+    "nickname2" : "AMANJIT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TERRY",
-   "nickname2":"TERRI"
+    "nickname1" : "AMANDEEP",
+    "nickname2" : "AMANPREET",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THAN",
-   "nickname2":"TAN "
+    "nickname1" : "AMELIA",
+    "nickname2" : "AMY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THEODORE",
-   "nickname2":"TED "
+    "nickname1" : "AMELIA",
+    "nickname2" : "MILLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THEODORE",
-   "nickname2":"TEDDY"
+    "nickname1" : "AMILIA",
+    "nickname2" : "MILLI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THEODORE",
-   "nickname2":"THEO"
+    "nickname1" : "AMREET",
+    "nickname2" : "AMIT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THERESA",
-   "nickname2":"TERESA"
+    "nickname1" : "ANDREW",
+    "nickname2" : "ANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THERESA",
-   "nickname2":"TERRI"
+    "nickname1" : "ANDREW",
+    "nickname2" : "DREW",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THERESA",
-   "nickname2":"TRACY"
+    "nickname1" : "ANGELA",
+    "nickname2" : "ANGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THOMAS",
-   "nickname2":"TAM "
+    "nickname1" : "ANGELINA",
+    "nickname2" : "ANGEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THOMAS",
-   "nickname2":"THOM"
+    "nickname1" : "ANGELINA",
+    "nickname2" : "ANGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THOMAS",
-   "nickname2":"TOM "
+    "nickname1" : "ANGELINA",
+    "nickname2" : "ANNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THOMAS",
-   "nickname2":"TOMAS"
+    "nickname1" : "ANGELINA",
+    "nickname2" : "GINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THOMAS",
-   "nickname2":"TOMMY"
+    "nickname1" : "ANGELINA",
+    "nickname2" : "LIN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"THORNTON",
-   "nickname2":"THORNE"
+    "nickname1" : "ANGELINA",
+    "nickname2" : "LINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TIFFANY",
-   "nickname2":"TIFFI"
+    "nickname1" : "ANGUS",
+    "nickname2" : "GUS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TIMON",
-   "nickname2":"TIM "
+    "nickname1" : "ANNE",
+    "nickname2" : "ANNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TIMOTHY",
-   "nickname2":"TIM "
+    "nickname1" : "ANTHONY",
+    "nickname2" : "TONY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TIMOTHY",
-   "nickname2":"TIMMY"
+    "nickname1" : "ANTOINETTE",
+    "nickname2" : "TONI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TITANIA",
-   "nickname2":"TANIA"
+    "nickname1" : "ANTONETTE",
+    "nickname2" : "TONI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TOBIA",
-   "nickname2":"TOBY"
+    "nickname1" : "ANTONIA",
+    "nickname2" : "TONI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TORRENCE",
-   "nickname2":"TORRY"
+    "nickname1" : "ANTONIO",
+    "nickname2" : "TONY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TOSHI-SHITA",
-   "nickname2":"TOSHIO"
+    "nickname1" : "ARCHIBALD",
+    "nickname2" : "ARCHIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TOVI",
-   "nickname2":"TOV "
+    "nickname1" : "ARISTOTLE",
+    "nickname2" : "ARI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TRAHERN",
-   "nickname2":"TRAY"
+    "nickname1" : "ARLENE",
+    "nickname2" : "ARLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TRAVERS",
-   "nickname2":"TRAVIS"
+    "nickname1" : "ARNOLD",
+    "nickname2" : "ARNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TRAYTON",
-   "nickname2":"TRAY"
+    "nickname1" : "ARTHUR",
+    "nickname2" : "ART",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TREMAYNE",
-   "nickname2":"TREY"
+    "nickname1" : "ASHLEY",
+    "nickname2" : "LEE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TRENTON",
-   "nickname2":"TRENT"
+    "nickname1" : "AUGUSTINE",
+    "nickname2" : "GUS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TREVOR",
-   "nickname2":"TREV"
+    "nickname1" : "BARBARA",
+    "nickname2" : "BARB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TRISTRAM",
-   "nickname2":"TRISTAN "
+    "nickname1" : "BARBARA",
+    "nickname2" : "BARBIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TUCKER",
-   "nickname2":"TUCK"
+    "nickname1" : "BEATRICE",
+    "nickname2" : "BEA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TYLER",
-   "nickname2":"TY  "
+    "nickname1" : "BEATRICE",
+    "nickname2" : "TRIXIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TYRELL",
-   "nickname2":"TY  "
+    "nickname1" : "BELINDA",
+    "nickname2" : "BELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"TYRONE",
-   "nickname2":"TY  "
+    "nickname1" : "BENJAMIN",
+    "nickname2" : "BEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"U",
-   "nickname2":"UU  "
+    "nickname1" : "BENJAMIN",
+    "nickname2" : "BENJI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"ULRICH",
-   "nickname2":"UWE "
+    "nickname1" : "BENOIT",
+    "nickname2" : "BENNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VALERIE",
-   "nickname2":"VAL"
+    "nickname1" : "BERNADETTE",
+    "nickname2" : "BERNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VERNON",
-   "nickname2":"VERN"
+    "nickname1" : "BERNARD",
+    "nickname2" : "BARRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VERONICA",
-   "nickname2":"RONNI"
+    "nickname1" : "BERNARD",
+    "nickname2" : "BERNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VERONICA",
-   "nickname2":"VONNY"
+    "nickname1" : "BETTINA",
+    "nickname2" : "BETTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VICTORIA",
-   "nickname2":"TORI"
+    "nickname1" : "BETTINA",
+    "nickname2" : "TINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VICTORIA",
-   "nickname2":"VICKI"
+    "nickname1" : "BEVERLY",
+    "nickname2" : "BEV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VINCENT",
-   "nickname2":"VINCE"
+    "nickname1" : "BRIANA",
+    "nickname2" : "BREE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VINCENT",
-   "nickname2":"VINNY"
+    "nickname1" : "BRITTANY",
+    "nickname2" : "BRITT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VIOLET",
-   "nickname2":"VI"
+    "nickname1" : "BURTON",
+    "nickname2" : "BURT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VIRGINIA",
-   "nickname2":"GEENA"
+    "nickname1" : "CALVIN",
+    "nickname2" : "CAL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VIVIAN",
-   "nickname2":"VI"
+    "nickname1" : "CALVIN",
+    "nickname2" : "VINNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VLADIMIR",
-   "nickname2":"VLAD"
+    "nickname1" : "CAMERON",
+    "nickname2" : "CAM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"VLADISLAV",
-   "nickname2":"SLAVA"
+    "nickname1" : "CANDACE",
+    "nickname2" : "CANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WALKER",
-   "nickname2":"WALLY"
+    "nickname1" : "CAROLINE",
+    "nickname2" : "CARLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WALTER",
-   "nickname2":"WALT"
+    "nickname1" : "CAROLINE",
+    "nickname2" : "CAROL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WENDEL",
-   "nickname2":"WENDAL"
+    "nickname1" : "CAROLINE",
+    "nickname2" : "CARRIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WENDY",
-   "nickname2":"WENDI"
+    "nickname1" : "CARROLL",
+    "nickname2" : "CARL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WESLEY",
-   "nickname2":"WES "
+    "nickname1" : "CASEY",
+    "nickname2" : "CASE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WILBERT",
-   "nickname2":"WIL"
+    "nickname1" : "CASSANDRA",
+    "nickname2" : "SANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WILFRED",
-   "nickname2":"WILF"
+    "nickname1" : "CATHERINE",
+    "nickname2" : "CATHY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WILHELMINA",
-   "nickname2":"MINA"
+    "nickname1" : "CATHLEEN",
+    "nickname2" : "CATHY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WILLIAM",
-   "nickname2":"BILL"
+    "nickname1" : "CHANDLER",
+    "nickname2" : "CHAND",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WILTON",
-   "nickname2":"WILT"
+    "nickname1" : "CHARLES",
+    "nickname2" : "CARL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WING-CHIU",
-   "nickname2":"WING"
+    "nickname1" : "CHARLES",
+    "nickname2" : "CHAD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WING-KIT",
-   "nickname2":"WING"
+    "nickname1" : "CHARLES",
+    "nickname2" : "CHARLIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"WOLFGANG",
-   "nickname2":"WOLF"
+    "nickname1" : "CHARLES",
+    "nickname2" : "CHUCK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"XAVIER",
-   "nickname2":"JAVIER"
+    "nickname1" : "CHARLOTTE",
+    "nickname2" : "CARLY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"YITZCHAK",
-   "nickname2":"ISAAC"
+    "nickname1" : "CHRISTIAN",
+    "nickname2" : "CHRIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"YOSHIUKI",
-   "nickname2":"YOSHI"
+    "nickname1" : "CHRISTINA",
+    "nickname2" : "TINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   },
   {
-   "nickname1":"YUKIKO",
-   "nickname2":"YUKI"
+    "nickname1" : "CHRISTINE",
+    "nickname2" : "CHRISSY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CHRISTOPHER",
+    "nickname2" : "CHRIS",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CLAYTON",
+    "nickname2" : "CLAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CLIFFORD",
+    "nickname2" : "CLIFF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CLIFFORD",
+    "nickname2" : "CLIVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CLINTON",
+    "nickname2" : "CLINT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CONRAD",
+    "nickname2" : "CON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CONSTANCE",
+    "nickname2" : "CONNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CORINNE",
+    "nickname2" : "CORRIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CORRINA",
+    "nickname2" : "CORY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "COURTNEY",
+    "nickname2" : "CORRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CURTIS",
+    "nickname2" : "CURT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CYNTHIA",
+    "nickname2" : "CINDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "CYRIL",
+    "nickname2" : "CY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DAKOTA",
+    "nickname2" : "DAC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DANICA",
+    "nickname2" : "DANI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DANIEL",
+    "nickname2" : "DAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DANIEL",
+    "nickname2" : "DANE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DANIEL",
+    "nickname2" : "DANNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DANIELLE",
+    "nickname2" : "DANI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DARCIE",
+    "nickname2" : "DARCEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DARCY",
+    "nickname2" : "DARCEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DARCY",
+    "nickname2" : "DARCIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DARLENE",
+    "nickname2" : "DARLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DAVID",
+    "nickname2" : "DAVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DAVID",
+    "nickname2" : "DAVEY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DAVID",
+    "nickname2" : "DAVY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DEBORAH",
+    "nickname2" : "DEBBIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DEIRDRE",
+    "nickname2" : "DEE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DELFUS",
+    "nickname2" : "DEL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DENIS",
+    "nickname2" : "DENNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DESMOND",
+    "nickname2" : "DES",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DIANA",
+    "nickname2" : "DI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DOMINIC",
+    "nickname2" : "DOM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DONALD",
+    "nickname2" : "DON",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DONALD",
+    "nickname2" : "DONNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DOROTHY",
+    "nickname2" : "DOT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DOUGLAS",
+    "nickname2" : "DOUG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DUNCAN",
+    "nickname2" : "DUNC",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "DUSTIN",
+    "nickname2" : "DUSTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EDITH",
+    "nickname2" : "EDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EDWARD",
+    "nickname2" : "ED",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EDWARD",
+    "nickname2" : "EDDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EDWARD",
+    "nickname2" : "NED",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EDWARD",
+    "nickname2" : "TED",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "BESSY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "BETH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "BETSY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "BETTE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "BETTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LIBBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LISA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LIZ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LIZA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LIZZIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ELIZABETH",
+    "nickname2" : "LIZZY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EMANUEL",
+    "nickname2" : "MANNY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EMILY",
+    "nickname2" : "EM",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ERICA",
+    "nickname2" : "RIKKI",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ERNEST",
+    "nickname2" : "ERNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ESTELLE",
+    "nickname2" : "STELLA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EUGENE",
+    "nickname2" : "GENE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EVELYN",
+    "nickname2" : "EVE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EVERETT",
+    "nickname2" : "EV",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "EZEKIEL",
+    "nickname2" : "ZEKE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FLORENCE",
+    "nickname2" : "FLO",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FRANCES",
+    "nickname2" : "FRAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FRANCIS",
+    "nickname2" : "FRANK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "ERIK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "FRED",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "FREDDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "FREDRIK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "FRITZ",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "FREDERICK",
+    "nickname2" : "RICK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GABRIELLE",
+    "nickname2" : "BREE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GABRIELLE",
+    "nickname2" : "ELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GABRIELLE",
+    "nickname2" : "ELLIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GABRIELLE",
+    "nickname2" : "GABBY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GARRY",
+    "nickname2" : "GARY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GENEVIEVE",
+    "nickname2" : "GEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GEOFFREY",
+    "nickname2" : "GEOFF",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GEORGETTE",
+    "nickname2" : "GEORGIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERALD",
+    "nickname2" : "GERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERALD",
+    "nickname2" : "JERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERARD",
+    "nickname2" : "GERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERARD",
+    "nickname2" : "JERRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERTRUD",
+    "nickname2" : "TRUDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERTRUDE",
+    "nickname2" : "GERTIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GERTRUDE",
+    "nickname2" : "TRUDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GIANNI",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GILBERT",
+    "nickname2" : "GIL",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GIOVANNI",
+    "nickname2" : "JOHN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GIUSEPPE",
+    "nickname2" : "JOE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GIUSEPPE",
+    "nickname2" : "JOSEPH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GORDON",
+    "nickname2" : "GORDIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GRAHAM",
+    "nickname2" : "GRAY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GREGORY",
+    "nickname2" : "GREG",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GURPREET",
+    "nickname2" : "GURJIT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GWENDOLYN",
+    "nickname2" : "GWEN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GWENDOLYN",
+    "nickname2" : "WENDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "GWYNETH",
+    "nickname2" : "WINNIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HANNAH",
+    "nickname2" : "ANN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HANNAH",
+    "nickname2" : "NINA",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HARMINDER",
+    "nickname2" : "RANDY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HAROLD",
+    "nickname2" : "HARRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HARPREET",
+    "nickname2" : "HARDEEP",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HARPREET",
+    "nickname2" : "HARJIT",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HARRIET",
+    "nickname2" : "HETTY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HELEN",
+    "nickname2" : "HELENE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HENRY",
+    "nickname2" : "HANK",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HENRY",
+    "nickname2" : "HARRY",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HERBERT",
+    "nickname2" : "HERB",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HOWARD",
+    "nickname2" : "HOWIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HOWARD",
+    "nickname2" : "WARD",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HUBERT",
+    "nickname2" : "HUGH",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "HUSSEIN",
+    "nickname2" : "HUSSAIN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "IAIN",
+    "nickname2" : "IAN",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "IRENE",
+    "nickname2" : "RENE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISAAC",
+    "nickname2" : "IKE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABEL",
+    "nickname2" : "BELLE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
+  },
+  {
+    "nickname1" : "ISABEL",
+    "nickname2" : "ISSIE",
+    "createUser" : "PEN_MATCH_MIGRATION",
+    "createDate" : "2025-01-21T19:13:20.000Z",
+    "updateUser" : "PEN_MATCH_MIGRATION",
+    "updateDate" : "2025-01-21T19:13:20.000Z"
   }
 ]

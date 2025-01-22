@@ -1,8 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1.newmatch;
 
 
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudent;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchStudentDetail;
 import lombok.Builder;
@@ -64,11 +63,11 @@ public class NewPenMatchStudentDetail extends PenMatchStudent {
   /**
    * The Given name nicknames.
    */
-  private List<NicknamesEntity> givenNameNicknames;
+  private List<NicknameEntity> givenNameNicknames;
   /**
    * The Middle name nicknames.
    */
-  private List<NicknamesEntity> middleNameNicknames;
+  private List<NicknameEntity> middleNameNicknames;
 
   /**
    * Instantiates a new New pen match student detail.

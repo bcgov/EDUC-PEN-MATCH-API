@@ -1,8 +1,8 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.FrequencySurnameEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
 import ca.bc.gov.educ.api.penmatch.properties.ApplicationProperties;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
@@ -15,6 +15,8 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -102,13 +104,15 @@ public class PenMatchLookupManagerTest {
   @Before
   public void before() throws Exception {
     if (!dataLoaded) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
       final File fileNick = new File("src/test/resources/mock_nicknames.json");
-      List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
+      List<NicknameEntity> nicknameEntities = objectMapper.readValue(fileNick, new TypeReference<>() {
       });
       nicknamesRepository.saveAll(nicknameEntities);
 
       final File fileSurnameFrequency = new File("src/test/resources/mock_surname_frequency.json");
-      List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
+      List<FrequencySurnameEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
       });
       surnameFrequencyRepository.saveAll(surnameFreqEntities);
       lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, matchCodesRepository, restUtils, surnameFrequencyService);

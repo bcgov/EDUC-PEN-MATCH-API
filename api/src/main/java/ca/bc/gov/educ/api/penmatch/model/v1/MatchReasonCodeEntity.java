@@ -1,13 +1,13 @@
 package ca.bc.gov.educ.api.penmatch.model.v1;
 
-import lombok.*;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 /**

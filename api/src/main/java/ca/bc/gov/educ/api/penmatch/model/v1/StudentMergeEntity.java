@@ -1,11 +1,11 @@
 package ca.bc.gov.educ.api.penmatch.model.v1;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

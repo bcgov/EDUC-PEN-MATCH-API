@@ -2,13 +2,13 @@ package ca.bc.gov.educ.api.penmatch.struct.v1;
 
 import ca.bc.gov.educ.api.penmatch.constants.MatchReasonCodes;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import java.util.UUID;
 
 /**

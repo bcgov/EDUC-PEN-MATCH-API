@@ -4,8 +4,8 @@ import ca.bc.gov.educ.api.penmatch.constants.MatchReasonCodes;
 import ca.bc.gov.educ.api.penmatch.controller.v1.PenMatchController;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
 import ca.bc.gov.educ.api.penmatch.mappers.v1.PossibleMatchMapper;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.FrequencySurnameEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.PossibleMatchRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
@@ -17,6 +17,8 @@ import ca.bc.gov.educ.api.penmatch.struct.v1.PossibleMatch;
 import ca.bc.gov.educ.api.penmatch.util.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -142,17 +144,20 @@ public class PenMatchControllerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.openMocks(this);
 
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
     final File fileNick = new File(
         Objects.requireNonNull(getClass().getClassLoader().getResource("mock_nicknames.json")).getFile()
     );
-    List<NicknamesEntity> nicknameEntities = new ObjectMapper().readValue(fileNick, new TypeReference<>() {
+    List<NicknameEntity> nicknameEntities = objectMapper.readValue(fileNick, new TypeReference<>() {
     });
     nicknamesRepository.saveAll(nicknameEntities);
 
     final File fileSurnameFrequency = new File(
         Objects.requireNonNull(getClass().getClassLoader().getResource("mock_surname_frequency.json")).getFile()
     );
-    List<SurnameFrequencyEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
+    List<FrequencySurnameEntity> surnameFreqEntities = new ObjectMapper().readValue(fileSurnameFrequency, new TypeReference<>() {
     });
     surnameFreqRepository.saveAll(surnameFreqEntities);
   }
@@ -194,7 +199,7 @@ public class PenMatchControllerTest {
     penMatchLookupManager.reloadCache();
     this.mockMvc
         .perform(get("/api/v1/pen-match/nicknames/ALEXANDER").with(mockAuthority).contentType(MediaType.APPLICATION_JSON))
-        .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
+        .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(12)));
   }
 
   @Test

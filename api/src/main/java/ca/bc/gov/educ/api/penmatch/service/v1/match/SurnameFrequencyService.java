@@ -1,6 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.service.v1.match;
 
-import ca.bc.gov.educ.api.penmatch.model.v1.SurnameFrequencyEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.FrequencySurnameEntity;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +39,9 @@ public class SurnameFrequencyService {
     }
     // Note this returns in two different places
     Integer surnameFrequency = 0;
-    List<SurnameFrequencyEntity> surnameFreqEntityList = getSurnameFrequencyRepository().findAllBySurnameStartingWith(fullStudentSurname);
+    List<FrequencySurnameEntity> surnameFreqEntityList = getSurnameFrequencyRepository().findAllBySurnameStartingWith(fullStudentSurname);
 
-    for (SurnameFrequencyEntity surnameFreqEntity : surnameFreqEntityList) {
+    for (FrequencySurnameEntity surnameFreqEntity : surnameFreqEntityList) {
       surnameFrequency = surnameFrequency + Integer.valueOf(surnameFreqEntity.getSurnameFrequency());
 
       if (surnameFrequency >= VERY_FREQUENT) {
