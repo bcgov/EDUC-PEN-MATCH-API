@@ -11,36 +11,38 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * The type Nicknames entity.
+ * The type Match codes entity.
  */
 @Entity
 @Data
 @NoArgsConstructor
 @Immutable
-@Table(name = "NICKNAME")
-@IdClass(NicknameEntity.class)
-public class NicknameEntity implements Serializable {
+@Table(name = "MATCH_CODE")
+@IdClass(MatchCodeEntity.class)
+public class MatchCodeEntity implements Serializable {
 
   /**
    * The constant serialVersionUID.
    */
   private static final long serialVersionUID = -8918085130403633012L;
+
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator", parameters = {
           @org.hibernate.annotations.Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-  @Column(name = "NICKNAME_ID", unique = true, updatable = false, columnDefinition = "BINARY(16)")
-  UUID nicknameID;
+  @Column(name = "MATCH_CODE_ID", unique = true, updatable = false, columnDefinition = "BINARY(16)")
+  UUID matchCodeID;
+
   /**
-   * The Nickname 1.
+   * The Match code.
    */
-  @Column(name = "NICKNAME1")
-  private String nickname1;
+  @Column(name = "MATCH_CODE")
+  private String matchCode;
   /**
-   * The Nickname 2.
+   * The Match result.
    */
-  @Column(name = "NICKNAME2")
-  private String nickname2;
+  @Column(name = "MATCH_RESULT")
+  private String matchResult;
 
   /**
    * The Create date.

@@ -10,10 +10,10 @@ import ca.bc.gov.educ.api.penmatch.service.v1.match.SurnameFrequencyService;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMatchNames;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,7 +22,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,7 +67,7 @@ public class PenMatchLookupManager {
   /**
    * The Nicknames map
    */
-  private final Map<String, List<NicknamesEntity>> nicknamesMap = new ConcurrentHashMap<>();
+  private final Map<String, List<NicknameEntity>> nicknamesMap = new ConcurrentHashMap<>();
   /**
    * The Nicknames lock.
    */
@@ -223,7 +222,7 @@ public class PenMatchLookupManager {
    * @param givenName the given name
    * @return the list
    */
-  public List<NicknamesEntity> lookupNicknamesOnly(String givenName) {
+  public List<NicknameEntity> lookupNicknamesOnly(String givenName) {
     if (givenName == null || givenName.length() < 1) {
       return new ArrayList<>();
     }
@@ -251,7 +250,7 @@ public class PenMatchLookupManager {
     // Part 1 - Find the base nickname
     String baseNickname = null;
 
-    List<NicknamesEntity> nicknamesBaseList = getNicknames(givenNameUpper);
+    List<NicknameEntity> nicknamesBaseList = getNicknames(givenNameUpper);
     if (!nicknamesBaseList.isEmpty()) {
       baseNickname = StringUtils.trimToNull(nicknamesBaseList.get(0).getNickname1());
     }
@@ -266,8 +265,8 @@ public class PenMatchLookupManager {
         penMatchTransactionNames.getNicknames().add(baseNickname);
       }
 
-      List<NicknamesEntity> tempNicknamesList = getNicknames(baseNickname);
-      for (NicknamesEntity nickEntity : tempNicknamesList) {
+      List<NicknameEntity> tempNicknamesList = getNicknames(baseNickname);
+      for (NicknameEntity nickEntity : tempNicknamesList) {
         if (!StringUtils.equals(nickEntity.getNickname2(), givenNameUpper)) {
           penMatchTransactionNames.getNicknames().add(StringUtils.trimToEmpty(nickEntity.getNickname2()));
         }
@@ -292,7 +291,7 @@ public class PenMatchLookupManager {
   public boolean lookupForeignSurname(String surname, String ancestry) {
     var curDate = LocalDate.now();
 
-    Optional<ForeignSurnamesEntity> foreignSurnamesEntities = getForeignSurnameRepository().findBySurnameAndAncestryAndEffectiveDateLessThanEqualAndExpiryDateGreaterThanEqual(surname, ancestry, curDate, curDate);
+    Optional<ForeignSurnameEntity> foreignSurnamesEntities = getForeignSurnameRepository().findBySurnameAndAncestryAndEffectiveDateLessThanEqualAndExpiryDateGreaterThanEqual(surname, ancestry, curDate, curDate);
 
     return foreignSurnamesEntities.isPresent();
   }
@@ -310,8 +309,8 @@ public class PenMatchLookupManager {
 
     if (matchCodesMap == null) {
       matchCodesMap = new ConcurrentHashMap<>();
-      List<MatchCodesEntity> matchCodesEntities = getMatchCodesRepository().findAll();
-      for (MatchCodesEntity entity : matchCodesEntities) {
+      List<MatchCodeEntity> matchCodesEntities = getMatchCodesRepository().findAll();
+      for (MatchCodeEntity entity : matchCodesEntities) {
         matchCodesMap.put(entity.getMatchCode(), entity.getMatchResult());
       }
     }
@@ -333,7 +332,7 @@ public class PenMatchLookupManager {
     if (matchCodesMap != null) {
       matchCodesMap.clear();
     }
-    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodeEntity::getMatchCode, MatchCodeEntity::getMatchResult));
     log.info("Reloaded match codes into cache. {} entries", matchCodesMap.size());
 
     log.info("Reloading nicknames cache");
@@ -348,7 +347,7 @@ public class PenMatchLookupManager {
   @PostConstruct
   public void init() {
     log.info("Loading Match codes during startup.");
-    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodeEntity::getMatchCode, MatchCodeEntity::getMatchResult));
     log.info("Loaded Match codes during startup. {} entries", matchCodesMap.size());
 
     log.info("Loading Nicknames during startup.");
@@ -362,7 +361,7 @@ public class PenMatchLookupManager {
    * @param givenName the given name
    * @return the nicknames
    */
-  public List<NicknamesEntity> getNicknames(String givenName) {
+  public List<NicknameEntity> getNicknames(String givenName) {
     String givenNameUpper = givenName.toUpperCase();
     if (this.nicknamesMap.containsKey(givenNameUpper)) {
       return this.nicknamesMap.get(givenNameUpper);
@@ -392,11 +391,11 @@ public class PenMatchLookupManager {
    * @param entities the entity list
    */
 // map as (givenName, list of Nicknames entity)
-  private void mapNicknames(List<NicknamesEntity> entities) {
-    for (NicknamesEntity entity : entities) {
+  private void mapNicknames(List<NicknameEntity> entities) {
+    for (NicknameEntity entity : entities) {
       String givenName = entity.getNickname1();
       var key = StringUtils.trimToNull(givenName);
-      List<NicknamesEntity> nicknames;
+      List<NicknameEntity> nicknames;
 
       if (this.nicknamesMap.containsKey(key)) {
         nicknames = this.nicknamesMap.get(key);
@@ -410,10 +409,10 @@ public class PenMatchLookupManager {
       }
     }
 
-    for (NicknamesEntity entity : entities) {
+    for (NicknameEntity entity : entities) {
       String givenName = entity.getNickname2();
       var key = StringUtils.trimToNull(givenName);
-      List<NicknamesEntity> nicknames;
+      List<NicknameEntity> nicknames;
 
       if (this.nicknamesMap.containsKey(key)) {
         nicknames = this.nicknamesMap.get(key);

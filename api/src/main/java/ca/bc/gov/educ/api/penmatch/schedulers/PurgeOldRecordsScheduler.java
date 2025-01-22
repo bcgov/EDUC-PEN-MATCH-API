@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.schedulers;
 
 import ca.bc.gov.educ.api.penmatch.repository.v1.PENMatchEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PRIVATE;

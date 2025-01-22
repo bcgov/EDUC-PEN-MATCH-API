@@ -1,7 +1,6 @@
 package ca.bc.gov.educ.api.penmatch.compare;
 
 import ca.bc.gov.educ.api.penmatch.struct.v1.OldPenMatchRecord;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Comparator;
 

@@ -3,7 +3,7 @@ package ca.bc.gov.educ.api.penmatch.service.v1.match;
 import ca.bc.gov.educ.api.penmatch.compare.NewPenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenConfirmationResult;
 import ca.bc.gov.educ.api.penmatch.struct.v1.PenMasterRecord;
@@ -693,14 +693,14 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
         transactionName = legalGivenHyphenToSpace;
         masterName = masterLegalGivenNameHyphenToSpace;
 
-        List<NicknamesEntity> nicknamesEntities = student.getGivenNameNicknames();
+        List<NicknameEntity> nicknamesEntities = student.getGivenNameNicknames();
 
         if (reOrganizedNames) {
           nicknamesEntities = lookupManager.lookupNicknamesOnly(transactionName);
         }
 
         boolean nicknameMasterMatchFound = false;
-        for (NicknamesEntity entity : nicknamesEntities) {
+        for (NicknameEntity entity : nicknamesEntities) {
           if (StringUtils.trim(entity.getNickname1()).equals(masterLegalGivenNameHyphenToSpace) || StringUtils.trim(entity.getNickname2()).equals(masterLegalGivenNameHyphenToSpace)) {
             nicknameMasterMatchFound = true;
             break;
@@ -772,14 +772,14 @@ public class NewPenMatchService extends BaseMatchService<NewPenMatchStudentDetai
           transactionName = legalMiddleHyphenToSpace;
           masterName = masterLegalMiddleNameHyphenToSpace;
 
-          List<NicknamesEntity> nicknamesEntities = student.getMiddleNameNicknames();
+          List<NicknameEntity> nicknamesEntities = student.getMiddleNameNicknames();
 
           if (reOrganizedNames) {
             nicknamesEntities = lookupManager.lookupNicknamesOnly(transactionName);
           }
 
           boolean nicknameMasterMatchFound = false;
-          for (NicknamesEntity entity : nicknamesEntities) {
+          for (NicknameEntity entity : nicknamesEntities) {
             if (entity.getNickname1().equals(masterLegalGivenNameHyphenToSpace) || entity.getNickname2().equals(masterLegalGivenNameHyphenToSpace)) {
               nicknameMasterMatchFound = true;
               break;

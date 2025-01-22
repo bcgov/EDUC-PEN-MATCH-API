@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.struct.v1;
 
 import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 

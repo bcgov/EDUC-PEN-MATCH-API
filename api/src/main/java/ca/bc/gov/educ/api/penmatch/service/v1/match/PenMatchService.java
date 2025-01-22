@@ -4,7 +4,7 @@ import ca.bc.gov.educ.api.penmatch.compare.PenMatchComparator;
 import ca.bc.gov.educ.api.penmatch.constants.PenAlgorithm;
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknamesEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
 import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
 import ca.bc.gov.educ.api.penmatch.struct.PenMatchRecord;
 import ca.bc.gov.educ.api.penmatch.struct.v1.*;
@@ -18,7 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,7 +84,7 @@ public class PenMatchService extends BaseMatchService<PenMatchStudentDetail, Pen
      * @param givenName the given name
      * @return the nicknames
      */
-    public List<NicknamesEntity> getNicknames(String givenName) {
+    public List<NicknameEntity> getNicknames(String givenName) {
         return lookupManager.lookupNicknamesOnly(givenName);
     }
 
