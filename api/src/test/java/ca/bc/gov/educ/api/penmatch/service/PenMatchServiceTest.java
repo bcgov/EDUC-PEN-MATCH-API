@@ -24,10 +24,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +134,13 @@ public class PenMatchServiceTest {
     lookupManager.init();
   }
 
+  @After
+  public void tearDown() {
+    matchCodesRepository.deleteAll();
+    nicknamesRepository.deleteAll();
+    surnameFreqRepository.deleteAll();
+    dataLoaded = false;
+  }
   /**
    * Test match student alg 30 should return status d 1 match.
    * below are parameters are in order

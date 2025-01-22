@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,6 +119,13 @@ public class PenMatchLookupManagerTest {
       lookupManager = new PenMatchLookupManager(foreignSurnameRepository, nicknamesRepository, matchCodesRepository, restUtils, surnameFrequencyService);
       dataLoaded = true;
     }
+  }
+
+  @After
+  public void tearDown() {
+    nicknamesRepository.deleteAll();
+    surnameFrequencyRepository.deleteAll();
+    dataLoaded = false;
   }
 
   /**

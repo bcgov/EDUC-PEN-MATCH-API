@@ -15,10 +15,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import junitparams.JUnitParamsRunner;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -99,6 +96,13 @@ public class NewPenMatchServiceTest {
       surnameFreqRepository.saveAll(surnameFreqEntities);
       dataLoaded = true;
     }
+  }
+
+  @After
+  public void tearDown() {
+    nicknamesRepository.deleteAll();
+    surnameFreqRepository.deleteAll();
+    dataLoaded = false;
   }
 
   /**
