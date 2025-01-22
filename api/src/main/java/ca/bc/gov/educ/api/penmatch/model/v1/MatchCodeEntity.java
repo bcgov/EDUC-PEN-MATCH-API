@@ -41,7 +41,6 @@ public class MatchCodeEntity implements Serializable {
   /**
    * The Match result.
    */
-  @Id
   @Column(name = "MATCH_RESULT")
   private String matchResult;
 

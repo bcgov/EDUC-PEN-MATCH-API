@@ -34,13 +34,11 @@ public class NicknameEntity implements Serializable {
   /**
    * The Nickname 1.
    */
-  @Id
   @Column(name = "NICKNAME1")
   private String nickname1;
   /**
    * The Nickname 2.
    */
-  @Id
   @Column(name = "NICKNAME2")
   private String nickname2;
 
