@@ -2,10 +2,7 @@ package ca.bc.gov.educ.api.penmatch.service;
 
 import ca.bc.gov.educ.api.penmatch.constants.PenStatus;
 import ca.bc.gov.educ.api.penmatch.lookup.PenMatchLookupManager;
-import ca.bc.gov.educ.api.penmatch.model.v1.FrequencySurnameEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.*;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.SurnameFrequencyRepository;
@@ -618,7 +615,7 @@ public class PenMatchServiceTest {
    * @return the match codes
    * @throws JsonProcessingException the json processing exception
    */
-  private List<MatchCodesEntity> getMatchCodes() throws JsonProcessingException {
+  private List<MatchCodeEntity> getMatchCodes() throws JsonProcessingException {
     String matchCodesJson = "[\n" +
         "  {\n" +
         "    \"matchCode\": \"1111111\",\n" +
@@ -4077,7 +4074,7 @@ public class PenMatchServiceTest {
         "    \"matchResult\": \"F\"\n" +
         "  }\n" +
         "]";
-    TypeReference<List<MatchCodesEntity>> type = new TypeReference<>() {
+    TypeReference<List<MatchCodeEntity>> type = new TypeReference<>() {
     };
     return new ObjectMapper().readValue(matchCodesJson, type);
   }

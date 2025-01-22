@@ -1,10 +1,7 @@
 package ca.bc.gov.educ.api.penmatch.lookup;
 
 import ca.bc.gov.educ.api.penmatch.exception.LookupRuntimeException;
-import ca.bc.gov.educ.api.penmatch.model.v1.ForeignSurnameEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.MatchCodesEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.NicknameEntity;
-import ca.bc.gov.educ.api.penmatch.model.v1.StudentEntity;
+import ca.bc.gov.educ.api.penmatch.model.v1.*;
 import ca.bc.gov.educ.api.penmatch.repository.v1.ForeignSurnameRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.MatchCodesRepository;
 import ca.bc.gov.educ.api.penmatch.repository.v1.NicknamesRepository;
@@ -312,8 +309,8 @@ public class PenMatchLookupManager {
 
     if (matchCodesMap == null) {
       matchCodesMap = new ConcurrentHashMap<>();
-      List<MatchCodesEntity> matchCodesEntities = getMatchCodesRepository().findAll();
-      for (MatchCodesEntity entity : matchCodesEntities) {
+      List<MatchCodeEntity> matchCodesEntities = getMatchCodesRepository().findAll();
+      for (MatchCodeEntity entity : matchCodesEntities) {
         matchCodesMap.put(entity.getMatchCode(), entity.getMatchResult());
       }
     }
@@ -335,7 +332,7 @@ public class PenMatchLookupManager {
     if (matchCodesMap != null) {
       matchCodesMap.clear();
     }
-    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodeEntity::getMatchCode, MatchCodeEntity::getMatchResult));
     log.info("Reloaded match codes into cache. {} entries", matchCodesMap.size());
 
     log.info("Reloading nicknames cache");
@@ -350,7 +347,7 @@ public class PenMatchLookupManager {
   @PostConstruct
   public void init() {
     log.info("Loading Match codes during startup.");
-    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodesEntity::getMatchCode, MatchCodesEntity::getMatchResult));
+    matchCodesMap = getMatchCodesRepository().findAll().stream().collect(Collectors.toConcurrentMap(MatchCodeEntity::getMatchCode, MatchCodeEntity::getMatchResult));
     log.info("Loaded Match codes during startup. {} entries", matchCodesMap.size());
 
     log.info("Loading Nicknames during startup.");
